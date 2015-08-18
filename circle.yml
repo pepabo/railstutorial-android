@@ -1,3 +1,13 @@
+machine:
+  java:
+    version: openjdk7
+  environment:
+    ANDROID_HOME: /usr/local/android-sdk-linux
 test:
   override:
+      - echo "Nothing to do here"
+deployment:
+  master:
+    branch: master
+    commands:
       - ./gradlew assembleDebug
