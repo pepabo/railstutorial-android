@@ -1,6 +1,7 @@
 general:
   branches:
-    - master
+    only:
+      - master
   artifacts:
     - "app/build/outputs/apk/app-debug-unsigned.apk"
 machine:
