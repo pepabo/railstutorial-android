@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/railstutorial-android.iml" filepath="$PROJECT_DIR$/railstutorial-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jodoroid.iml" filepath="$PROJECT_DIR$/jodoroid.iml" />
     </modules>
   </component>
 </project>
