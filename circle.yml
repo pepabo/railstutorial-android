@@ -1,9 +1,7 @@
 general:
-  branches:
-    only:
-      - circleci
   artifacts:
     - "app/build/outputs/apk/app-debug-unaligned.apk"
+    - "app/build/outputs/apk/app-debug-unsigned.apk"
 machine:
   java:
     version: openjdk7
@@ -16,8 +14,15 @@ test:
   override:
       - echo "Nothing to do here"
 deployment:
-  staging:
-    branch: circleci
-    commands:
-      - ./gradlew assembleDebug
-      - curl -F "file=@app/build/outputs/apk/app-debug-unaligned.apk" -F "token=${DEPLOY_GATE_API_KEY}" -F "message=sample" https://deploygate.com/api/users/komaji/apps
+  development:
+    branch: master/*
+      commands:
+        - ./gradlew assembleDebug
+        - curl -F "file=@app/build/outputs/apk/app-debug-unaligned.apk" -F "token=${DEPLOY_GATE_API_KEY}" -F "message=sample" https://deploygate.com/api/users/komaji/apps
+  production:
+    branch: master
+      commands:
+        - ./gradlew assembleRelease
+        - curl -F "file=@app/build/outputs/apk/app-debug-unsigned.apk" -F "token=${DEPLOY_GATE_API_KEY}" -F "message=sample" https://deploygate.com/api/users/komaji/apps
+
+  
