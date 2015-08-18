@@ -13,7 +13,6 @@ test:
   override:
       - echo "Nothing to do here"
 deployment:
-  development:
-    commands:
-      - ./gradlew assembleDebug
-      - curl -F "file=@app/build/outputs/apk/app-debug-unaligned.apk" -F "token=${DEPLOY_GATE_API_KEY}" -F "message=sample" https://deploygate.com/api/users/komaji/apps
+  commands:
+    - ./gradlew assembleDebug
+    - curl -F "file=@app/build/outputs/apk/app-debug-unaligned.apk" -F "token=${DEPLOY_GATE_API_KEY}" -F "message=sample" https://deploygate.com/api/users/komaji/apps
