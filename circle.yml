@@ -11,7 +11,7 @@ dependencies:
     - echo y | android update sdk --no-ui --filter "android-22,build-tools-21.1.2"
 test:
   override:
-      - echo "Nothing to do here"
+    - echo "Nothing to do here"
 deployment:
   commands:
     - ./gradlew assembleDebug
