@@ -1,7 +1,7 @@
 general:
   branches:
     only:
-      - master
+      - test-master
   artifacts:
     - "app/build/outputs/apk/app-debug-unsigned.apk"
 machine:
@@ -14,7 +14,7 @@ test:
       - echo "Nothing to do here"
 deployment:
   staging:
-    branch: master
+    branch: test-master
     commands:
       - ./gradlew assembleDebug
       - curl -F "file=@app/build/outputs/apk/app-debug-unsigned.apk" -F "token=${DEPLOY_GATE_API_KEY}" -F "message=sample" https://deploygate.com/api/users/komaji/apps
