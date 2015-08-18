@@ -20,7 +20,7 @@ deployment:
       - ./gradlew assembleDebug
       - curl -F "file=@app/build/outputs/apk/app-debug-unaligned.apk" -F "token=${DEPLOY_GATE_API_KEY}" -F "message=sample" https://deploygate.com/api/users/komaji/apps
   production:
-    branch: master
+    branch: circleci
     commands:
       - ./gradlew assembleRelease
       - curl -F "file=@app/build/outputs/apk/app-release-unsigned.apk" -F "token=${DEPLOY_GATE_API_KEY}" -F "message=sample" https://deploygate.com/api/users/komaji/apps
