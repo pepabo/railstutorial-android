@@ -1,5 +1,6 @@
 package com.pepabo.jodo.jodoroid;
 
+import android.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.app.Activity;
 import android.app.Fragment;
@@ -22,12 +23,26 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
 public class NavigationDrawerFragment extends Fragment {
+
+    public static final List<Section> SECTIONS = new ArrayList<Section>();
+
+    static {
+        SECTIONS.add(new Section(R.string.title_section_home) {
+            @Override
+            public Fragment getFragment(FragmentManager fragmentManager) {
+                return MicropostFragment.newInstance();
+            }
+        });
+    }
 
     /**
      * Remember the position of the selected item.
@@ -99,15 +114,17 @@ public class NavigationDrawerFragment extends Fragment {
                 selectItem(position);
             }
         });
+
+        List<String> titles = new ArrayList<>();
+        for (Section section: SECTIONS) {
+            titles.add(getString(section.getTitleRes()));
+        }
+
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1,
-                new String[]{
-                        getString(R.string.title_section1),
-                        getString(R.string.title_section2),
-                        getString(R.string.title_section3),
-                }));
+                titles));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawer;
     }
@@ -199,7 +216,7 @@ public class NavigationDrawerFragment extends Fragment {
             mDrawerLayout.closeDrawer(mFragmentContainerView);
         }
         if (mCallbacks != null) {
-            mCallbacks.onNavigationDrawerItemSelected(position);
+            mCallbacks.onNavigationDrawerItemSelected(SECTIONS.get(position));
         }
     }
 
@@ -279,6 +296,20 @@ public class NavigationDrawerFragment extends Fragment {
         /**
          * Called when an item in the navigation drawer is selected.
          */
-        void onNavigationDrawerItemSelected(int position);
+        void onNavigationDrawerItemSelected(Section section);
+    }
+
+    static abstract class Section {
+        int titleRes;
+
+        public Section(int titleStringId) {
+            this.titleRes = titleStringId;
+        }
+
+        public int getTitleRes() {
+            return titleRes;
+        }
+
+        public abstract Fragment getFragment(FragmentManager fragmentManager);
     }
 }
