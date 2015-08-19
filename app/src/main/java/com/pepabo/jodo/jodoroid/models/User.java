@@ -10,6 +10,12 @@ public class User {
     public User() {
     }
 
+    public User(long id, String name, URI avatar) {
+        this.id = id;
+        this.name = name;
+        this.avatar = avatar;
+    }
+
     public long getId() {
         return id;
     }

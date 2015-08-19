@@ -13,6 +13,14 @@ public class Micropost {
     public Micropost() {
     }
 
+    public Micropost(long id, String content, User user, Date createdAt, URI picture) {
+        this.id = id;
+        this.content = content;
+        this.user = user;
+        this.createdAt = createdAt;
+        this.picture = picture;
+    }
+
     public long getId() {
         return id;
     }
