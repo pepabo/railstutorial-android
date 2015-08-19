@@ -38,6 +38,8 @@ public class MicropostFragment extends ListFragment {
 
     private OnFragmentInteractionListener mListener;
 
+    private List<Micropost> mMicroposts;
+
     public static MicropostFragment newInstance() {
         MicropostFragment fragment = new MicropostFragment();
         Bundle args = new Bundle();
@@ -56,7 +58,8 @@ public class MicropostFragment extends ListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setListAdapter(new MicropostsAdapter(getActivity(), DummyContent.HOME_TIMELINE));
+        mMicroposts = DummyContent.getHomeTimeline();
+        setListAdapter(new MicropostsAdapter(getActivity(), mMicroposts));
     }
 
 
@@ -84,7 +87,7 @@ public class MicropostFragment extends ListFragment {
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(DummyContent.HOME_TIMELINE.get(position));
+            mListener.onFragmentInteraction(mMicroposts.get(position));
         }
     }
 
