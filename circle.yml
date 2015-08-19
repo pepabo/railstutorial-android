@@ -1,0 +1,20 @@
+general:
+  artifacts:
+    - "app/build/outputs/apk/app-debug-unaligned.apk"
+machine:
+  java:
+    version: openjdk7
+  environment:
+    ANDROID_HOME: /usr/local/android-sdk-linux
+dependencies:
+  override:
+    - echo y | android update sdk --no-ui --filter "android-22,build-tools-21.1.2"
+test:
+  override:
+    - echo "Nothing to do here"
+deployment:
+  devlopment:
+    branch: /.+/
+    commands:
+      - ./gradlew assembleDebug
+      - curl -F "file=@app/build/outputs/apk/app-debug-unaligned.apk" -F "token=${DEPLOY_GATE_API_KEY}" -F "message=sample" https://deploygate.com/api/users/komaji/apps
