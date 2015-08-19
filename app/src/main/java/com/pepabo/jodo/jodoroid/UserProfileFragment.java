@@ -1,8 +1,5 @@
 package com.pepabo.jodo.jodoroid;
 
-import android.app.Activity;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,10 +10,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.pepabo.jodo.jodoroid.dummy.DummyContent;
-import com.pepabo.jodo.jodoroid.models.Micropost;
 import com.pepabo.jodo.jodoroid.models.User;
-
-import java.util.List;
 
 
 /**
@@ -27,7 +21,7 @@ import java.util.List;
  * Use the {@link UserProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UserProfileFragment extends MicropostFragment {
+public class UserProfileFragment extends MicropostListFragment {
     private static final String ARG_USER_ID = "user_id";
 
     private User mUser;

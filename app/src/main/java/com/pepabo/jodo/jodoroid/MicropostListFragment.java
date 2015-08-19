@@ -17,7 +17,7 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class MicropostFragment extends ListFragment {
+public class MicropostListFragment extends ListFragment {
 
     private OnFragmentInteractionListener mListener;
 
@@ -27,7 +27,7 @@ public class MicropostFragment extends ListFragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public MicropostFragment() {
+    public MicropostListFragment() {
     }
 
     protected void setMicroposts(List<Micropost> microposts) {
