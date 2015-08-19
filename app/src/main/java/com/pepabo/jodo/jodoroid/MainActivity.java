@@ -2,6 +2,7 @@ package com.pepabo.jodo.jodoroid;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
@@ -85,7 +86,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentInteraction(Micropost id) {
-        return;
+    public void onFragmentInteraction(Micropost micropost) {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container, UserProfileFragment.newInstance(micropost.getUser().getId()))
+                .addToBackStack(null)
+                .commit();
     }
 }
