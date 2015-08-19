@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.ListFragment;
 import android.util.Log;
@@ -105,6 +106,35 @@ public class MicropostFragment extends ListFragment {
         public void onFragmentInteraction(Micropost id);
     }
 
+    class FetchAvatarTask extends AsyncTask<URI, Void, Drawable> {
+        ImageView mImageView;
+
+        public FetchAvatarTask(ImageView imageView) {
+            mImageView = imageView;
+        }
+
+        @Override
+        protected Drawable doInBackground(URI... params) {
+            URI avatarUri = params[0];
+            Log.i(FetchAvatarTask.class.getName(), String.format("Downloading %s", avatarUri));
+            try {
+                InputStream stream = (InputStream)avatarUri.toURL().getContent();
+                try {
+                    return Drawable.createFromStream(stream, avatarUri.toString());
+                } finally {
+                    stream.close();
+                }
+            } catch(IOException ex) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Drawable drawable) {
+            mImageView.setImageDrawable(drawable);
+        }
+    }
+
     class MicropostsAdapter extends ArrayAdapter<Micropost> {
         LayoutInflater mInflater;
         List<Micropost> mObjects;
@@ -122,12 +152,7 @@ public class MicropostFragment extends ListFragment {
 
             final Micropost micropost = mObjects.get(position);
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    fetchAvatar(micropost.getUser().getAvatar(), (ImageView) view.findViewById(R.id.avatar));
-                }
-            }).start();
+            new FetchAvatarTask((ImageView)view.findViewById(R.id.avatar)).execute(micropost.getUser().getAvatar());
 
             ((TextView)view.findViewById(R.id.username)).setText(micropost.getUser().getName());
             ((TextView)view.findViewById(R.id.content)).setText(micropost.getContent());
@@ -139,26 +164,6 @@ public class MicropostFragment extends ListFragment {
         String formatDate(Date date) {
             DateFormat f = DateFormat.getDateTimeInstance();
             return f.format(date);
-        }
-
-        void fetchAvatar(URI avatarUri, final ImageView view) {
-            try {
-                InputStream stream = (InputStream)avatarUri.toURL().getContent();
-                try {
-                    Log.i(MicropostsAdapter.class.getName(), String.format("Downloading %s", avatarUri));
-                    final Drawable avatar = Drawable.createFromStream(stream, avatarUri.toString());
-                    MicropostFragment.this.getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            view.setImageDrawable(avatar);
-                        }
-                    });
-                } finally {
-                    stream.close();
-                }
-            } catch(IOException ex) {
-                // set default image
-            }
         }
     }
 }
