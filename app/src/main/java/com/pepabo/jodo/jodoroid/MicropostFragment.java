@@ -41,13 +41,6 @@ public class MicropostFragment extends ListFragment {
 
     private List<Micropost> mMicroposts;
 
-    public static MicropostFragment newInstance() {
-        MicropostFragment fragment = new MicropostFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -55,14 +48,15 @@ public class MicropostFragment extends ListFragment {
     public MicropostFragment() {
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        mMicroposts = DummyContent.getHomeTimeline();
-        setListAdapter(new MicropostsAdapter(getActivity(), mMicroposts));
+    protected void setMicroposts(List<Micropost> microposts) {
+        mMicroposts = microposts;
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        setListAdapter(new MicropostsAdapter(getActivity(), mMicroposts));
+    }
 
     @Override
     public void onAttach(Activity activity) {
