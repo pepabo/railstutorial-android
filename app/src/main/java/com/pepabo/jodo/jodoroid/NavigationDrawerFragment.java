@@ -39,7 +39,7 @@ public class NavigationDrawerFragment extends Fragment {
         SECTIONS.add(new Section(R.string.title_section_home) {
             @Override
             public Fragment getFragment(FragmentManager fragmentManager) {
-                return MicropostFragment.newInstance();
+                return HomeFeedFragment.newInstance();
             }
         });
     }

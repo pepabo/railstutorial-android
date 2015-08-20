@@ -1,6 +1,5 @@
 package com.pepabo.jodo.jodoroid;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
@@ -12,7 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import com.pepabo.jodo.jodoroid.models.Micropost;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, MicropostFragment.OnFragmentInteractionListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, MicropostListFragment.OnFragmentInteractionListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -85,7 +84,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentInteraction(Micropost id) {
-        return;
+    public void onFragmentInteraction(Micropost micropost) {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container, UserProfileFragment.newInstance(micropost.getUser().getId()))
+                .addToBackStack(null)
+                .commit();
     }
 }
