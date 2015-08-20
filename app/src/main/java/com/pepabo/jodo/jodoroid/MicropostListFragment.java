@@ -66,7 +66,10 @@ public class MicropostListFragment extends ListFragment {
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(mMicroposts.get(position));
+            Micropost micropost = (Micropost) l.getItemAtPosition(position);
+            if(micropost != null) {
+                mListener.onFragmentInteraction(micropost);
+            }
         }
     }
 
