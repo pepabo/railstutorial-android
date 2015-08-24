@@ -7,6 +7,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
+import android.content.Intent;
 
 import com.pepabo.jodo.jodoroid.models.Micropost;
 import com.pepabo.jodo.jodoroid.models.User;
@@ -89,6 +93,15 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Micropost micropost) {
         onFragmentInteraction(micropost.getUser());
+    }
+
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.post_button:
+                Intent intent = new Intent(this, PostMicropost.class);
+                startActivity(intent);
+                break;
+        }
     }
 
     @Override
