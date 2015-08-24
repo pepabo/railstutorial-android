@@ -65,4 +65,8 @@ public class DummyContent {
         if(id == KAORI.getId()) return KAORI;
         throw new RuntimeException("Unknown user");
     }
+
+    public static List<User> getAllUsers() {
+        return Arrays.asList(TAKASHI, KAORI);
+    }
 }
