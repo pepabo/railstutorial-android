@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.content.Intent;
 
 import com.pepabo.jodo.jodoroid.models.Micropost;
 
@@ -149,6 +150,16 @@ public class MainActivity extends AppCompatActivity
             super.onAttach(activity);
             ((MainActivity) activity).onSectionAttached(
                     getArguments().getInt(ARG_SECTION_NUMBER));
+        }
+
+    }
+
+    public void onClick(View view){
+        switch (view.getId()){
+            case R.id.post_button:
+                Intent intent = new Intent(this, PostMicropost.class);
+                startActivity(intent);
+                break;
         }
     }
 
