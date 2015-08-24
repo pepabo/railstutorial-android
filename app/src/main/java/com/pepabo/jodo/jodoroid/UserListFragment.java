@@ -66,7 +66,10 @@ public class UserListFragment extends ListFragment {
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(mUsers.get(position));
+            User user = (User) l.getItemAtPosition(position);
+            if (user != null) {
+                mListener.onFragmentInteraction(user);
+            }
         }
     }
 
