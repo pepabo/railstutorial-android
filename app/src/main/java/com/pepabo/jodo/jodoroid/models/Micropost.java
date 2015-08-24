@@ -1,6 +1,7 @@
 package com.pepabo.jodo.jodoroid.models;
 
-import java.net.URI;
+import android.net.Uri;
+
 import java.util.Date;
 
 public class Micropost implements Comparable<Micropost> {
@@ -8,12 +9,12 @@ public class Micropost implements Comparable<Micropost> {
     String content;
     User user;
     Date createdAt;
-    URI picture;
+    Uri picture;
 
     public Micropost() {
     }
 
-    public Micropost(long id, String content, User user, Date createdAt, URI picture) {
+    public Micropost(long id, String content, User user, Date createdAt, Uri picture) {
         this.id = id;
         this.content = content;
         this.user = user;
@@ -37,7 +38,7 @@ public class Micropost implements Comparable<Micropost> {
         return createdAt;
     }
 
-    public URI getPicture() {
+    public Uri getPicture() {
         return picture;
     }
 

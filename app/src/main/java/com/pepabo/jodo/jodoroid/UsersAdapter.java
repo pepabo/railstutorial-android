@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.pepabo.jodo.jodoroid.models.Micropost;
 import com.pepabo.jodo.jodoroid.models.User;
+import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -17,10 +18,12 @@ import java.util.List;
 
 class UsersAdapter extends ArrayAdapter<User> {
     LayoutInflater mInflater;
+    Picasso mPicasso;
 
-    public UsersAdapter(Context context, List<User> objects) {
+    public UsersAdapter(Context context, Picasso picasso, List<User> objects) {
         super(context, 0, objects);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mPicasso = picasso;
     }
 
     @Override
@@ -30,7 +33,7 @@ class UsersAdapter extends ArrayAdapter<User> {
 
         final User user = getItem(position);
 
-        new FetchAvatarTask((ImageView) view.findViewById(R.id.imageView_user_avatar)).execute(user.getAvatar());
+        mPicasso.load(user.getAvatar()).fit().into((ImageView) view.findViewById(R.id.imageView_user_avatar));
         ((TextView) view.findViewById(R.id.textView_user_name)).setText(user.getName());
 
         return view;

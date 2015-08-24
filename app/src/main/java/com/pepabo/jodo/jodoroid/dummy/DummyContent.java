@@ -1,9 +1,10 @@
 package com.pepabo.jodo.jodoroid.dummy;
 
+import android.net.Uri;
+
 import com.pepabo.jodo.jodoroid.models.Micropost;
 import com.pepabo.jodo.jodoroid.models.User;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,8 +23,8 @@ import java.util.Map;
  */
 public class DummyContent {
 
-    private static User TAKASHI = new User(0, "Takashi", URI.create("https://www.gravatar.com/avatar/b740b4b6ebd411a24c3ea0dfac44f04b"));
-    private static User KAORI = new User(1, "Kaori", URI.create("https://www.gravatar.com/avatar/bebfcf57d6d8277d806a9ef3385c078d"));
+    private static User TAKASHI = new User(0, "Takashi", Uri.parse("https://www.gravatar.com/avatar/b740b4b6ebd411a24c3ea0dfac44f04b"));
+    private static User KAORI = new User(1, "Kaori", Uri.parse("https://www.gravatar.com/avatar/bebfcf57d6d8277d806a9ef3385c078d"));
     private static List<Micropost> TAKASHI_POSTS = new ArrayList<>();
     private static List<Micropost> KAORI_POSTS = new ArrayList<>();
     private static List<Micropost> HOME_TIMELINE = new ArrayList<>();
@@ -55,14 +56,14 @@ public class DummyContent {
     }
 
     public static List<Micropost> getUserTimeline(User user) {
-        if(user == TAKASHI) return TAKASHI_POSTS;
-        if(user == KAORI) return KAORI_POSTS;
+        if (user == TAKASHI) return TAKASHI_POSTS;
+        if (user == KAORI) return KAORI_POSTS;
         throw new RuntimeException("Unknown user");
     }
 
     public static User getUser(long id) {
-        if(id == TAKASHI.getId()) return TAKASHI;
-        if(id == KAORI.getId()) return KAORI;
+        if (id == TAKASHI.getId()) return TAKASHI;
+        if (id == KAORI.getId()) return KAORI;
         throw new RuntimeException("Unknown user");
     }
 
