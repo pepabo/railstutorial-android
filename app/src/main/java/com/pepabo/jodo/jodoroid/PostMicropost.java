@@ -13,7 +13,7 @@ import android.widget.TextView;
 import java.io.InputStream;
 
 public class PostMicropost extends AppCompatActivity {
-    public final static int REQUEST_GALLEY = 0;
+    public final static int REQUEST_GALLERY = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class PostMicropost extends AppCompatActivity {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_PICK);
-                startActivityForResult(intent, REQUEST_GALLEY);
+                startActivityForResult(intent, REQUEST_GALLERY);
                 break;
             case R.id.action_Send:
                 finish();
@@ -57,7 +57,7 @@ public class PostMicropost extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
-        if(requestCode == REQUEST_GALLEY && resultCode == RESULT_OK && null != intent) {
+        if(requestCode == REQUEST_GALLERY && resultCode == RESULT_OK && null != intent) {
 
             TextView imguri = (TextView) findViewById(R.id.imguri);
             imguri.setText(intent.getData().getPath());
