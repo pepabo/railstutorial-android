@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.pepabo.jodo.jodoroid.models.Micropost;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -37,7 +38,8 @@ public class MicropostListFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setListAdapter(new MicropostsAdapter(getActivity(), mMicroposts));
+        final Picasso picasso = ((JodoroidApplication) getActivity().getApplication()).getPicasso();
+        setListAdapter(new MicropostsAdapter(getActivity(), picasso, mMicroposts));
     }
 
     @Override

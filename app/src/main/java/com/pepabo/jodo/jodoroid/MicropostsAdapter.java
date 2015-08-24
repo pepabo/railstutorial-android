@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pepabo.jodo.jodoroid.models.Micropost;
+import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -16,10 +17,12 @@ import java.util.List;
 
 class MicropostsAdapter extends ArrayAdapter<Micropost> {
     LayoutInflater mInflater;
+    Picasso mPicasso;
 
-    public MicropostsAdapter(Context context, List<Micropost> objects) {
+    public MicropostsAdapter(Context context, Picasso picasso, List<Micropost> objects) {
         super(context, 0, objects);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mPicasso = picasso;
     }
 
     @Override
@@ -29,7 +32,7 @@ class MicropostsAdapter extends ArrayAdapter<Micropost> {
 
         final Micropost micropost = getItem(position);
 
-        new FetchAvatarTask((ImageView) view.findViewById(R.id.avatar)).execute(micropost.getUser().getAvatar());
+        mPicasso.load(micropost.getUser().getAvatar()).fit().into((ImageView) view.findViewById(R.id.avatar));
 
         ((TextView) view.findViewById(R.id.username)).setText(micropost.getUser().getName());
         ((TextView) view.findViewById(R.id.content)).setText(micropost.getContent());
