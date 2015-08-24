@@ -3,7 +3,7 @@ package com.pepabo.jodo.jodoroid.models;
 import java.net.URI;
 import java.util.Date;
 
-public class Micropost {
+public class Micropost implements Comparable<Micropost> {
     long id;
     String content;
     User user;
@@ -39,5 +39,10 @@ public class Micropost {
 
     public URI getPicture() {
         return picture;
+    }
+
+    @Override
+    public int compareTo(Micropost another) {
+        return getCreatedAt().compareTo(another.getCreatedAt());
     }
 }
