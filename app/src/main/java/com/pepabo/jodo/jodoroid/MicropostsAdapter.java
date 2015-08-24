@@ -16,12 +16,10 @@ import java.util.List;
 
 class MicropostsAdapter extends ArrayAdapter<Micropost> {
     LayoutInflater mInflater;
-    List<Micropost> mObjects;
 
     public MicropostsAdapter(Context context, List<Micropost> objects) {
         super(context, 0, objects);
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mObjects = objects;
     }
 
     @Override
@@ -29,7 +27,7 @@ class MicropostsAdapter extends ArrayAdapter<Micropost> {
         final View view = convertView != null ? convertView :
                 mInflater.inflate(R.layout.view_micropost, parent, false);
 
-        final Micropost micropost = mObjects.get(position);
+        final Micropost micropost = getItem(position);
 
         new FetchAvatarTask((ImageView) view.findViewById(R.id.avatar)).execute(micropost.getUser().getAvatar());
 

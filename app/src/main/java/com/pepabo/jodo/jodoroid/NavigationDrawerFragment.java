@@ -42,6 +42,13 @@ public class NavigationDrawerFragment extends Fragment {
                 return HomeFeedFragment.newInstance();
             }
         });
+
+        SECTIONS.add(new Section(R.string.title_section_all_users) {
+            @Override
+            public Fragment getFragment(FragmentManager fragmentManager) {
+                return AllUsersFragment.newInstance();
+            }
+        });
     }
 
     /**
