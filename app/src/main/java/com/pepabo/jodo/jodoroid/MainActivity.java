@@ -2,6 +2,8 @@ package com.pepabo.jodo.jodoroid;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.content.Intent;
 
@@ -48,6 +51,15 @@ public class MainActivity extends AppCompatActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final Context self = this;
+        fab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(self, PostMicropost.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -93,15 +105,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Micropost micropost) {
         onFragmentInteraction(micropost.getUser());
-    }
-
-    public void onClick(View view){
-        switch (view.getId()){
-            case R.id.post_button:
-                Intent intent = new Intent(this, PostMicropost.class);
-                startActivity(intent);
-                break;
-        }
     }
 
     @Override
