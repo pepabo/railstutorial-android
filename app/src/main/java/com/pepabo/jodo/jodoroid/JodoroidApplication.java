@@ -9,6 +9,8 @@ import com.squareup.picasso.Picasso;
 import com.pepabo.jodo.jodoroid.models.APIService;
 import com.squareup.okhttp.OkHttpClient;
 
+import java.net.CookieHandler;
+import java.net.CookieManager;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
@@ -24,6 +26,8 @@ import retrofit.android.AndroidLog;
 import retrofit.client.OkClient;
 
 public class JodoroidApplication extends Application {
+    public static final String ENDPOINT = "https://157.7.190.186/api/";
+
     APIService mService;
     Picasso mPicasso;
 
@@ -31,7 +35,7 @@ public class JodoroidApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mPicasso = createPicasso(getApplicationContext());
-        mService = createService();
+        mService = createAPIService();
     }
 
     public Picasso getPicasso() {
@@ -49,17 +53,22 @@ public class JodoroidApplication extends Application {
                 .build();
     }
 
-    private static APIService createService() {
+    private static CookieHandler createCookieHandler() {
+        return new CookieManager(); // TODO: Implement persistent cookie jar
+    }
+
+    private static APIService createAPIService() {
         try {
             final SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new X509TrustManager[]{new TrustEveryoneX509TrustManager()}, null);
 
             final OkHttpClient client = new OkHttpClient();
+            client.setCookieHandler(createCookieHandler());
             client.setSslSocketFactory(sslContext.getSocketFactory()); // XXX
             client.setHostnameVerifier(new NonVerifyingHostnameVerifier()); // XXX
 
             final RestAdapter adapter = new RestAdapter.Builder()
-                    .setEndpoint("https://157.7.190.186/api/")
+                    .setEndpoint(ENDPOINT)
                     .setClient(new OkClient(client))
                     .setLogLevel(RestAdapter.LogLevel.FULL)
                     .setLog(new AndroidLog("API"))
@@ -80,6 +89,7 @@ public class JodoroidApplication extends Application {
 
         @Override
         public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            // Trust any certificate!!!
         }
 
         @Override
