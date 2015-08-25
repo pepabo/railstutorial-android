@@ -12,7 +12,7 @@ import rx.Observable;
 public interface APIService {
     @POST("/login")
     @FormUrlEncoded
-    Observable<Void> login(@Field("session[email]") String email,
+    Observable<Session> login(@Field("session[email]") String email,
                            @Field("session[password]") String password);
 
     @DELETE("/logout")
