@@ -3,6 +3,9 @@ package com.pepabo.jodo.jodoroid;
 import android.app.Application;
 import android.content.Context;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
 
@@ -24,6 +27,7 @@ import javax.net.ssl.X509TrustManager;
 import retrofit.RestAdapter;
 import retrofit.android.AndroidLog;
 import retrofit.client.OkClient;
+import retrofit.converter.GsonConverter;
 
 public class JodoroidApplication extends Application {
     public static final String ENDPOINT = "https://157.7.190.186/api/";
@@ -57,6 +61,12 @@ public class JodoroidApplication extends Application {
         return new CookieManager(); // TODO: Implement persistent cookie jar
     }
 
+    private static Gson createGson() {
+        return new GsonBuilder()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create();
+    }
+
     private static APIService createAPIService() {
         try {
             final SSLContext sslContext = SSLContext.getInstance("TLS");
@@ -69,6 +79,7 @@ public class JodoroidApplication extends Application {
 
             final RestAdapter adapter = new RestAdapter.Builder()
                     .setEndpoint(ENDPOINT)
+                    .setConverter(new GsonConverter(createGson()))
                     .setClient(new OkClient(client))
                     .setLogLevel(RestAdapter.LogLevel.FULL)
                     .setLog(new AndroidLog("API"))
