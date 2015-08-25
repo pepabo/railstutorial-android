@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.pepabo.jodo.jodoroid.dummy.DummyContent;
 import com.pepabo.jodo.jodoroid.models.User;
+import com.squareup.picasso.Picasso;
 
 
 /**
@@ -25,6 +26,8 @@ public class UserProfileFragment extends MicropostListFragment {
     private static final String ARG_USER_ID = "user_id";
 
     private User mUser;
+
+    private View mProfileView;
 
     public static UserProfileFragment newInstance(long userId) {
         UserProfileFragment fragment = new UserProfileFragment();
@@ -47,16 +50,22 @@ public class UserProfileFragment extends MicropostListFragment {
         }
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        final Picasso picasso = ((JodoroidApplication) getActivity().getApplication()).getPicasso();
+
+        ((TextView) mProfileView.findViewById(R.id.textView_user_name)).setText(mUser.getName());
+        picasso.load(mUser.getAvatar()).fit().into((ImageView) mProfileView.findViewById(R.id.imageView_user_avatar));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         ListView list = (ListView) view.findViewById(android.R.id.list);
-        View profileView = inflater.inflate(R.layout.view_user_profile, list, false);
-        list.addHeaderView(profileView);
-        ((TextView) profileView.findViewById(R.id.textView_user_name)).setText(mUser.getName());
-        new FetchAvatarTask((ImageView) profileView.findViewById(R.id.imageView_user_avatar))
-                .execute(mUser.getAvatar());
+        mProfileView = inflater.inflate(R.layout.view_user_profile, list, false);
+        list.addHeaderView(mProfileView);
         return view;
     }
 }

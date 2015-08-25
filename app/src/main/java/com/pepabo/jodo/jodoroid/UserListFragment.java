@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.pepabo.jodo.jodoroid.models.User;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -37,7 +38,8 @@ public class UserListFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setListAdapter(new UsersAdapter(getActivity(), mUsers));
+        final Picasso picasso = ((JodoroidApplication) getActivity().getApplication()).getPicasso();
+        setListAdapter(new UsersAdapter(getActivity(), picasso, mUsers));
     }
 
     @Override
@@ -64,7 +66,10 @@ public class UserListFragment extends ListFragment {
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(mUsers.get(position));
+            User user = (User) l.getItemAtPosition(position);
+            if (user != null) {
+                mListener.onFragmentInteraction(user);
+            }
         }
     }
 

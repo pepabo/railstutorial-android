@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.pepabo.jodo.jodoroid.models.Micropost;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -37,7 +38,8 @@ public class MicropostListFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setListAdapter(new MicropostsAdapter(getActivity(), mMicroposts));
+        final Picasso picasso = ((JodoroidApplication) getActivity().getApplication()).getPicasso();
+        setListAdapter(new MicropostsAdapter(getActivity(), picasso, mMicroposts));
     }
 
     @Override
@@ -64,7 +66,10 @@ public class MicropostListFragment extends ListFragment {
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(mMicroposts.get(position));
+            Micropost micropost = (Micropost) l.getItemAtPosition(position);
+            if(micropost != null) {
+                mListener.onFragmentInteraction(micropost);
+            }
         }
     }
 

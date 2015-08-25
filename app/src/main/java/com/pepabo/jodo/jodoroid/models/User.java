@@ -1,16 +1,16 @@
 package com.pepabo.jodo.jodoroid.models;
 
-import java.net.URI;
+import android.net.Uri;
 
 public class User {
     long id;
     String name;
-    URI avatar;
+    Uri avatar;
 
     public User() {
     }
 
-    public User(long id, String name, URI avatar) {
+    public User(long id, String name, Uri avatar) {
         this.id = id;
         this.name = name;
         this.avatar = avatar;
@@ -24,7 +24,7 @@ public class User {
         return name;
     }
 
-    public URI getAvatar() {
+    public Uri getAvatar() {
         return avatar;
     }
 }
