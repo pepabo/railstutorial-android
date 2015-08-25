@@ -57,6 +57,10 @@ public class UserProfileFragment extends MicropostListFragment {
         final Picasso picasso = ((JodoroidApplication) getActivity().getApplication()).getPicasso();
 
         ((TextView) mProfileView.findViewById(R.id.textView_user_name)).setText(mUser.getName());
+        ((TextView) mProfileView.findViewById(R.id.textView_followers))
+                .setText(Long.toString(mUser.getFollowersCount()));
+        ((TextView) mProfileView.findViewById(R.id.textView_following))
+                .setText(Long.toString(mUser.getFollowingCount()));
         picasso.load(mUser.getAvatar()).fit().into((ImageView) mProfileView.findViewById(R.id.imageView_user_avatar));
     }
 
