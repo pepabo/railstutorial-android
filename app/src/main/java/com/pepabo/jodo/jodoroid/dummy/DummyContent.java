@@ -70,4 +70,16 @@ public class DummyContent {
     public static List<User> getAllUsers() {
         return Arrays.asList(TAKASHI, KAORI);
     }
+
+    public static List<User> getFollowers(long userId) {
+        if (userId == TAKASHI.getId()) return Arrays.asList(KAORI);
+        if (userId == KAORI.getId()) return Arrays.asList(TAKASHI);
+        throw new RuntimeException("Unknown user");
+    }
+
+    public static List<User> getFollowing(long userId) {
+        if (userId == TAKASHI.getId()) return Arrays.asList(KAORI);
+        if (userId == KAORI.getId()) return Arrays.asList(TAKASHI);
+        throw new RuntimeException("Unknown user");
+    }
 }
