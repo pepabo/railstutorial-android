@@ -6,14 +6,20 @@ public class User {
     long id;
     String name;
     Uri avatar;
+    long followersCount;
+    long followingCount;
+    long micropostsCount;
 
     public User() {
     }
 
-    public User(long id, String name, Uri avatar) {
+    public User(long id, String name, Uri avatar, long followersCount, long followingCount, long micropostsCount) {
         this.id = id;
         this.name = name;
         this.avatar = avatar;
+        this.followersCount = followersCount;
+        this.followingCount = followingCount;
+        this.micropostsCount = micropostsCount;
     }
 
     public long getId() {
@@ -26,5 +32,17 @@ public class User {
 
     public Uri getAvatar() {
         return avatar;
+    }
+
+    public long getFollowersCount() {
+        return followersCount;
+    }
+
+    public long getFollowingCount() {
+        return followingCount;
+    }
+
+    public long getMicropostsCount() {
+        return micropostsCount;
     }
 }
