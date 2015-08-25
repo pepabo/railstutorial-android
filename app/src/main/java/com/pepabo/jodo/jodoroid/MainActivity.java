@@ -112,20 +112,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onNewIntent(Intent intent) {
         switch (intent.getAction()) {
-            case ACTION_VIEW_FOLLOWERS: {
-                long userId = intent.getExtras().getLong(EXTRA_USER_ID);
-                if(userId != -1) {
-                    showFollowers(userId);
-                }
+            case ACTION_VIEW_FOLLOWERS:
+                showFollowers(getUserIdFromIntent(intent));
                 return;
-            }
-            case ACTION_VIEW_FOLLOWING: {
-                long userId = intent.getExtras().getLong(EXTRA_USER_ID);
-                if(userId != -1) {
-                    showFollowing(userId);
-                }
+            case ACTION_VIEW_FOLLOWING:
+                showFollowing(getUserIdFromIntent(intent));
                 return;
-            }
         }
         super.onNewIntent(intent);
     }
@@ -145,5 +137,13 @@ public class MainActivity extends AppCompatActivity
                 .replace(R.id.container, fragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    private static long getUserIdFromIntent(Intent intent) {
+        long userId = intent.getLongExtra(EXTRA_USER_ID, -1);
+        if(userId == -1) {
+            throw new RuntimeException("Intent has no EXTRA_USER_ID");
+        }
+        return userId;
     }
 }
