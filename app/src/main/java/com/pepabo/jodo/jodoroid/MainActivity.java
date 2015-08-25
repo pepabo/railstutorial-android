@@ -1,5 +1,6 @@
 package com.pepabo.jodo.jodoroid;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
@@ -19,6 +20,10 @@ public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
         MicropostListFragment.OnFragmentInteractionListener,
         UserListFragment.OnFragmentInteractionListener {
+
+    public static final String ACTION_VIEW_FOLLOWERS = "com.pepabo.jodo.jodoroid.VIEW_FOLLOWERS";
+    public static final String ACTION_VIEW_FOLLOWING = "com.pepabo.jodo.jodoroid.VIEW_FOLLOWING";
+    public static final String EXTRA_USER_ID = "userId";
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -47,12 +52,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onNavigationDrawerItemSelected(NavigationDrawerFragment.Section section) {
-        // update the main content by replacing fragments
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, section.getFragment(fragmentManager))
-                .addToBackStack(null)
-                .commit();
+        showFragment(section.getFragment(getFragmentManager()));
     }
 
     public void restoreActionBar() {
@@ -106,9 +106,44 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction(User user) {
+        showFragment(UserProfileFragment.newInstance(user.getId()));
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        switch (intent.getAction()) {
+            case ACTION_VIEW_FOLLOWERS:
+                showFollowers(getUserIdFromIntent(intent));
+                return;
+            case ACTION_VIEW_FOLLOWING:
+                showFollowing(getUserIdFromIntent(intent));
+                return;
+        }
+        super.onNewIntent(intent);
+    }
+
+    private void showFollowers(long userId) {
+        showFragment(UserFollowersFragment
+                .newInstance(userId, UserFollowersFragment.TYPE_FOLLOWERS));
+    }
+
+    private void showFollowing(long userId) {
+        showFragment(UserFollowersFragment
+                .newInstance(userId, UserFollowersFragment.TYPE_FOLLOWING));
+    }
+
+    private void showFragment(Fragment fragment) {
         getFragmentManager().beginTransaction()
-                .replace(R.id.container, UserProfileFragment.newInstance(user.getId()))
+                .replace(R.id.container, fragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    private static long getUserIdFromIntent(Intent intent) {
+        long userId = intent.getLongExtra(EXTRA_USER_ID, -1);
+        if(userId == -1) {
+            throw new RuntimeException("Intent has no EXTRA_USER_ID");
+        }
+        return userId;
     }
 }
