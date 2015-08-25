@@ -13,7 +13,7 @@
 
     </FrameLayout>
 
-    <anadfgaddroid.support.design.widget.CoordinatorLayout
+    <android.support.design.widget.CoordinatorLayout
         android:id="@+id/design_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -26,7 +26,7 @@
             android:layout_margin="16dp"
             android:src="@drawable/ic_action_edit" />
 
-    </anadfgaddroid.support.design.widget.CoordinatorLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
     <!-- android:layout_gravity="start" tells DrawerLayout to treat
   this as a sliding drawer on the left side for left-to-right
