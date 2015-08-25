@@ -40,6 +40,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/layout_followers"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -56,6 +57,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layout_following"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:orientation="vertical">

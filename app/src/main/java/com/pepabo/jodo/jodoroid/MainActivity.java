@@ -20,6 +20,10 @@ public class MainActivity extends AppCompatActivity
         MicropostListFragment.OnFragmentInteractionListener,
         UserListFragment.OnFragmentInteractionListener {
 
+    public static final String ACTION_VIEW_FOLLOWERS = "com.pepabo.jodo.jodoroid.VIEW_FOLLOWERS";
+    public static final String ACTION_VIEW_FOLLOWING = "com.pepabo.jodo.jodoroid.VIEW_FOLLOWING";
+    public static final String EXTRA_USER_ID = "userId";
+
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -108,6 +112,43 @@ public class MainActivity extends AppCompatActivity
     public void onFragmentInteraction(User user) {
         getFragmentManager().beginTransaction()
                 .replace(R.id.container, UserProfileFragment.newInstance(user.getId()))
+                .addToBackStack(null)
+                .commit();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        switch (intent.getAction()) {
+            case ACTION_VIEW_FOLLOWERS: {
+                long userId = intent.getExtras().getLong(EXTRA_USER_ID);
+                if(userId != -1) {
+                    showFollowers(userId);
+                }
+                return;
+            }
+            case ACTION_VIEW_FOLLOWING: {
+                long userId = intent.getExtras().getLong(EXTRA_USER_ID);
+                if(userId != -1) {
+                    showFollowing(userId);
+                }
+                return;
+            }
+        }
+        super.onNewIntent(intent);
+    }
+
+    private void showFollowers(long userId) {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container, UserFollowersFragment
+                        .newInstance(userId, UserFollowersFragment.TYPE_FOLLOWERS))
+                .addToBackStack(null)
+                .commit();
+    }
+
+    private void showFollowing(long userId) {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container, UserFollowersFragment
+                        .newInstance(userId, UserFollowersFragment.TYPE_FOLLOWING))
                 .addToBackStack(null)
                 .commit();
     }

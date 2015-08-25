@@ -1,5 +1,7 @@
 package com.pepabo.jodo.jodoroid;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -22,7 +24,7 @@ import com.squareup.picasso.Picasso;
  * Use the {@link UserProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UserProfileFragment extends MicropostListFragment {
+public class UserProfileFragment extends MicropostListFragment implements View.OnClickListener {
     private static final String ARG_USER_ID = "user_id";
 
     private User mUser;
@@ -62,6 +64,9 @@ public class UserProfileFragment extends MicropostListFragment {
         ((TextView) mProfileView.findViewById(R.id.textView_following))
                 .setText(Long.toString(mUser.getFollowingCount()));
         picasso.load(mUser.getAvatar()).fit().into((ImageView) mProfileView.findViewById(R.id.imageView_user_avatar));
+
+        ((View) mProfileView.findViewById(R.id.layout_followers)).setOnClickListener(this);
+        ((View) mProfileView.findViewById(R.id.layout_following)).setOnClickListener(this);
     }
 
     @Override
@@ -71,5 +76,25 @@ public class UserProfileFragment extends MicropostListFragment {
         mProfileView = inflater.inflate(R.layout.view_user_profile, list, false);
         list.addHeaderView(mProfileView);
         return view;
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent = null;
+        switch (v.getId()) {
+            case R.id.layout_followers:
+                intent = new Intent(getActivity(), MainActivity.class);
+                intent.setAction(MainActivity.ACTION_VIEW_FOLLOWERS);
+                intent.putExtra(MainActivity.EXTRA_USER_ID, mUser.getId());
+                break;
+            case R.id.layout_following:
+                intent = new Intent(getActivity(), MainActivity.class);
+                intent.setAction(MainActivity.ACTION_VIEW_FOLLOWING);
+                intent.putExtra(MainActivity.EXTRA_USER_ID, mUser.getId());
+                break;
+        }
+        if(intent != null) {
+            startActivity(intent);
+        }
     }
 }
