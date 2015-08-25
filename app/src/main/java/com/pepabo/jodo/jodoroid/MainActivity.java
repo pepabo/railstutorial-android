@@ -1,5 +1,6 @@
 package com.pepabo.jodo.jodoroid;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
@@ -51,12 +52,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onNavigationDrawerItemSelected(NavigationDrawerFragment.Section section) {
-        // update the main content by replacing fragments
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, section.getFragment(fragmentManager))
-                .addToBackStack(null)
-                .commit();
+        showFragment(section.getFragment(getFragmentManager()));
     }
 
     public void restoreActionBar() {
@@ -110,10 +106,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction(User user) {
-        getFragmentManager().beginTransaction()
-                .replace(R.id.container, UserProfileFragment.newInstance(user.getId()))
-                .addToBackStack(null)
-                .commit();
+        showFragment(UserProfileFragment.newInstance(user.getId()));
     }
 
     @Override
@@ -138,17 +131,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showFollowers(long userId) {
-        getFragmentManager().beginTransaction()
-                .replace(R.id.container, UserFollowersFragment
-                        .newInstance(userId, UserFollowersFragment.TYPE_FOLLOWERS))
-                .addToBackStack(null)
-                .commit();
+        showFragment(UserFollowersFragment
+                .newInstance(userId, UserFollowersFragment.TYPE_FOLLOWERS));
     }
 
     private void showFollowing(long userId) {
+        showFragment(UserFollowersFragment
+                .newInstance(userId, UserFollowersFragment.TYPE_FOLLOWING));
+    }
+
+    private void showFragment(Fragment fragment) {
         getFragmentManager().beginTransaction()
-                .replace(R.id.container, UserFollowersFragment
-                        .newInstance(userId, UserFollowersFragment.TYPE_FOLLOWING))
+                .replace(R.id.container, fragment)
                 .addToBackStack(null)
                 .commit();
     }
