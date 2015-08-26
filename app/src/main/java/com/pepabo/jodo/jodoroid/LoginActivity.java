@@ -88,7 +88,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         mResetPasswordButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(self, ResetPassword.class);
+                Intent intent = new Intent(self, ResetPasswordRequest.class);
                 startActivity(intent);
             }
         });
