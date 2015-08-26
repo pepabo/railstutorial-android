@@ -35,6 +35,11 @@
                 android:layout_marginTop="16dp" android:text="@string/action_sign_in"
                 android:textStyle="bold" />
 
+            <Button android:id="@+id/reset_password_request_button" style="?android:textAppearanceSmall"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginTop="16dp" android:layout_gravity="center"
+                android:text="@string/action_if_forgot_password" android:textStyle="bold" />
+
         </LinearLayout>
     </ScrollView>
 
