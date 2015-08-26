@@ -14,5 +14,8 @@
     <string name="action_follow">Follow</string>
     <string name="label_followers">Followers</string>
     <string name="label_following">Following</string>
+    <string name="title_activity_reset_password_request">ResetPasswordRequest</string>
+
+    <string name="hello_world">Hello world!</string>
 
 </resources>
