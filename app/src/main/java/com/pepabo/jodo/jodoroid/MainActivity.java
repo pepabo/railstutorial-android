@@ -16,6 +16,8 @@ import android.content.Intent;
 import com.pepabo.jodo.jodoroid.models.Micropost;
 import com.pepabo.jodo.jodoroid.models.User;
 
+import de.psdev.licensesdialog.LicensesDialog;
+
 public class MainActivity extends AppCompatActivity
         implements
         NavigationView.OnNavigationItemSelectedListener,
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity
     public static final String ACTION_VIEW_ALL_USERS = "com.pepabo.jodo.jodoroid.VIEW_ALL_USERS";
     public static final String ACTION_VIEW_FOLLOWERS = "com.pepabo.jodo.jodoroid.VIEW_FOLLOWERS";
     public static final String ACTION_VIEW_FOLLOWING = "com.pepabo.jodo.jodoroid.VIEW_FOLLOWING";
+    public static final String ACTION_VIEW_LICENSES = "com.pepabo.jodo.jodoroid.VIEW_LICENSES";
     public static final String EXTRA_USER_ID = "userId";
 
     private ActionBarDrawerToggle mDrawerToggle;
@@ -112,6 +115,9 @@ public class MainActivity extends AppCompatActivity
             case ACTION_VIEW_FOLLOWING:
                 showFollowing(getUserIdFromIntent(intent));
                 return true;
+            case ACTION_VIEW_LICENSES:
+                showLicenses();
+                return true;
         }
         return false;
     }
@@ -132,6 +138,13 @@ public class MainActivity extends AppCompatActivity
     private void showFollowing(long userId) {
         showFragment(UserFollowersFragment
                 .newInstance(userId, UserFollowersFragment.TYPE_FOLLOWING));
+    }
+
+    private void showLicenses() {
+        new LicensesDialog.Builder(this)
+                .setNotices(R.raw.notices)
+                .build()
+                .show();
     }
 
     private void showFragment(Fragment fragment) {
@@ -162,6 +175,11 @@ public class MainActivity extends AppCompatActivity
                 intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.setAction(ACTION_VIEW_ALL_USERS);
                 break;
+            case R.id.action_view_oss_license:
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.setAction(ACTION_VIEW_LICENSES);
+                break;
+
         }
 
         if (intent != null) {

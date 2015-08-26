@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<notices>
+    <notice>
+        <name>LicensesDialog</name>
+        <url>https://psdev.de/LicensesDialog/</url>
+        <copyright>Copyright 2013 Philip Schiffer</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+</notices>
