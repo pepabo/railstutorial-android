@@ -28,7 +28,7 @@ public class SignupActivity extends AppCompatActivity {
         mCreateAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                attemptLogin();
+                attemptSignup();
             }
         });
 
@@ -36,7 +36,7 @@ public class SignupActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    public void attemptLogin() {
+    public void attemptSignup() {
         // Reset errors.
         mSignupEmailView.setError(null);
         mSignupNameView.setError(null);
