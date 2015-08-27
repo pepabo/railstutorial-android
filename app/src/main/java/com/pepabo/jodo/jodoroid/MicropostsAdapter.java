@@ -35,7 +35,7 @@ class MicropostsAdapter extends ArrayAdapter<Micropost> {
 
         final User user = micropost.getUser();
         if(user != null) {
-            mPicasso.load(user.getAvatar()).fit().into((ImageView) view.findViewById(R.id.avatar));
+            mPicasso.load(user.getAvatarUrl()).fit().into((ImageView) view.findViewById(R.id.avatar));
             ((TextView) view.findViewById(R.id.username)).setText(user.getName());
         } else {
             ((ImageView) view.findViewById(R.id.avatar)).setImageDrawable(null);

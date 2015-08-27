@@ -5,7 +5,7 @@ import android.net.Uri;
 public class User {
     long id;
     String name;
-    Uri avatar;
+    Uri avatarUrl;
     long followersCount;
     long followingCount;
     long micropostsCount;
@@ -13,10 +13,10 @@ public class User {
     public User() {
     }
 
-    public User(long id, String name, Uri avatar, long followersCount, long followingCount, long micropostsCount) {
+    public User(long id, String name, Uri avatarUrl, long followersCount, long followingCount, long micropostsCount) {
         this.id = id;
         this.name = name;
-        this.avatar = avatar;
+        this.avatarUrl = avatarUrl;
         this.followersCount = followersCount;
         this.followingCount = followingCount;
         this.micropostsCount = micropostsCount;
@@ -30,8 +30,8 @@ public class User {
         return name;
     }
 
-    public Uri getAvatar() {
-        return avatar;
+    public Uri getAvatarUrl() {
+        return avatarUrl;
     }
 
     public long getFollowersCount() {

@@ -9,17 +9,17 @@ public class Micropost implements Comparable<Micropost> {
     String content;
     User user;
     Date createdAt;
-    Uri picture;
+    Uri pictureUrl;
 
     public Micropost() {
     }
 
-    public Micropost(long id, String content, User user, Date createdAt, Uri picture) {
+    public Micropost(long id, String content, User user, Date createdAt, Uri pictureUrl) {
         this.id = id;
         this.content = content;
         this.user = user;
         this.createdAt = createdAt;
-        this.picture = picture;
+        this.pictureUrl = pictureUrl;
     }
 
     public long getId() {
@@ -38,8 +38,8 @@ public class Micropost implements Comparable<Micropost> {
         return createdAt;
     }
 
-    public Uri getPicture() {
-        return picture;
+    public Uri getPictureUrl() {
+        return pictureUrl;
     }
 
     @Override

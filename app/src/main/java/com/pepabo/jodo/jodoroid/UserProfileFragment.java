@@ -1,7 +1,6 @@
 package com.pepabo.jodo.jodoroid;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -63,7 +62,7 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
                 .setText(Long.toString(mUser.getFollowersCount()));
         ((TextView) mProfileView.findViewById(R.id.textView_following))
                 .setText(Long.toString(mUser.getFollowingCount()));
-        picasso.load(mUser.getAvatar()).fit().into((ImageView) mProfileView.findViewById(R.id.imageView_user_avatar));
+        picasso.load(mUser.getAvatarUrl()).fit().into((ImageView) mProfileView.findViewById(R.id.imageView_user_avatar));
 
         ((View) mProfileView.findViewById(R.id.layout_followers)).setOnClickListener(this);
         ((View) mProfileView.findViewById(R.id.layout_following)).setOnClickListener(this);
