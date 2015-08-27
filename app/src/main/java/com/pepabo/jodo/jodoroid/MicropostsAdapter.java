@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pepabo.jodo.jodoroid.models.Micropost;
+import com.pepabo.jodo.jodoroid.models.User;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
@@ -32,9 +33,15 @@ class MicropostsAdapter extends ArrayAdapter<Micropost> {
 
         final Micropost micropost = getItem(position);
 
-        mPicasso.load(micropost.getUser().getAvatar()).fit().into((ImageView) view.findViewById(R.id.avatar));
+        final User user = micropost.getUser();
+        if(user != null) {
+            mPicasso.load(user.getAvatar()).fit().into((ImageView) view.findViewById(R.id.avatar));
+            ((TextView) view.findViewById(R.id.username)).setText(user.getName());
+        } else {
+            ((ImageView) view.findViewById(R.id.avatar)).setImageDrawable(null);
+            ((TextView) view.findViewById(R.id.username)).setText("");
+        }
 
-        ((TextView) view.findViewById(R.id.username)).setText(micropost.getUser().getName());
         ((TextView) view.findViewById(R.id.content)).setText(micropost.getContent());
         ((TextView) view.findViewById(R.id.timestamp)).setText(formatDate(micropost.getCreatedAt()));
 
