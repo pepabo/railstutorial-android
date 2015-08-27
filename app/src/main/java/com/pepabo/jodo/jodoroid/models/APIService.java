@@ -26,14 +26,13 @@ public interface APIService {
     Observable<Void> logout();
 
     @GET("/users")
-    Observable<List<User>> fetchAllUsers();
+    Observable<List<User>> fetchAllUsers(@Query("page") Integer page);
 
     @POST("/users")
     @FormUrlEncoded
     Observable<Void> signup(@Field("user[name]")     String name,
                             @Field("user[email]")    String email,
                             @Field("user[password]") String password);
-
 
     @GET("/users/{id}")
     Observable<User> fetchUser(@Path("id") Integer userId);
@@ -45,16 +44,20 @@ public interface APIService {
     Observable<User> updateMe();
 
     @POST("/users/{id}/follow")
-    Observable<Void> followUser(@Path("id") Integer userId);
+    Observable<Void> followUser(@Path("id")    Integer userId,
+                                @Query("page") Integer page);
 
     @DELETE("/users/{id}/follow")
-    Observable<Void> unfollowUser(@Path("id") Integer userId);
+    Observable<Void> unfollowUser(@Path("id")    Integer userId,
+                                  @Query("page") Integer page);
 
     @GET("/users/{id}/following")
-    Observable<List<User>> fetchFollowing(@Path("id")    Integer userId);
+    Observable<List<User>> fetchFollowing(@Path("id")    Integer userId,
+                                          @Query("page") Integer page);
 
     @GET("/users/{id}/followers")
-    Observable<List<User>> fetchFollowers(@Path("id")    Integer userId);
+    Observable<List<User>> fetchFollowers(@Path("id")    Integer userId,
+                                          @Query("page") Integer page);
 
     @Multipart
     @POST("/microposts")
@@ -65,7 +68,7 @@ public interface APIService {
     Observable<Void> deleteMicropost(@Path("id") Integer micropostId);
 
     @GET("/feed")
-    Observable<List<Micropost>> fetchFeed();
+    Observable<List<Micropost>> fetchFeed(@Query("page") Integer page);
 
     @POST("/password_resets")
     @FormUrlEncoded
