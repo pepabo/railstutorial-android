@@ -1,5 +1,7 @@
 package com.pepabo.jodo.jodoroid;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Application;
 import android.content.Context;
 
@@ -24,6 +26,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
+import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.android.AndroidLog;
 import retrofit.client.OkClient;
@@ -38,8 +41,8 @@ public class JodoroidApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        mPicasso = createPicasso(getApplicationContext());
-        mService = createAPIService();
+        mPicasso = createPicasso(this);
+        mService = createAPIService(this);
     }
 
     public Picasso getPicasso() {
@@ -67,7 +70,7 @@ public class JodoroidApplication extends Application {
                 .create();
     }
 
-    private static APIService createAPIService() {
+    private static APIService createAPIService(Context context) {
         try {
             final SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, new X509TrustManager[]{new TrustEveryoneX509TrustManager()}, null);
@@ -83,6 +86,7 @@ public class JodoroidApplication extends Application {
                     .setClient(new OkClient(client))
                     .setLogLevel(RestAdapter.LogLevel.FULL)
                     .setLog(new AndroidLog("API"))
+                    .setRequestInterceptor(new AuthenticationInterceptor(context))
                     .build();
 
             return adapter.create(APIService.class);
@@ -113,6 +117,36 @@ public class JodoroidApplication extends Application {
         @Override
         public boolean verify(String hostname, SSLSession session) {
             return true;
+        }
+    }
+
+    static class AuthenticationInterceptor implements RequestInterceptor {
+        private final static String HTTP_AUTHORIZATION = "Authorization";
+
+        final Context mContext;
+
+        public AuthenticationInterceptor(Context context) {
+            this.mContext = context;
+        }
+
+        @Override
+        public void intercept(RequestFacade request) {
+            final String authToken = getAuthToken();
+            if(authToken != null) {
+                request.addHeader(HTTP_AUTHORIZATION, authToken);
+            }
+        }
+
+        private String getAuthToken() {
+            final AccountManager accountManager = AccountManager.get(mContext);
+            final Account[] accounts = accountManager.getAccountsByType(JodoAuthenticator.ACCOUNT_TYPE);
+
+            if(accounts.length == 0) {
+                return null;
+            }
+
+            final Account account = accounts[0];
+            return accountManager.peekAuthToken(account, JodoAuthenticator.ACCOUNT_TOKEN_TYPE);
         }
     }
 }
