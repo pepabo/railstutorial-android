@@ -1,21 +1,13 @@
 package com.pepabo.jodo.jodoroid;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
-import com.pepabo.jodo.jodoroid.models.Session;
-
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
 
 public class SignupActivity extends AppCompatActivity {
 
