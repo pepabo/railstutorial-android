@@ -179,7 +179,12 @@ public class MainActivity extends AppCompatActivity
                 intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.setAction(ACTION_VIEW_LICENSES);
                 break;
-
+            case R.id.action_edit_profile:
+                intent = new Intent(getApplicationContext(), ProfileEditActivity.class);
+                break;
+            case R.id.action_change_password:
+                intent = new Intent(getApplicationContext(), PasswordChangeActivity.class);
+                break;
         }
 
         if (intent != null) {

@@ -47,6 +47,12 @@
             android:name=".ResetPassword"
             android:label="@string/title_activity_reset_password" >
         </activity>
+        <activity
+            android:name=".ProfileEditActivity"
+            android:label="@string/title_activity_profile_edit"/>
+        <activity
+            android:name=".PasswordChangeActivity"
+            android:label="@string/title_activity_password_change"/>
 
         <service android:name=".JodoAuthenticatorService" >
             <intent-filter>
