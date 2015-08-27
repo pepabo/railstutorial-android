@@ -32,10 +32,11 @@ public interface APIService {
                             @Field("user[password]") String password);
 
     @GET("/users/{id}")
-    Observable<User> fetchUser(@Path("id") long userId);
+    Observable<User> fetchUser(@Path("id")    long userId,
+                               @Query("page") int  page);
 
     @GET("/users/me")
-    Observable<User> fetchMe();
+    Observable<User> fetchMe(@Query("page") int page);
 
     @PATCH("/users/me")
     @FormUrlEncoded
