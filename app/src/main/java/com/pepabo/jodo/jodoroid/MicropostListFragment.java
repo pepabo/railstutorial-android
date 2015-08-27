@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.app.ListFragment;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.pepabo.jodo.jodoroid.models.Micropost;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +24,8 @@ public class MicropostListFragment extends ListFragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private List<Micropost> mMicroposts;
+    private List<Micropost> mMicroposts = new ArrayList<>();
+    private ArrayAdapter<Micropost> mAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -32,14 +35,17 @@ public class MicropostListFragment extends ListFragment {
     }
 
     protected void setMicroposts(List<Micropost> microposts) {
-        mMicroposts = microposts;
-    }
+        mMicroposts.clear();
+        mMicroposts.addAll(microposts);
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        final Picasso picasso = ((JodoroidApplication) getActivity().getApplication()).getPicasso();
-        setListAdapter(new MicropostsAdapter(getActivity(), picasso, mMicroposts));
+        if(mAdapter == null) {
+            final Picasso picasso =
+                    ((JodoroidApplication) getActivity().getApplication()).getPicasso();
+            mAdapter = new MicropostsAdapter(getActivity(), picasso, mMicroposts);
+            setListAdapter(mAdapter);
+        }
+
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

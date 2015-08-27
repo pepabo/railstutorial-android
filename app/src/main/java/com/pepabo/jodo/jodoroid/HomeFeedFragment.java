@@ -1,8 +1,14 @@
 package com.pepabo.jodo.jodoroid;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
-import com.pepabo.jodo.jodoroid.dummy.DummyContent;
+import com.pepabo.jodo.jodoroid.models.Micropost;
+
+import java.util.List;
+
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
 
 public class HomeFeedFragment extends MicropostListFragment {
     public static HomeFeedFragment newInstance() {
@@ -14,11 +20,34 @@ public class HomeFeedFragment extends MicropostListFragment {
 
     public HomeFeedFragment() {
     }
-
+    
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        loadHomeFeed();
+    }
 
-        setMicroposts(DummyContent.getHomeTimeline());
+    private void loadHomeFeed() {
+        ((JodoroidApplication) getActivity().getApplication()).getAPIService()
+                .fetchFeed(1)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Micropost>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Toast.makeText(getActivity(),
+                                getString(R.string.toast_load_failure), Toast.LENGTH_SHORT)
+                                .show();
+                    }
+
+                    @Override
+                    public void onNext(List<Micropost> microposts) {
+                        setMicroposts(microposts);
+                    }
+                });
     }
 }
