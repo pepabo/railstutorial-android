@@ -23,7 +23,7 @@ public interface APIService {
                               @Field("session[password]") String password);
 
     @GET("/users")
-    Observable<List<User>> fetchAllUsers(@Query("page") Integer page);
+    Observable<List<User>> fetchAllUsers(@Query("page") int page);
 
     @POST("/users")
     @FormUrlEncoded
@@ -32,7 +32,7 @@ public interface APIService {
                             @Field("user[password]") String password);
 
     @GET("/users/{id}")
-    Observable<User> fetchUser(@Path("id") Integer userId);
+    Observable<User> fetchUser(@Path("id") long userId);
 
     @GET("/users/me")
     Observable<User> fetchMe();
@@ -44,20 +44,20 @@ public interface APIService {
                               @Field("user[password]") String password);
 
     @POST("/users/{id}/follow")
-    Observable<Void> followUser(@Path("id")    Integer userId,
-                                @Query("page") Integer page);
+    Observable<Void> followUser(@Path("id")    long userId,
+                                @Query("page") int  page);
 
     @DELETE("/users/{id}/follow")
-    Observable<Void> unfollowUser(@Path("id")    Integer userId,
-                                  @Query("page") Integer page);
+    Observable<Void> unfollowUser(@Path("id")    long userId,
+                                  @Query("page") int  page);
 
     @GET("/users/{id}/following")
-    Observable<List<User>> fetchFollowing(@Path("id")    Integer userId,
-                                          @Query("page") Integer page);
+    Observable<List<User>> fetchFollowing(@Path("id")    long userId,
+                                          @Query("page") int  page);
 
     @GET("/users/{id}/followers")
-    Observable<List<User>> fetchFollowers(@Path("id")    Integer userId,
-                                          @Query("page") Integer page);
+    Observable<List<User>> fetchFollowers(@Path("id")    long userId,
+                                          @Query("page") int  page);
 
     @Multipart
     @POST("/microposts")
@@ -65,10 +65,10 @@ public interface APIService {
                                           @Part("micropost[picture]") TypedFile picture);
 
     @DELETE("/microposts/{id}")
-    Observable<Void> deleteMicropost(@Path("id") Integer micropostId);
+    Observable<Void> deleteMicropost(@Path("id") long micropostId);
 
     @GET("/feed")
-    Observable<List<Micropost>> fetchFeed(@Query("page") Integer page);
+    Observable<List<Micropost>> fetchFeed(@Query("page") int page);
 
     @POST("/password_resets")
     @FormUrlEncoded
