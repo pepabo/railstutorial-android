@@ -13,11 +13,11 @@
 
         <EditText android:id="@+id/signup_email" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:hint="@string/signup_email"
-            android:singleLine="true" />
+            android:inputType="textEmailAddress" android:singleLine="true" />
 
         <EditText android:id="@+id/signup_name" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:hint="@string/signup_name"
-            android:singleLine="true" />
+            android:inputType="textPersonName" android:singleLine="true" />
 
         <EditText android:id="@+id/signup_password" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:hint="@string/signup_password"
