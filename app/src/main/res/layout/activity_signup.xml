@@ -24,7 +24,7 @@
             android:inputType="textPassword" android:singleLine="true" />
 
         <Button android:id="@+id/action_signup" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:text="@string/action_sign_up"
+            android:layout_height="wrap_content" android:text="@string/action_create_account"
             android:layout_marginTop="16dp" android:textStyle="bold"/>
 
     </LinearLayout>

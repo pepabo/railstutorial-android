@@ -83,12 +83,20 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             }
         });
 
+        Button mSignUpButton = (Button) findViewById(R.id.sign_up_button);
+        mSignUpButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+                startActivity(intent);
+            }
+        });
+
         Button mResetPasswordButton = (Button) findViewById(R.id.reset_password_request_button);
-        final Context self = this;
         mResetPasswordButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(self, ResetPasswordRequest.class);
+                Intent intent = new Intent(getApplicationContext(), ResetPasswordRequest.class);
                 startActivity(intent);
             }
         });

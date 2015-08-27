@@ -1,9 +1,9 @@
 <resources>
-    <string name="title_activity_signup">Sign up</string>
+    <string name="title_activity_Signup">Sign up</string>
 
     <!-- Strings related to signup -->
     <string name="signup_email">Email</string>
     <string name="signup_name">Name</string>
     <string name="signup_password">Password</string>
-    <string name="action_sign_up">Sign up</string>
+    <string name="action_create_account">Create Account</string>
 </resources>
