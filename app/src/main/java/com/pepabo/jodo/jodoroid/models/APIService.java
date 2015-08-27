@@ -21,7 +21,7 @@ public interface APIService {
     @FormUrlEncoded
     Observable<Session> login(@Field("session[email]")    String email,
                               @Field("session[password]") String password);
-    
+
     @GET("/users")
     Observable<List<User>> fetchAllUsers(@Query("page") Integer page);
 
@@ -38,7 +38,10 @@ public interface APIService {
     Observable<User> fetchMe();
 
     @PATCH("/users/me")
-    Observable<User> updateMe();
+    @FormUrlEncoded
+    Observable<User> updateMe(@Field("user[name]")     String name,
+                              @Field("user[email]")    String email,
+                              @Field("user[password]") String password);
 
     @POST("/users/{id}/follow")
     Observable<Void> followUser(@Path("id")    Integer userId,
