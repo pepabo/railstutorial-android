@@ -7,19 +7,23 @@
     tools:context="com.pepabo.jodo.jodoroid.SignupActivity">
 
 
-    <LinearLayout android:id="@+id/singup_form"
+    <ProgressBar android:id="@+id/signup_progress" style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content" android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp" android:visibility="gone" />
+
+    <LinearLayout android:id="@+id/signup_form"
         android:layout_width="match_parent" android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <EditText android:id="@+id/singup_email" android:layout_width="match_parent"
+        <EditText android:id="@+id/signup_email" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:hint="@string/signup_email"
             android:singleLine="true" />
 
-        <EditText android:id="@+id/singup_name" android:layout_width="match_parent"
+        <EditText android:id="@+id/signup_name" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:hint="@string/signup_name"
             android:singleLine="true" />
 
-        <EditText android:id="@+id/singup_password" android:layout_width="match_parent"
+        <EditText android:id="@+id/signup_password" android:layout_width="match_parent"
             android:layout_height="wrap_content" android:hint="@string/signup_password"
             android:inputType="textPassword" android:singleLine="true" />
 
