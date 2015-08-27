@@ -21,10 +21,7 @@ public interface APIService {
     @FormUrlEncoded
     Observable<Session> login(@Field("session[email]")    String email,
                               @Field("session[password]") String password);
-
-    @DELETE("/logout")
-    Observable<Void> logout();
-
+    
     @GET("/users")
     Observable<List<User>> fetchAllUsers(@Query("page") Integer page);
 
