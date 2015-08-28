@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="InvalidPackage">
+        <!-- https://github.com/square/okio/issues/58 -->
+        <ignore regexp="okio-.*\.jar" />
+    </issue>
+</lint>
