@@ -38,21 +38,16 @@ public class UserListFragment extends ListFragment {
         mUsers.clear();
         mUsers.addAll(users);
 
-        mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
         if(mAdapter == null) {
             final Picasso picasso =
                     ((JodoroidApplication) getActivity().getApplication()).getPicasso();
             mAdapter = new UsersAdapter(getActivity(), picasso, mUsers);
             setListAdapter(mAdapter);
         }
-    }
 
+        mAdapter.notifyDataSetChanged();
+    }
+    
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
