@@ -7,6 +7,7 @@
     tools:context="com.pepabo.jodo.jodoroid.PostMicropost">
 
     <EditText
+        android:inputType="textImeMultiLine"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:id="@+id/editText"
