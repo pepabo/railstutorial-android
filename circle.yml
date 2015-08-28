@@ -11,7 +11,10 @@ dependencies:
     - echo y | android update sdk --no-ui --filter "android-22,build-tools-21.1.2"
 test:
   override:
-    - ./gradlew build
+    - ./gradlew build -PdisablePreDex
+  post:
+    - mkdir -p $CIRCLE_TEST_REPORTS/lint
+    - cp -r app/build/outputs/lint-results* $CIRCLE_TEST_REPORTS/lint
 deployment:
   devlopment:
     branch: master
