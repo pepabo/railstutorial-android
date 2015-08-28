@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.pepabo.jodo.jodoroid.models.User;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +24,8 @@ public class UserListFragment extends ListFragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private List<User> mUsers;
+    private List<User> mUsers = new ArrayList<User>();
+    private ArrayAdapter<User> mAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -32,14 +35,22 @@ public class UserListFragment extends ListFragment {
     }
 
     protected void setUsers(List<User> users) {
-        mUsers = users;
+        mUsers.clear();
+        mUsers.addAll(users);
+
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        final Picasso picasso = ((JodoroidApplication) getActivity().getApplication()).getPicasso();
-        setListAdapter(new UsersAdapter(getActivity(), picasso, mUsers));
+
+        if(mAdapter == null) {
+            final Picasso picasso =
+                    ((JodoroidApplication) getActivity().getApplication()).getPicasso();
+            mAdapter = new UsersAdapter(getActivity(), picasso, mUsers);
+            setListAdapter(mAdapter);
+        }
     }
 
     @Override
