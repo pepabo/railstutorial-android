@@ -1,6 +1,7 @@
 package com.pepabo.jodo.jodoroid;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -193,5 +194,15 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        final FragmentManager fragmentManager = getFragmentManager();
+        if(fragmentManager.getBackStackEntryCount() > 1) {
+            fragmentManager.popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }
