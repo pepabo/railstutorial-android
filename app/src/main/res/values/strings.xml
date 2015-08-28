@@ -30,4 +30,6 @@
     <string name="title_activity_password_change">Change password</string>
     <string name="title_section_password">Change password</string>
     <string name="action_change">Change</string>
+
+    <string name="toast_load_failure">Unable to fetch data</string>
 </resources>

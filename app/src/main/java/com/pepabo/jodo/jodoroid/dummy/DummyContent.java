@@ -51,20 +51,16 @@ public class DummyContent {
         });
     }
 
-    public static List<Micropost> getHomeTimeline() {
-        return HOME_TIMELINE;
-    }
-
     public static List<Micropost> getUserTimeline(User user) {
         if (user == TAKASHI) return TAKASHI_POSTS;
         if (user == KAORI) return KAORI_POSTS;
-        throw new RuntimeException("Unknown user");
+        return new ArrayList<>();
     }
 
     public static User getUser(long id) {
         if (id == TAKASHI.getId()) return TAKASHI;
         if (id == KAORI.getId()) return KAORI;
-        throw new RuntimeException("Unknown user");
+        return TAKASHI;
     }
 
     public static List<User> getAllUsers() {
@@ -74,12 +70,12 @@ public class DummyContent {
     public static List<User> getFollowers(long userId) {
         if (userId == TAKASHI.getId()) return Arrays.asList(KAORI);
         if (userId == KAORI.getId()) return Arrays.asList(TAKASHI);
-        throw new RuntimeException("Unknown user");
+        return Arrays.asList(TAKASHI, KAORI);
     }
 
     public static List<User> getFollowing(long userId) {
         if (userId == TAKASHI.getId()) return Arrays.asList(KAORI);
         if (userId == KAORI.getId()) return Arrays.asList(TAKASHI);
-        throw new RuntimeException("Unknown user");
+        return Arrays.asList(TAKASHI, KAORI);
     }
 }

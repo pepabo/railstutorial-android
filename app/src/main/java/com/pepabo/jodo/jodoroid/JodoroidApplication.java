@@ -5,10 +5,12 @@ import android.accounts.AccountManager;
 import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
 
@@ -39,12 +41,20 @@ public class JodoroidApplication extends Application {
 
     APIService mService;
     Picasso mPicasso;
+    private static OkHttpClient mHttpClient;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mPicasso = createPicasso(this);
-        mService = createAPIService(this);
+
+        try {
+            mHttpClient = getOkHttpClient();
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            throw new RuntimeException(e);
+        }
+
+        mPicasso = createPicasso(this, mHttpClient);
+        mService = createAPIService(this, mHttpClient);
     }
 
     public Picasso getPicasso() {
@@ -55,9 +65,10 @@ public class JodoroidApplication extends Application {
         return mService;
     }
 
-    private static Picasso createPicasso(Context context) {
+    private static Picasso createPicasso(Context context, OkHttpClient httpClient) {
         return new Picasso.Builder(context)
                 .loggingEnabled(true)
+                .downloader(new OkHttpDownloader(httpClient))
                 .indicatorsEnabled(BuildConfig.DEBUG)
                 .build();
     }
@@ -74,30 +85,29 @@ public class JodoroidApplication extends Application {
                 .create();
     }
 
-    private static APIService createAPIService(Context context) {
-        try {
-            final SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, new X509TrustManager[]{new TrustEveryoneX509TrustManager()}, null);
+    private static APIService createAPIService(Context context, OkHttpClient httpClient) {
+        final RestAdapter adapter = new RestAdapter.Builder()
+                .setEndpoint(ENDPOINT)
+                .setConverter(new GsonConverter(createGson()))
+                .setClient(new OkClient(httpClient))
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLog(new AndroidLog("API"))
+                .setRequestInterceptor(new AuthenticationInterceptor(context))
+                .build();
 
-            final OkHttpClient client = new OkHttpClient();
-            client.setCookieHandler(createCookieHandler());
-            client.setSslSocketFactory(sslContext.getSocketFactory()); // XXX
-            client.setHostnameVerifier(new NonVerifyingHostnameVerifier()); // XXX
+        return adapter.create(APIService.class);
+    }
 
-            final RestAdapter adapter = new RestAdapter.Builder()
-                    .setEndpoint(ENDPOINT)
-                    .setConverter(new GsonConverter(createGson()))
-                    .setClient(new OkClient(client))
-                    .setLogLevel(RestAdapter.LogLevel.FULL)
-                    .setLog(new AndroidLog("API"))
-                    .setRequestInterceptor(new AuthenticationInterceptor(context))
-                    .build();
+    @NonNull
+    private static OkHttpClient getOkHttpClient() throws NoSuchAlgorithmException, KeyManagementException {
+        final SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, new X509TrustManager[]{new TrustEveryoneX509TrustManager()}, null);
 
-            return adapter.create(APIService.class);
-
-        } catch (NoSuchAlgorithmException | KeyManagementException e) {
-            throw new RuntimeException(e);
-        }
+        final OkHttpClient client = new OkHttpClient();
+        client.setCookieHandler(createCookieHandler());
+        client.setSslSocketFactory(sslContext.getSocketFactory()); // XXX
+        client.setHostnameVerifier(new NonVerifyingHostnameVerifier()); // XXX
+        return client;
     }
 
     private static class TrustEveryoneX509TrustManager implements X509TrustManager {
@@ -136,7 +146,7 @@ public class JodoroidApplication extends Application {
         @Override
         public void intercept(RequestFacade request) {
             final String authToken = getAuthToken();
-            if(authToken != null) {
+            if (authToken != null) {
                 request.addHeader(HTTP_AUTHORIZATION, authToken);
             }
         }
@@ -145,7 +155,7 @@ public class JodoroidApplication extends Application {
             final AccountManager accountManager = AccountManager.get(mContext);
             final Account[] accounts = accountManager.getAccountsByType(JodoAuthenticator.ACCOUNT_TYPE);
 
-            if(accounts.length == 0) {
+            if (accounts.length == 0) {
                 return null;
             }
 

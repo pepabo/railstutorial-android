@@ -8,12 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.pepabo.jodo.jodoroid.models.Micropost;
 import com.pepabo.jodo.jodoroid.models.User;
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.List;
 
 class UsersAdapter extends ArrayAdapter<User> {
@@ -33,7 +30,7 @@ class UsersAdapter extends ArrayAdapter<User> {
 
         final User user = getItem(position);
 
-        mPicasso.load(user.getAvatar()).fit().into((ImageView) view.findViewById(R.id.imageView_user_avatar));
+        mPicasso.load(user.getAvatarUrl()).fit().into((ImageView) view.findViewById(R.id.imageView_user_avatar));
         ((TextView) view.findViewById(R.id.textView_user_name)).setText(user.getName());
 
         return view;
