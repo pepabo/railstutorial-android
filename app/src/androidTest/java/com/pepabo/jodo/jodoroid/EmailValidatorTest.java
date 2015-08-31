@@ -1,6 +1,5 @@
 package com.pepabo.jodo.jodoroid;
 
-import android.content.Context;
 import android.test.AndroidTestCase;
 
 public class EmailValidatorTest extends AndroidTestCase {
