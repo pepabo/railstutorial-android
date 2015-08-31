@@ -14,6 +14,9 @@ import com.pepabo.jodo.jodoroid.dummy.DummyContent;
 import com.pepabo.jodo.jodoroid.models.User;
 import com.squareup.picasso.Picasso;
 
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,26 +49,50 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mUser = DummyContent.getUser(getArguments().getLong(ARG_USER_ID));
-            setMicroposts(DummyContent.getUserTimeline(mUser));
+            loadUserPage();
         }
+    }
+
+    private void loadUserPage() {
+        ((JodoroidApplication) getActivity().getApplication()).getAPIService()
+                .fetchUser(getArguments().getLong(ARG_USER_ID), 1)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<User>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(User user) {
+                        mUser = user;
+                        setProfile(user);
+                        setMicroposts(user.getMicroposts());
+                    }
+                });
+    }
+
+    private void setProfile(User user){
+        final Picasso picasso = ((JodoroidApplication) getActivity().getApplication()).getPicasso();
+        ((TextView) mProfileView.findViewById(R.id.textView_user_name)).setText(user.getName());
+        ((TextView) mProfileView.findViewById(R.id.textView_followers))
+                .setText(Long.toString(user.getFollowersCount()));
+        ((TextView) mProfileView.findViewById(R.id.textView_following))
+                .setText(Long.toString(user.getFollowingCount()));
+        picasso.load(user.getAvatarUrl()).fit().into((ImageView) mProfileView.findViewById(R.id.imageView_user_avatar));
+
+        ((View) mProfileView.findViewById(R.id.layout_followers)).setOnClickListener(this);
+        ((View) mProfileView.findViewById(R.id.layout_following)).setOnClickListener(this);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        final Picasso picasso = ((JodoroidApplication) getActivity().getApplication()).getPicasso();
-
-        ((TextView) mProfileView.findViewById(R.id.textView_user_name)).setText(mUser.getName());
-        ((TextView) mProfileView.findViewById(R.id.textView_followers))
-                .setText(Long.toString(mUser.getFollowersCount()));
-        ((TextView) mProfileView.findViewById(R.id.textView_following))
-                .setText(Long.toString(mUser.getFollowingCount()));
-        picasso.load(mUser.getAvatarUrl()).fit().into((ImageView) mProfileView.findViewById(R.id.imageView_user_avatar));
-
-        ((View) mProfileView.findViewById(R.id.layout_followers)).setOnClickListener(this);
-        ((View) mProfileView.findViewById(R.id.layout_following)).setOnClickListener(this);
     }
 
     @Override

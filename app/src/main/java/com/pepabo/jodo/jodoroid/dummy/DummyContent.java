@@ -23,8 +23,8 @@ import java.util.Map;
  */
 public class DummyContent {
 
-    private static User TAKASHI = new User(0, "Takashi", Uri.parse("https://www.gravatar.com/avatar/b740b4b6ebd411a24c3ea0dfac44f04b"), 1, 1, 10);
-    private static User KAORI = new User(1, "Kaori", Uri.parse("https://www.gravatar.com/avatar/bebfcf57d6d8277d806a9ef3385c078d"), 1, 1, 10);
+    private static User TAKASHI = new User(0, "Takashi", Uri.parse("https://www.gravatar.com/avatar/b740b4b6ebd411a24c3ea0dfac44f04b"), 1, 1, 10, null);
+    private static User KAORI = new User(1, "Kaori", Uri.parse("https://www.gravatar.com/avatar/bebfcf57d6d8277d806a9ef3385c078d"), 1, 1, 10, null);
     private static List<Micropost> TAKASHI_POSTS = new ArrayList<>();
     private static List<Micropost> KAORI_POSTS = new ArrayList<>();
     private static List<Micropost> HOME_TIMELINE = new ArrayList<>();
