@@ -2,22 +2,31 @@ package com.pepabo.jodo.jodoroid;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.res.Configuration;
+import android.media.Image;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.content.Intent;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.pepabo.jodo.jodoroid.models.Micropost;
 import com.pepabo.jodo.jodoroid.models.User;
 
 import de.psdev.licensesdialog.LicensesDialog;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 
 public class MainActivity extends AppCompatActivity
         implements
@@ -26,6 +35,7 @@ public class MainActivity extends AppCompatActivity
         UserListFragment.OnFragmentInteractionListener {
 
     public static final String ACTION_VIEW_HOME = "com.pepabo.jodo.jodoroid.VIEW_HOME";
+    public static final String ACTION_VIEW_SELF_PROFILE = "com.pepabo.jodo.jodoroid.VIEW_SELF_PROFILE";
     public static final String ACTION_VIEW_ALL_USERS = "com.pepabo.jodo.jodoroid.VIEW_ALL_USERS";
     public static final String ACTION_VIEW_FOLLOWERS = "com.pepabo.jodo.jodoroid.VIEW_FOLLOWERS";
     public static final String ACTION_VIEW_FOLLOWING = "com.pepabo.jodo.jodoroid.VIEW_FOLLOWING";
@@ -35,6 +45,12 @@ public class MainActivity extends AppCompatActivity
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
     private NavigationView mDrawer;
+
+    private Subscription mAccountSubscription;
+    private User mSelf;
+    private TextView mDrawerEmail;
+    private TextView mDrawerName;
+    private ImageView mDrawerAvatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +67,7 @@ public class MainActivity extends AppCompatActivity
         actionBar.setDisplayShowHomeEnabled(true);
 
         mDrawer = (NavigationView) findViewById(R.id.navigation_drawer);
+        mDrawer.inflateHeaderView(R.layout.view_drawer_accounts);
         mDrawer.setNavigationItemSelectedListener(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -61,8 +78,55 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        mDrawerEmail = (TextView) mDrawer.findViewById(R.id.email);
+        mDrawerName = (TextView) mDrawer.findViewById(R.id.name);
+        mDrawerAvatar = (ImageView) mDrawer.findViewById(R.id.avatar);
+
+        mDrawerEmail.setText(JodoroidApplication.getAccount(this).name);
+        mDrawerAvatar.setClickable(true);
+        mDrawerAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.setAction(ACTION_VIEW_SELF_PROFILE);
+                mDrawerLayout.closeDrawer(mDrawer);
+                startActivity(intent);
+            }
+        });
+
+        final JodoroidApplication app = (JodoroidApplication) getApplication();
+        mAccountSubscription = app.getAPIService()
+                .fetchMe(1)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<User>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(User user) {
+                        mSelf = user;
+                        mDrawerName.setText(mSelf.getName());
+                        app.getPicasso().load(mSelf.getAvatarUrl()).fit().into(mDrawerAvatar);
+                    }
+                });
 
         processIntent(getIntent());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if (mAccountSubscription != null) {
+            mAccountSubscription.unsubscribe();
+        }
     }
 
     @Override
@@ -107,6 +171,9 @@ public class MainActivity extends AppCompatActivity
             case ACTION_VIEW_HOME:
                 showHome();
                 return true;
+            case ACTION_VIEW_SELF_PROFILE:
+                showSelf();
+                return true;
             case ACTION_VIEW_ALL_USERS:
                 showAllUsers();
                 return true;
@@ -146,6 +213,12 @@ public class MainActivity extends AppCompatActivity
                 .setNotices(R.raw.notices)
                 .build()
                 .show();
+    }
+
+    private void showSelf() {
+        if (mSelf != null) {
+            showFragment(UserProfileFragment.newInstance(mSelf.getId()));
+        }
     }
 
     private void showFragment(Fragment fragment) {
@@ -199,7 +272,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         final FragmentManager fragmentManager = getFragmentManager();
-        if(fragmentManager.getBackStackEntryCount() > 1) {
+        if (fragmentManager.getBackStackEntryCount() > 1) {
             fragmentManager.popBackStack();
         } else {
             super.onBackPressed();
