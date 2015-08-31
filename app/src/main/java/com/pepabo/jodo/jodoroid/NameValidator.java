@@ -11,7 +11,7 @@ public class NameValidator extends FormItemValidator {
     }
 
     public void validate(Context context) {
-        mError = "";
+        resetError();
 
         if (TextUtils.isEmpty(eName)) {
             mError = context.getString(R.string.error_field_required);

@@ -16,7 +16,7 @@ public class EmailValidator extends FormItemValidator {
     }
 
     public void validate(Context context) {
-        mError = "";
+        resetError();
 
         if (TextUtils.isEmpty(mEmail)) {
             mError = context.getString(R.string.error_field_required);
