@@ -31,4 +31,6 @@
     <string name="toast_account_activated">Welcome to Jodo. Your account is activated.</string>
     <string name="action_attach">Attach</string>
     <string name="action_send">Send</string>
+    <string name="description_attached_image">Attached Image</string>
+    <string name="description_user_avatar">User avatar</string>
 </resources>
