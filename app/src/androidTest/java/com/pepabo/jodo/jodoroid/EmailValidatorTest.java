@@ -3,6 +3,13 @@ package com.pepabo.jodo.jodoroid;
 import android.test.AndroidTestCase;
 
 public class EmailValidatorTest extends AndroidTestCase {
+    FormItemValidator mValidator;
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        mValidator = new EmailValidator(getContext());
+    }
 
     public void testValidationNormal() throws Exception {
         String[] validAddresses = {
@@ -14,10 +21,8 @@ public class EmailValidatorTest extends AndroidTestCase {
         };
 
         for (int i=0; i < validAddresses.length; i++) {
-            EmailValidator ev = new EmailValidator(validAddresses[i]);
-            ev.validate(getContext());
-
-            assertFalse(ev.hasError());
+            mValidator.validate(validAddresses[i]);
+            assertFalse(mValidator.hasError());
         }
     }
 
@@ -31,11 +36,10 @@ public class EmailValidatorTest extends AndroidTestCase {
                 "foo@bar..com"
         };
 
+        EmailValidator ev = new EmailValidator(getContext());
         for (int i=0; i < invalidAddresses.length; i++) {
-            EmailValidator ev = new EmailValidator(invalidAddresses[i]);
-            ev.validate(getContext());
-
-            assertTrue(ev.hasError());
+            mValidator.validate(invalidAddresses[i]);
+            assertTrue(mValidator.hasError());
         }
     }
 }

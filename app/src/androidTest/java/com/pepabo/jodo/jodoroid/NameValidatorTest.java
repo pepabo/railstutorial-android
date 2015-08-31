@@ -3,19 +3,21 @@ package com.pepabo.jodo.jodoroid;
 import android.test.AndroidTestCase;
 
 public class NameValidatorTest extends AndroidTestCase {
+    FormItemValidator mValidator;
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        mValidator = new NameValidator(getContext());
+    }
 
     public void testValidationNormal() throws Exception {
-
-        NameValidator ev = new NameValidator("JohnDoe");
-        ev.validate(getContext());
-
-        assertFalse(ev.hasError());
+        mValidator.validate("JohnDoe");
+        assertFalse(mValidator.hasError());
     }
 
     public void testValidationAbnormal() throws Exception {
-        NameValidator ev = new NameValidator("");
-        ev.validate(getContext());
-
-        assertTrue(ev.hasError());
+        mValidator.validate("");
+        assertTrue(mValidator.hasError());
     }
 }
