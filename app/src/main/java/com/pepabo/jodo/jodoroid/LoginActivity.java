@@ -31,6 +31,7 @@ import android.widget.TextView;
 
 import com.pepabo.jodo.jodoroid.models.Session;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -131,10 +132,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         boolean cancel = false;
         View focusView = null;
 
-        EmailValidator emailValidator = new EmailValidator(email);
+        FormItemValidator emailValidator = new EmailValidator(email);
         emailValidator.validate(getApplicationContext());
 
-        PasswordValidator passwordValidator = new PasswordValidator(password);
+        FormItemValidator passwordValidator = new PasswordValidator(password);
         passwordValidator.validate(getApplicationContext());
 
         // Check for a valid password, if the user entered one.

@@ -6,11 +6,10 @@ import android.text.TextUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class EmailValidator {
+public class EmailValidator extends FormItemValidator {
     static Pattern REGEXP = Pattern.compile("\\A[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\\z/");
 
     private String mEmail;
-    private String mError = "";
 
     public EmailValidator(String email) {
         mEmail = email;
@@ -27,13 +26,5 @@ public class EmailValidator {
                 mError = context.getString(R.string.error_invalid_email);
             }
         }
-    }
-
-    public boolean hasError() {
-        return !TextUtils.isEmpty(mError);
-    }
-
-    public String getErrorMessage() {
-        return mError;
     }
 }

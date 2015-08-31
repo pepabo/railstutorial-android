@@ -3,7 +3,6 @@ package com.pepabo.jodo.jodoroid;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -50,13 +49,13 @@ public class SignupActivity extends AppCompatActivity {
         boolean cancel = false;
         View focusView = null;
 
-        PasswordValidator passwordValidator = new PasswordValidator(password);
+        FormItemValidator passwordValidator = new PasswordValidator(password);
         passwordValidator.validate(getApplicationContext());
 
-        NameValidator nameValidator = new NameValidator(name);
+        FormItemValidator nameValidator = new NameValidator(name);
         nameValidator.validate(getApplicationContext());
 
-        EmailValidator emailValidator = new EmailValidator(email);
+        FormItemValidator emailValidator = new EmailValidator(email);
         emailValidator.validate(getApplicationContext());
 
         if (passwordValidator.hasError()) {
