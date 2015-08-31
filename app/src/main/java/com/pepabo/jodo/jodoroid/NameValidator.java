@@ -4,17 +4,16 @@ import android.content.Context;
 import android.text.TextUtils;
 
 public class NameValidator extends FormItemValidator {
-    private String eName;
 
-    public NameValidator(String name) {
-        eName = name;
+    public NameValidator(Context context) {
+        super(context);
     }
 
-    public void validate(Context context) {
+    public void validate(String name) {
         resetError();
 
-        if (TextUtils.isEmpty(eName)) {
-            mError = context.getString(R.string.error_field_required);
+        if (TextUtils.isEmpty(name)) {
+            mError = mContext.getString(R.string.error_field_required);
         }
     }
 }

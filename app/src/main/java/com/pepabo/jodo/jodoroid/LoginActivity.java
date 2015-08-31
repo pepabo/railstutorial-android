@@ -132,20 +132,18 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         boolean cancel = false;
         View focusView = null;
 
-        FormItemValidator emailValidator = new EmailValidator(email);
-        emailValidator.validate(getApplicationContext());
+        FormItemValidator passwordValidator = new PasswordValidator(getApplicationContext());
+        passwordValidator.validate(password);
 
-        FormItemValidator passwordValidator = new PasswordValidator(password);
-        passwordValidator.validate(getApplicationContext());
-
-        // Check for a valid password, if the user entered one.
         if (passwordValidator.hasError()) {
             mPasswordView.setError(passwordValidator.getErrorMessage());
             focusView = mPasswordView;
             cancel = true;
         }
 
-        // Check for a valid email address.
+        FormItemValidator emailValidator = new EmailValidator(getApplicationContext());
+        emailValidator.validate(email);
+
         if (emailValidator.hasError()) {
             mEmailView.setError(emailValidator.getErrorMessage());
             focusView = mEmailView;

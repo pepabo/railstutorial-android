@@ -9,21 +9,19 @@ import java.util.regex.Pattern;
 public class EmailValidator extends FormItemValidator {
     static Pattern REGEXP = Pattern.compile("\\A[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\\z");
 
-    private String mEmail;
-
-    public EmailValidator(String email) {
-        mEmail = email;
+    public EmailValidator(Context context) {
+        super(context);
     }
 
-    public void validate(Context context) {
+    public void validate(String email) {
         resetError();
 
-        if (TextUtils.isEmpty(mEmail)) {
-            mError = context.getString(R.string.error_field_required);
+        if (TextUtils.isEmpty(email)) {
+            mError = mContext.getString(R.string.error_field_required);
         } else {
-            Matcher matcher = REGEXP.matcher(mEmail);
+            Matcher matcher = REGEXP.matcher(email);
             if (!matcher.matches()) {
-                mError = context.getString(R.string.error_invalid_email);
+                mError = mContext.getString(R.string.error_invalid_email);
             }
         }
     }

@@ -3,9 +3,14 @@ package com.pepabo.jodo.jodoroid;
 import android.content.Context;
 
 public abstract class FormItemValidator {
-    protected String mError = "";
+    protected String  mError = "";
+    protected Context mContext;
 
-    public abstract void validate(Context context);
+    public FormItemValidator(Context context) {
+        mContext = context;
+    }
+
+    public abstract void validate(String formItem);
 
     public boolean hasError() {
         return !(mError.equals(""));

@@ -49,14 +49,8 @@ public class SignupActivity extends AppCompatActivity {
         boolean cancel = false;
         View focusView = null;
 
-        FormItemValidator passwordValidator = new PasswordValidator(password);
-        passwordValidator.validate(getApplicationContext());
-
-        FormItemValidator nameValidator = new NameValidator(name);
-        nameValidator.validate(getApplicationContext());
-
-        FormItemValidator emailValidator = new EmailValidator(email);
-        emailValidator.validate(getApplicationContext());
+        final FormItemValidator passwordValidator = new PasswordValidator(getApplicationContext());
+        passwordValidator.validate(password);
 
         if (passwordValidator.hasError()) {
             mSignupPasswordView.setError(passwordValidator.getErrorMessage());
@@ -64,11 +58,17 @@ public class SignupActivity extends AppCompatActivity {
             cancel = true;
         }
 
+        final FormItemValidator nameValidator = new NameValidator(getApplicationContext());
+        nameValidator.validate(name);
+
         if (nameValidator.hasError()) {
             mSignupNameView.setError(nameValidator.getErrorMessage());
             focusView = mSignupNameView;
             cancel = true;
         }
+
+        final FormItemValidator emailValidator = new EmailValidator(getApplicationContext());
+        emailValidator.validate(email);
 
         if (emailValidator.hasError()) {
             mSignupEmailView.setError(emailValidator.getErrorMessage());
