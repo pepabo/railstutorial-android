@@ -50,26 +50,29 @@ public class SignupActivity extends AppCompatActivity {
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!isPasswordValid(password)) {
-            mSignupPasswordView.setError(getString(R.string.error_invalid_password));
+        PasswordValidator passwordValidator = new PasswordValidator(password);
+        passwordValidator.validate(getApplicationContext());
+
+        NameValidator nameValidator = new NameValidator(name);
+        nameValidator.validate(getApplicationContext());
+
+        EmailValidator emailValidator = new EmailValidator(email);
+        emailValidator.validate(getApplicationContext());
+
+        if (passwordValidator.hasError()) {
+            mSignupPasswordView.setError(passwordValidator.getErrorMessage());
             focusView = mSignupPasswordView;
             cancel = true;
         }
 
-        if (TextUtils.isEmpty(name)) {
-            mSignupNameView.setError(getString(R.string.error_field_required));
+        if (nameValidator.hasError()) {
+            mSignupNameView.setError(nameValidator.getErrorMessage());
             focusView = mSignupNameView;
             cancel = true;
         }
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mSignupEmailView.setError(getString(R.string.error_field_required));
-            focusView = mSignupEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mSignupEmailView.setError(getString(R.string.error_invalid_email));
+        if (emailValidator.hasError()) {
+            mSignupEmailView.setError(emailValidator.getErrorMessage());
             focusView = mSignupEmailView;
             cancel = true;
         }
