@@ -22,7 +22,7 @@ public class PostMicropost extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_action_cancel);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
     }
 
     @Override
