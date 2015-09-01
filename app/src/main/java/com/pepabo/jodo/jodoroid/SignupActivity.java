@@ -170,7 +170,8 @@ public class SignupActivity extends AppCompatActivity {
             final SignupActivity activity = mActivity.get();
             if (activity != null) {
                 activity.showProgress(false);
-                Toast.makeText(activity, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(activity, ErrorUtils.getMessage(e), Toast.LENGTH_LONG).show();
             }
         }
 
