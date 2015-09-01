@@ -1,9 +1,10 @@
 package com.pepabo.jodo.jodoroid;
 
-import com.pepabo.jodo.jodoroid.models.APIService;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
@@ -11,13 +12,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.pepabo.jodo.jodoroid.models.Micropost;
 
 import java.io.File;
 import java.io.InputStream;
-import java.net.URI;
+
 
 import retrofit.mime.TypedFile;
 import rx.Observer;
@@ -25,7 +25,7 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class PostMicropost extends AppCompatActivity {
     public final static int REQUEST_GALLERY = 0;
-    private EditText txt;
+    private EditText article;
     private TypedFile imgtype;
 
     @Override
@@ -33,7 +33,7 @@ public class PostMicropost extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_micropost);
 
-        txt = (EditText) findViewById(R.id.editText);
+        article = (EditText) findViewById(R.id.editText);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -75,10 +75,10 @@ public class PostMicropost extends AppCompatActivity {
 
         if(requestCode == REQUEST_GALLERY && resultCode == RESULT_OK && null != intent) {
 
-            TextView imguri = (TextView) findViewById(R.id.imguri);
-            imguri.setText(intent.getData().getPath());
-            File file = new File(intent.getDataString());
-            String type = intent.getType();
+            String[] columns = {MediaStore.Images.Media.DATA};
+            Cursor c = getContentResolver().query(intent.getData(), columns, null, null, null);
+            c.moveToFirst();
+            File file = new File(c.getString(0));
             imgtype = new TypedFile("image/*", file);
 
             ImageView imgview = (ImageView) findViewById(R.id.imgview);
@@ -93,9 +93,8 @@ public class PostMicropost extends AppCompatActivity {
     }
 
     private void postMicropost() {
-
         ((JodoroidApplication) getApplication()).getAPIService()
-                .createMicropost(txt.getText().toString(), imgtype)
+                .createMicropost(article.getText().toString(), imgtype)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Micropost>() {
                     @Override
