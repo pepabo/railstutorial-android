@@ -75,10 +75,7 @@ public class PostMicropost extends AppCompatActivity {
 
         if(requestCode == REQUEST_GALLERY && resultCode == RESULT_OK && null != intent) {
 
-            String[] columns = {MediaStore.Images.Media.DATA};
-            Cursor c = getContentResolver().query(intent.getData(), columns, null, null, null);
-            c.moveToFirst();
-            File file = new File(c.getString(0));
+            File file = new File(toPath(intent));
             imgtype = new TypedFile("image/*", file);
 
             ImageView imgview = (ImageView) findViewById(R.id.imgview);
@@ -90,6 +87,13 @@ public class PostMicropost extends AppCompatActivity {
             } catch (Exception e) {
             }
         }
+    }
+
+    private String toPath(Intent intent) {
+        String[] columns = {MediaStore.Images.Media.DATA};
+        Cursor c = getContentResolver().query(intent.getData(), columns, null, null, null);
+        c.moveToFirst();
+        return c.getString(0);
     }
 
     private void postMicropost() {
