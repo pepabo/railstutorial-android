@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +34,6 @@ public class PostMicropost extends AppCompatActivity {
     public final static int REQUEST_GALLERY = 0;
     private EditText article;
     private TypedFile imgtype;
-    private ImageView imgview;
     private View mPostformView;
     private View mProgressView;
 
@@ -87,10 +87,10 @@ public class PostMicropost extends AppCompatActivity {
 
         if(requestCode == REQUEST_GALLERY && resultCode == RESULT_OK && null != intent) {
 
-            File file = new File(toPath(intent));
+            File file = new File(imagePath(intent));
             imgtype = new TypedFile("image/*", file);
 
-            imgview = (ImageView) findViewById(R.id.imgview);
+            ImageView imgview = (ImageView) findViewById(R.id.imgview);
             try {
                 InputStream stream = getContentResolver().openInputStream(intent.getData());
                 Bitmap bmp = BitmapFactory.decodeStream(stream);
@@ -101,7 +101,7 @@ public class PostMicropost extends AppCompatActivity {
         }
     }
 
-    private String toPath(Intent intent) {
+    private String imagePath(Intent intent) {
         String[] columns = {MediaStore.Images.Media.DATA};
         Cursor c = getContentResolver().query(intent.getData(), columns, null, null, null);
         c.moveToFirst();
