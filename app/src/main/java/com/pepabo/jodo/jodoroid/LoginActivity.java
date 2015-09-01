@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import com.pepabo.jodo.jodoroid.models.Session;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,20 +119,20 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
+        FormItemValidator passwordValidator = new PasswordValidator(getApplicationContext());
+        passwordValidator.validate(password);
+
+        if (passwordValidator.hasError()) {
+            mPasswordView.setError(passwordValidator.getErrorMessage());
             focusView = mPasswordView;
             cancel = true;
         }
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mEmailView.setError(getString(R.string.error_field_required));
-            focusView = mEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
+        FormItemValidator emailValidator = new EmailValidator(getApplicationContext());
+        emailValidator.validate(email);
+
+        if (emailValidator.hasError()) {
+            mEmailView.setError(emailValidator.getErrorMessage());
             focusView = mEmailView;
             cancel = true;
         }
@@ -176,17 +177,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                     });
         }
     }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
-    }
-
+    
     /**
      * Shows the progress UI and hides the login form.
      */

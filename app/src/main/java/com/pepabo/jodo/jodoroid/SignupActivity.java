@@ -3,7 +3,6 @@ package com.pepabo.jodo.jodoroid;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -50,26 +49,29 @@ public class SignupActivity extends AppCompatActivity {
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!isPasswordValid(password)) {
-            mSignupPasswordView.setError(getString(R.string.error_invalid_password));
+        final FormItemValidator passwordValidator = new PasswordValidator(getApplicationContext());
+        passwordValidator.validate(password);
+
+        if (passwordValidator.hasError()) {
+            mSignupPasswordView.setError(passwordValidator.getErrorMessage());
             focusView = mSignupPasswordView;
             cancel = true;
         }
 
-        if (TextUtils.isEmpty(name)) {
-            mSignupNameView.setError(getString(R.string.error_field_required));
+        final FormItemValidator nameValidator = new NameValidator(getApplicationContext());
+        nameValidator.validate(name);
+
+        if (nameValidator.hasError()) {
+            mSignupNameView.setError(nameValidator.getErrorMessage());
             focusView = mSignupNameView;
             cancel = true;
         }
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            mSignupEmailView.setError(getString(R.string.error_field_required));
-            focusView = mSignupEmailView;
-            cancel = true;
-        } else if (!isEmailValid(email)) {
-            mSignupEmailView.setError(getString(R.string.error_invalid_email));
+        final FormItemValidator emailValidator = new EmailValidator(getApplicationContext());
+        emailValidator.validate(email);
+
+        if (emailValidator.hasError()) {
+            mSignupEmailView.setError(emailValidator.getErrorMessage());
             focusView = mSignupEmailView;
             cancel = true;
         }
@@ -81,16 +83,6 @@ public class SignupActivity extends AppCompatActivity {
         } else {
 
         }
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
-    }
-
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
     }
 
     @Override
