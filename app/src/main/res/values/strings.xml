@@ -33,4 +33,5 @@
 
     <string name="toast_load_failure">Unable to fetch data</string>
     <string name="toast_check_email">Check your mailbox for email verification!</string>
+    <string name="toast_account_activated">Welcome to Jodo. Your account is activated.</string>
 </resources>
