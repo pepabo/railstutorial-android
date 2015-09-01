@@ -32,4 +32,5 @@
     <string name="action_change">Change</string>
 
     <string name="toast_load_failure">Unable to fetch data</string>
+    <string name="toast_check_email">Check your mailbox for email verification!</string>
 </resources>

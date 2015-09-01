@@ -2,17 +2,25 @@ package com.pepabo.jodo.jodoroid;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.pepabo.jodo.jodoroid.models.APIService;
+
+import java.lang.ref.WeakReference;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.Subscriptions;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -24,13 +32,16 @@ public class SignupActivity extends AppCompatActivity {
     EditText mPasswordView;
 
     @Bind(R.id.form)
-            View mFormView;
+    View mFormView;
     @Bind(R.id.progress)
-            View mProgressView;
+    View mProgressView;
 
     EmailValidator mEmailValidator;
     NameValidator mNameValidator;
     PasswordValidator mPasswordValidator;
+
+    APIService mAPIService;
+    Subscription mAPISubscription = Subscriptions.empty();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +55,16 @@ public class SignupActivity extends AppCompatActivity {
         mEmailValidator = new EmailValidator(getApplicationContext());
         mNameValidator = new NameValidator(getApplicationContext());
         mPasswordValidator = new PasswordValidator(getApplicationContext());
+
+        mAPIService = ((JodoroidApplication) getApplication()).getAPIService();
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        mAPISubscription.unsubscribe();
+
         ButterKnife.unbind(this);
+        super.onDestroy();
     }
 
     @OnClick(R.id.action_signup)
@@ -91,7 +106,9 @@ public class SignupActivity extends AppCompatActivity {
         if (cancel) {
             focusView.requestFocus();
         } else {
-
+            mAPISubscription = mAPIService.signup(name, email, password)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new SignupSubscriber(this));
         }
     }
 
@@ -126,5 +143,44 @@ public class SignupActivity extends AppCompatActivity {
                         mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
                     }
                 });
+    }
+
+    static class SignupSubscriber extends Subscriber<Void> {
+        final WeakReference<SignupActivity> mActivity;
+
+        public SignupSubscriber(SignupActivity activity) {
+            mActivity = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void onNext(Void unused) {
+            final SignupActivity activity = mActivity.get();
+            if (activity != null) {
+                Toast.makeText(activity, R.string.toast_check_email, Toast.LENGTH_LONG).show();
+                activity.finish();
+            }
+        }
+
+        @Override
+        public void onCompleted() {
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            final SignupActivity activity = mActivity.get();
+            if (activity != null) {
+                activity.showProgress(false);
+                Toast.makeText(activity, e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+            final SignupActivity activity = mActivity.get();
+            if (activity != null) {
+                activity.showProgress(true);
+            }
+        }
     }
 }
