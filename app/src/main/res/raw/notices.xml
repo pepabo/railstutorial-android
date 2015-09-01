@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <notices>
     <notice>
+        <name>Material Design icons by Google</name>
+        <url>https://github.com/google/material-design-icons</url>
+        <license>Creative Common Attribution 4.0 International License</license>
+    </notice>
+    <notice>
         <name>Android Support Library</name>
         <url>https://source.android.com/</url>
         <copyright>Copyright (c) 2005-2013, The Android Open Source Project</copyright>
@@ -44,6 +49,12 @@
         <name>Gson</name>
         <url>https://github.com/google/gson</url>
         <copyright>Copyright 2008 Google Inc.</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
+        <name>ButterKnife</name>
+        <url>https://jakewharton.github.io/butterknife/</url>
+        <copyright>Copyright 2013 Jake Wharton</copyright>
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>

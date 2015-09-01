@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.okhttp.Cache;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
@@ -17,6 +18,7 @@ import com.squareup.picasso.Picasso;
 import com.pepabo.jodo.jodoroid.models.APIService;
 import com.squareup.okhttp.OkHttpClient;
 
+import java.io.File;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.security.KeyManagementException;
@@ -38,6 +40,7 @@ import retrofit.converter.GsonConverter;
 
 public class JodoroidApplication extends Application {
     public static final String ENDPOINT = "https://157.7.190.186/api/";
+    private static final String CACHE_DIR_NAME = "http-cache";
 
     APIService mService;
     Picasso mPicasso;
@@ -48,7 +51,7 @@ public class JodoroidApplication extends Application {
         super.onCreate();
 
         try {
-            mHttpClient = getOkHttpClient();
+            mHttpClient = getOkHttpClient(this);
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             throw new RuntimeException(e);
         }
@@ -99,14 +102,18 @@ public class JodoroidApplication extends Application {
     }
 
     @NonNull
-    private static OkHttpClient getOkHttpClient() throws NoSuchAlgorithmException, KeyManagementException {
+    private static OkHttpClient getOkHttpClient(Context context) throws NoSuchAlgorithmException, KeyManagementException {
         final SSLContext sslContext = SSLContext.getInstance("TLS");
         sslContext.init(null, new X509TrustManager[]{new TrustEveryoneX509TrustManager()}, null);
+
+        final File cacheDir = new File(context.getApplicationContext().getCacheDir(), CACHE_DIR_NAME);
+        final Cache cache = new Cache(cacheDir, 20 * 1024 * 1024); // 20MB (toriaez)
 
         final OkHttpClient client = new OkHttpClient();
         client.setCookieHandler(createCookieHandler());
         client.setSslSocketFactory(sslContext.getSocketFactory()); // XXX
         client.setHostnameVerifier(new NonVerifyingHostnameVerifier()); // XXX
+        client.setCache(cache);
         return client;
     }
 
@@ -152,16 +159,13 @@ public class JodoroidApplication extends Application {
         }
 
         private String getAuthToken() {
-            final AccountManager accountManager = AccountManager.get(mContext);
-            final Account[] accounts = accountManager.getAccountsByType(JodoAuthenticator.ACCOUNT_TYPE);
-
-            if (accounts.length == 0) {
+            final Account account = JodoAccounts.getAccount(mContext);
+            if(account == null) {
                 return null;
             }
 
-            final Account account = accounts[0];
+            final AccountManager accountManager = AccountManager.get(mContext);
             return accountManager.peekAuthToken(account, JodoAuthenticator.ACCOUNT_TOKEN_TYPE);
         }
     }
-
 }
