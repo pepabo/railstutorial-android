@@ -52,6 +52,12 @@
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
+        <name>ButterKnife</name>
+        <url>https://jakewharton.github.io/butterknife/</url>
+        <copyright>Copyright 2013 Jake Wharton</copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
         <name>LicensesDialog</name>
         <url>https://psdev.de/LicensesDialog/</url>
         <copyright>Copyright 2013 Philip Schiffer</copyright>
