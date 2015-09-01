@@ -32,11 +32,11 @@ import rx.android.schedulers.AndroidSchedulers;
 public class MainActivity extends AppCompatActivity
         implements
         NavigationView.OnNavigationItemSelectedListener,
-        MicropostListFragment.OnFragmentInteractionListener,
         UserListFragment.OnFragmentInteractionListener {
 
     public static final String ACTION_VIEW_HOME = "com.pepabo.jodo.jodoroid.VIEW_HOME";
     public static final String ACTION_VIEW_SELF_PROFILE = "com.pepabo.jodo.jodoroid.VIEW_SELF_PROFILE";
+    public static final String ACTION_VIEW_USER_PROFILE = "com.pepabo.jodo.jodoroid.VIEW_USER_PROFILE";
     public static final String ACTION_VIEW_ALL_USERS = "com.pepabo.jodo.jodoroid.VIEW_ALL_USERS";
     public static final String ACTION_VIEW_FOLLOWERS = "com.pepabo.jodo.jodoroid.VIEW_FOLLOWERS";
     public static final String ACTION_VIEW_FOLLOWING = "com.pepabo.jodo.jodoroid.VIEW_FOLLOWING";
@@ -149,11 +149,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentInteraction(Micropost micropost) {
-        onFragmentInteraction(micropost.getUser());
-    }
-
-    @Override
     public void onFragmentInteraction(User user) {
         showFragment(UserProfileFragment.newInstance(user.getId()));
     }
@@ -174,6 +169,9 @@ public class MainActivity extends AppCompatActivity
                 return true;
             case ACTION_VIEW_SELF_PROFILE:
                 showSelf();
+                return true;
+            case ACTION_VIEW_USER_PROFILE:
+                showUser(getUserIdFromIntent(intent));
                 return true;
             case ACTION_VIEW_ALL_USERS:
                 showAllUsers();
@@ -218,6 +216,10 @@ public class MainActivity extends AppCompatActivity
                 .setNotices(R.raw.notices)
                 .build()
                 .show();
+    }
+
+    private void showUser(long userId) {
+        showFragment(UserProfileFragment.newInstance(userId));
     }
 
     private void showSelf() {
