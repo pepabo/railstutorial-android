@@ -68,7 +68,7 @@ public class UserFollowersFragment extends UserListFragment {
                         .subscribe(observer);
                 break;
             default:
-                assert false;
+                throw new IllegalArgumentException();
         }
     }
 

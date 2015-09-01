@@ -7,13 +7,14 @@
     tools:context="com.pepabo.jodo.jodoroid.PostMicropost">
 
     <EditText
+        android:inputType="textImeMultiLine"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:id="@+id/editText"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="64dp"
-        android:gravity="top|left"
+        android:gravity="top|end"
         android:background="@drawable/post_frame" />
 
     <TextView
@@ -26,6 +27,7 @@
         android:layout_alignParentStart="true" />
 
     <ImageView
+        android:contentDescription="@string/description_attached_image"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:id="@+id/imgview"

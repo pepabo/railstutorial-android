@@ -7,17 +7,12 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_example">Example action</string>
-
-    <string name="action_settings">Settings</string>
     <string name="title_activity_post_micropost">PostMicropost</string>
     <string name="action_follow">Follow</string>
     <string name="label_followers">Followers</string>
     <string name="label_following">Following</string>
     <string name="title_activity_reset_password_request">ResetPasswordRequest</string>
     <string name="title_activity_reset_password">ResetPassword</string>
-
-    <string name="hello_world">Hello world!</string>
 
     <string name="title_section_profile">Edit your profile</string>
     <string name="title_section_oss_license">Open source licenses</string>
@@ -34,4 +29,8 @@
     <string name="toast_load_failure">Unable to fetch data</string>
     <string name="toast_check_email">Check your mailbox for email verification!</string>
     <string name="toast_account_activated">Welcome to Jodo. Your account is activated.</string>
+    <string name="action_attach">Attach</string>
+    <string name="action_send">Send</string>
+    <string name="description_attached_image">Attached Image</string>
+    <string name="description_user_avatar">User avatar</string>
 </resources>

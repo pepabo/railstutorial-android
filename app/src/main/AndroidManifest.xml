@@ -75,7 +75,9 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".JodoAuthenticatorService" >
+        <service
+            android:name=".JodoAuthenticatorService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
