@@ -23,6 +23,7 @@ import android.widget.TextView;
 import com.pepabo.jodo.jodoroid.models.Micropost;
 import com.pepabo.jodo.jodoroid.models.User;
 
+import de.psdev.licensesdialog.LicenseResolver;
 import de.psdev.licensesdialog.LicensesDialog;
 import rx.Observer;
 import rx.Subscription;
@@ -206,6 +207,10 @@ public class MainActivity extends AppCompatActivity
     private void showFollowing(long userId) {
         showFragment(UserFollowersFragment
                 .newInstance(userId, UserFollowersFragment.TYPE_FOLLOWING));
+    }
+
+    static {
+        LicenseResolver.registerLicense(new CreativeCommonsAttribution40());
     }
 
     private void showLicenses() {
