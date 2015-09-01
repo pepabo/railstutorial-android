@@ -53,6 +53,14 @@
         <activity
             android:name=".PasswordChangeActivity"
             android:label="@string/title_activity_password_change"/>
+        <activity android:name=".AccountActivationActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <data android:scheme="https"
+                    android:host="www.joe-noh.pw"
+                    android:pathPrefix="/account_activations/" />
+            </intent-filter>
+        </activity>
 
         <service android:name=".JodoAuthenticatorService" >
             <intent-filter>
