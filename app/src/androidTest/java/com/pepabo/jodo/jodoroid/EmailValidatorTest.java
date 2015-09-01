@@ -36,7 +36,6 @@ public class EmailValidatorTest extends AndroidTestCase {
                 "foo@bar..com"
         };
 
-        EmailValidator ev = new EmailValidator(getContext());
         for (int i=0; i < invalidAddresses.length; i++) {
             mValidator.validate(invalidAddresses[i]);
             assertTrue(mValidator.hasError());
