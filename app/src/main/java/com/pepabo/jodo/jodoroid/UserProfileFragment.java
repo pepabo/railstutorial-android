@@ -48,6 +48,12 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
         if (getArguments() != null) {
             loadUserPage();
         }
@@ -88,11 +94,6 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
 
         ((View) mProfileView.findViewById(R.id.layout_followers)).setOnClickListener(this);
         ((View) mProfileView.findViewById(R.id.layout_following)).setOnClickListener(this);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
