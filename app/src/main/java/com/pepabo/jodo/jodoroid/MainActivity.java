@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity
         mDrawerName = (TextView) mDrawer.findViewById(R.id.name);
         mDrawerAvatar = (ImageView) mDrawer.findViewById(R.id.avatar);
 
-        mDrawerEmail.setText(JodoroidApplication.getAccount(this).name);
+        mDrawerEmail.setText(JodoAccounts.getAccount(this).name);
         mDrawerAvatar.setClickable(true);
         mDrawerAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
