@@ -1,17 +1,23 @@
 package com.pepabo.jodo.jodoroid;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 
 import com.pepabo.jodo.jodoroid.models.Micropost;
 
@@ -27,17 +33,23 @@ public class PostMicropost extends AppCompatActivity {
     public final static int REQUEST_GALLERY = 0;
     private EditText article;
     private TypedFile imgtype;
+    private ImageView imgview;
+    private View mPostformView;
+    private View mProgressView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_micropost);
 
-        article = (EditText) findViewById(R.id.editText);
+        article = (EditText) findViewById(R.id.article);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_action_cancel);
+
+        mPostformView = findViewById(R.id.post_form);
+        mProgressView = findViewById(R.id.post_progress);
     }
 
     @Override
@@ -63,8 +75,8 @@ public class PostMicropost extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_GALLERY);
                 break;
             case R.id.action_Send:
+                showProgress(true);
                 postMicropost();
-                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -78,7 +90,7 @@ public class PostMicropost extends AppCompatActivity {
             File file = new File(toPath(intent));
             imgtype = new TypedFile("image/*", file);
 
-            ImageView imgview = (ImageView) findViewById(R.id.imgview);
+            imgview = (ImageView) findViewById(R.id.imgview);
             try {
                 InputStream stream = getContentResolver().openInputStream(intent.getData());
                 Bitmap bmp = BitmapFactory.decodeStream(stream);
@@ -108,14 +120,48 @@ public class PostMicropost extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        showProgress(false);
                     }
 
                     @Override
                     public void onNext(Micropost micropost) {
-
+                        setResult(RESULT_OK);
+                        finish();
                     }
                 });
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    public void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            mPostformView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mPostformView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mPostformView.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mPostformView.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
     }
 
 }
