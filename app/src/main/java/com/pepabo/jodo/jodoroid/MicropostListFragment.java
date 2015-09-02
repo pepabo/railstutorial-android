@@ -1,7 +1,11 @@
 package com.pepabo.jodo.jodoroid;
 
 import android.content.Intent;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -24,6 +28,35 @@ public class MicropostListFragment extends SwipeRefreshListFragment {
      * fragment (e.g. upon screen orientation changes).
      */
     public MicropostListFragment() {
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        this.getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e("EEE", "Long Clicked");
+
+                Micropost m = (Micropost) parent.getItemAtPosition(position);
+                long ownerId = m.getUser().getId();
+                
+                new AlertDialog.Builder(getActivity())
+                        .setTitle(R.string.title_delete_micropost)
+                        .setMessage(R.string.description_delete_micropost)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.e("EEE", "DELETE !!!");
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
+                Log.e("EEE", m.getContent());
+                return true;
+            }
+        });
     }
 
     protected void setMicroposts(List<Micropost> microposts) {

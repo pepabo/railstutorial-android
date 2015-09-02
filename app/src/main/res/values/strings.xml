@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Jodoroid</string>
 
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
     <string name="title_section_home">Home</string>
     <string name="title_section_all_users">All users</string>
 
@@ -34,4 +37,7 @@
     <string name="action_send">Send</string>
     <string name="description_attached_image">Attached Image</string>
     <string name="description_user_avatar">User avatar</string>
+
+    <string name="title_delete_micropost">Delete This Post</string>
+    <string name="description_delete_micropost">Are You Sure?</string>
 </resources>
