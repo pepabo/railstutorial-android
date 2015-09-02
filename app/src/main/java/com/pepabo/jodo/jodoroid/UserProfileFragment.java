@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -16,8 +17,12 @@ import com.pepabo.jodo.jodoroid.models.Follow;
 import com.pepabo.jodo.jodoroid.models.User;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -32,10 +37,12 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class UserProfileFragment extends MicropostListFragment implements View.OnClickListener {
     private static final String ARG_USER_ID = "user_id";
+
     private User mUser;
     private View mProfileView;
-    //private APIService apiService = ((JodoroidApplication) getActivity().getApplication()).getAPIService();
+    private boolean following;
 
+    @Bind(R.id.button_follow_unfollow) Button follow_unfollowButton;
 
     public static UserProfileFragment newInstance(long userId) {
         UserProfileFragment fragment = new UserProfileFragment();
@@ -60,8 +67,12 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
 
         if (getArguments() != null) {
             loadUserPage();
-            loadFollowFlag();
+            loadFollow();
+            System.out.println("#################" + following);
+
         }
+
+        follow_unfollowButton.setOnClickListener(this);
     }
 
     private void loadUserPage() {
@@ -101,7 +112,7 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
         ((View) mProfileView.findViewById(R.id.layout_following)).setOnClickListener(this);
     }
 
-    private void loadFollowFlag(){
+    private void loadFollow() {
         ((JodoroidApplication) getActivity().getApplication()).getAPIService()
                 .fetchFollow(getArguments().getLong(ARG_USER_ID))
                 .observeOn(AndroidSchedulers.mainThread())
@@ -118,9 +129,60 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
 
                     @Override
                     public void onNext(Follow follow) {
-                        System.out.println("#####################" + follow.getFollowing());
+                        following = follow.getFollowing();
+                        changeButtonText();
                     }
                 });
+    }
+
+    private void followUser() {
+        ((JodoroidApplication) getActivity().getApplication()).getAPIService()
+                .followUser(getArguments().getLong(ARG_USER_ID), 1, "dummy")
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Void>() {
+                    @Override
+                    public void onCompleted() {
+                        loadFollow();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Void aVoid) {
+                    }
+                });
+    }
+
+    private void unfollowUser() {
+        ((JodoroidApplication) getActivity().getApplication()).getAPIService()
+                .unfollowUser(getArguments().getLong(ARG_USER_ID), 1)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Void>() {
+                    @Override
+                    public void onCompleted() {
+                        loadFollow();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Void aVoid) {
+                    }
+                });
+    }
+
+    private void changeButtonText() {
+        if(following) {
+            follow_unfollowButton.setText(getText(R.string.action_unfollow));
+        } else {
+            follow_unfollowButton.setText(getText(R.string.action_follow));
+        }
     }
 
     @Override
@@ -129,6 +191,7 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
         ListView list = (ListView) view.findViewById(android.R.id.list);
         mProfileView = inflater.inflate(R.layout.view_user_profile, list, false);
         list.addHeaderView(mProfileView);
+        ButterKnife.bind(this, view);
         return view;
     }
 
@@ -146,10 +209,17 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
                 intent.setAction(MainActivity.ACTION_VIEW_FOLLOWING);
                 intent.putExtra(MainActivity.EXTRA_USER_ID, mUser.getId());
                 break;
-
+            case R.id.button_follow_unfollow:
+                if(following) {
+                    unfollowUser();
+                } else {
+                    followUser();
+                }
+                break;
         }
         if(intent != null) {
             startActivity(intent);
         }
     }
+
 }
