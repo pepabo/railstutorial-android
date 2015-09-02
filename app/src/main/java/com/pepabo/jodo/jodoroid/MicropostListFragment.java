@@ -1,7 +1,7 @@
 package com.pepabo.jodo.jodoroid;
 
-import android.content.Intent;
 import android.app.ListFragment;
+import android.content.Intent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
