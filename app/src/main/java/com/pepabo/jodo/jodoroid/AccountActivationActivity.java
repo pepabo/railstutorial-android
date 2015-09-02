@@ -1,7 +1,5 @@
 package com.pepabo.jodo.jodoroid;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
@@ -76,7 +74,7 @@ public class AccountActivationActivity extends Activity {
             final AccountActivationActivity activity = mActivity.get();
             if (activity != null) {
                 if(session != null && session.getAuthToken() != null) {
-                    JodoAccounts.addAccount(activity, mEmail, session.getAuthToken());
+                    JodoAccounts.addAccount(activity, mEmail, session);
 
                     activity.setResult(RESULT_OK);
                     Toast.makeText(activity, R.string.toast_account_activated, Toast.LENGTH_LONG).show();

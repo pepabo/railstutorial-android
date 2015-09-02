@@ -1,7 +1,5 @@
 package com.pepabo.jodo.jodoroid;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -146,8 +144,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onNext(Session session) {
                             if(session != null && session.getAuthToken() != null) {
-                                JodoAccounts.addAccount(getApplicationContext(),
-                                        email, session.getAuthToken());
+                                JodoAccounts.addAccount(getApplicationContext(), email, session);
 
                                 setResult(RESULT_OK);
                                 finish();

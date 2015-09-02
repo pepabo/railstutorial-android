@@ -11,6 +11,7 @@ import android.os.Bundle;
 public class JodoAuthenticator extends AbstractAccountAuthenticator {
     public static final String ACCOUNT_TYPE = "com.pepabo.jodo";
     public static final String ACCOUNT_TOKEN_TYPE = "com.pepabo.jodo.auth_token";
+    public static final String ACCOUNT_ID_TYPE    = "com.pepabo.jodo.user_id";
 
     final JodoroidApplication mApp;
 
