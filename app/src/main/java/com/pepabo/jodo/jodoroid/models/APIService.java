@@ -44,6 +44,9 @@ public interface APIService {
                               @Field("user[email]")    String email,
                               @Field("user[password]") String password);
 
+    @GET("/users/{id}/follow")
+    Observable<Follow> fetchFollow(@Path("id") long userId);
+
     @POST("/users/{id}/follow")
     Observable<Void> followUser(@Path("id")    long userId,
                                 @Query("page") int  page);

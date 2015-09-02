@@ -11,8 +11,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.pepabo.jodo.jodoroid.dummy.DummyContent;
+import com.pepabo.jodo.jodoroid.models.APIService;
+import com.pepabo.jodo.jodoroid.models.Follow;
 import com.pepabo.jodo.jodoroid.models.User;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -28,10 +32,10 @@ import rx.android.schedulers.AndroidSchedulers;
  */
 public class UserProfileFragment extends MicropostListFragment implements View.OnClickListener {
     private static final String ARG_USER_ID = "user_id";
-
     private User mUser;
-
     private View mProfileView;
+    //private APIService apiService = ((JodoroidApplication) getActivity().getApplication()).getAPIService();
+
 
     public static UserProfileFragment newInstance(long userId) {
         UserProfileFragment fragment = new UserProfileFragment();
@@ -56,6 +60,7 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
 
         if (getArguments() != null) {
             loadUserPage();
+            loadFollowFlag();
         }
     }
 
@@ -96,6 +101,28 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
         ((View) mProfileView.findViewById(R.id.layout_following)).setOnClickListener(this);
     }
 
+    private void loadFollowFlag(){
+        ((JodoroidApplication) getActivity().getApplication()).getAPIService()
+                .fetchFollow(getArguments().getLong(ARG_USER_ID))
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Follow>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(Follow follow) {
+                        System.out.println("#####################" + follow.getFollowing());
+                    }
+                });
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
@@ -119,6 +146,7 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
                 intent.setAction(MainActivity.ACTION_VIEW_FOLLOWING);
                 intent.putExtra(MainActivity.EXTRA_USER_ID, mUser.getId());
                 break;
+
         }
         if(intent != null) {
             startActivity(intent);
