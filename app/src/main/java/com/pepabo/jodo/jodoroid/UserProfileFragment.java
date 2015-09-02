@@ -137,7 +137,7 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
 
     private void followUser() {
         ((JodoroidApplication) getActivity().getApplication()).getAPIService()
-                .followUser(getArguments().getLong(ARG_USER_ID), 1, "dummy")
+                .followUser(getArguments().getLong(ARG_USER_ID), "")
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Void>() {
                     @Override
@@ -158,7 +158,7 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
 
     private void unfollowUser() {
         ((JodoroidApplication) getActivity().getApplication()).getAPIService()
-                .unfollowUser(getArguments().getLong(ARG_USER_ID), 1)
+                .unfollowUser(getArguments().getLong(ARG_USER_ID))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Void>() {
                     @Override
@@ -191,7 +191,7 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
         ListView list = (ListView) view.findViewById(android.R.id.list);
         mProfileView = inflater.inflate(R.layout.view_user_profile, list, false);
         list.addHeaderView(mProfileView);
-        ButterKnife.bind(this, view);
+        ButterKnife.bind(this, mProfileView);
         return view;
     }
 

@@ -49,13 +49,11 @@ public interface APIService {
     Observable<Follow> fetchFollow(@Path("id") long userId);
 
     @POST("/users/{id}/follow")
-    Observable<Void> followUser(@Path("id")    long userId,
-                                @Query("page") int  page,
-                                @Body String dummy);
+    Observable<Void> followUser(@Path("id") long userId,
+                                @Body       String dummy);
 
     @DELETE("/users/{id}/follow")
-    Observable<Void> unfollowUser(@Path("id")    long userId,
-                                  @Query("page") int  page);
+    Observable<Void> unfollowUser(@Path("id")    long userId);
 
     @GET("/users/{id}/following")
     Observable<List<User>> fetchFollowing(@Path("id")    long userId,
