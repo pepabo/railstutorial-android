@@ -40,4 +40,6 @@
 
     <string name="title_delete_micropost">Delete This Post</string>
     <string name="description_delete_micropost">Are You Sure?</string>
+    <string name="toast_deletion_succeed">Deleted Successfully.</string>
+    <string name="toast_deletion_failed">Deletion failed.</string>
 </resources>
