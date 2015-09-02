@@ -79,4 +79,8 @@ public interface APIService {
     @FormUrlEncoded
     Observable<Session> resetPassword(@Field("user[password]") String password,
                                       @Query("email")          String email);
+
+    @GET("/account_activations/{id}/edit")
+    Observable<Session> activateAccount(@Path("id") String token,
+                                        @Query("email") String email);
 }

@@ -159,7 +159,7 @@ public class JodoroidApplication extends Application {
         }
 
         private String getAuthToken() {
-            final Account account = getAccount(mContext);
+            final Account account = JodoAccounts.getAccount(mContext);
             if(account == null) {
                 return null;
             }
@@ -167,15 +167,5 @@ public class JodoroidApplication extends Application {
             final AccountManager accountManager = AccountManager.get(mContext);
             return accountManager.peekAuthToken(account, JodoAuthenticator.ACCOUNT_TOKEN_TYPE);
         }
-    }
-
-    static Account getAccount(Context context) {
-        final AccountManager accountManager = AccountManager.get(context);
-        final Account[] accounts = accountManager.getAccountsByType(JodoAuthenticator.ACCOUNT_TYPE);
-
-        if(accounts.length == 0) {
-            return null;
-        }
-        return accounts[0];
     }
 }

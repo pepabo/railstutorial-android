@@ -1,103 +1,187 @@
 package com.pepabo.jodo.jodoroid;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.pepabo.jodo.jodoroid.models.APIService;
+
+import java.lang.ref.WeakReference;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.Subscriptions;
 
 public class SignupActivity extends AppCompatActivity {
 
-    private EditText mSignupEmailView;
-    private EditText mSignupNameView;
-    private EditText mSignupPasswordView;
+    @Bind(R.id.email)
+    EditText mEmailView;
+    @Bind(R.id.name)
+    EditText mNameView;
+    @Bind(R.id.password)
+    EditText mPasswordView;
+
+    @Bind(R.id.form)
+    View mFormView;
+    @Bind(R.id.progress)
+    View mProgressView;
+
+    EmailValidator mEmailValidator;
+    NameValidator mNameValidator;
+    PasswordValidator mPasswordValidator;
+
+    APIService mAPIService;
+    Subscription mAPISubscription = Subscriptions.empty();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-
-        mSignupEmailView = (EditText) findViewById(R.id.signup_email);
-        mSignupNameView = (EditText) findViewById(R.id.signup_name);
-        mSignupPasswordView = (EditText) findViewById(R.id.signup_password);
-
-        Button mCreateAccountButton = (Button) findViewById(R.id.action_signup);
-        mCreateAccountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                attemptSignup();
-            }
-        });
+        ButterKnife.bind(this);
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        mEmailValidator = new EmailValidator(getApplicationContext());
+        mNameValidator = new NameValidator(getApplicationContext());
+        mPasswordValidator = new PasswordValidator(getApplicationContext());
+
+        mAPIService = ((JodoroidApplication) getApplication()).getAPIService();
     }
 
-    public void attemptSignup() {
+    @Override
+    protected void onDestroy() {
+        mAPISubscription.unsubscribe();
+
+        ButterKnife.unbind(this);
+        super.onDestroy();
+    }
+
+    @OnClick(R.id.action_signup)
+    void attemptSignup() {
         // Reset errors.
-        mSignupEmailView.setError(null);
-        mSignupNameView.setError(null);
-        mSignupPasswordView.setError(null);
+        mEmailView.setError(null);
+        mNameView.setError(null);
+        mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        final String email = mSignupEmailView.getText().toString();
-        final String name = mSignupNameView.getText().toString();
-        final String password = mSignupPasswordView.getText().toString();
+        final String email = mEmailView.getText().toString();
+        final String name = mNameView.getText().toString();
+        final String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
-        final FormItemValidator passwordValidator = new PasswordValidator(getApplicationContext());
-        passwordValidator.validate(password);
-
-        if (passwordValidator.hasError()) {
-            mSignupPasswordView.setError(passwordValidator.getErrorMessage());
-            focusView = mSignupPasswordView;
+        mPasswordValidator.validate(password);
+        if (mPasswordValidator.hasError()) {
+            mPasswordView.setError(mPasswordValidator.getErrorMessage());
+            focusView = mPasswordView;
             cancel = true;
         }
 
-        final FormItemValidator nameValidator = new NameValidator(getApplicationContext());
-        nameValidator.validate(name);
-
-        if (nameValidator.hasError()) {
-            mSignupNameView.setError(nameValidator.getErrorMessage());
-            focusView = mSignupNameView;
+        mNameValidator.validate(name);
+        if (mNameValidator.hasError()) {
+            mNameView.setError(mNameValidator.getErrorMessage());
+            focusView = mNameView;
             cancel = true;
         }
 
-        final FormItemValidator emailValidator = new EmailValidator(getApplicationContext());
-        emailValidator.validate(email);
-
-        if (emailValidator.hasError()) {
-            mSignupEmailView.setError(emailValidator.getErrorMessage());
-            focusView = mSignupEmailView;
+        mEmailValidator.validate(email);
+        if (mEmailValidator.hasError()) {
+            mEmailView.setError(mEmailValidator.getErrorMessage());
+            focusView = mEmailView;
             cancel = true;
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
             focusView.requestFocus();
         } else {
-
+            mAPISubscription = mAPIService.signup(name, email, password)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new SignupSubscriber(this));
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == android.R.id.home) {
-            finish();
-            return true;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    void showProgress(final boolean show) {
+        final int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+        mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        mFormView.animate().setDuration(shortAnimTime).alpha(show ? 0 : 1)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                    }
+                });
+
+        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        mProgressView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                    }
+                });
+    }
+
+    static class SignupSubscriber extends Subscriber<Void> {
+        final WeakReference<SignupActivity> mActivity;
+
+        public SignupSubscriber(SignupActivity activity) {
+            mActivity = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void onNext(Void unused) {
+            final SignupActivity activity = mActivity.get();
+            if (activity != null) {
+                Toast.makeText(activity, R.string.toast_check_email, Toast.LENGTH_LONG).show();
+                activity.finish();
+            }
+        }
+
+        @Override
+        public void onCompleted() {
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            final SignupActivity activity = mActivity.get();
+            if (activity != null) {
+                activity.showProgress(false);
+
+                Toast.makeText(activity, ErrorUtils.getMessage(e), Toast.LENGTH_LONG).show();
+            }
+        }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+            final SignupActivity activity = mActivity.get();
+            if (activity != null) {
+                activity.showProgress(true);
+            }
+        }
     }
 }

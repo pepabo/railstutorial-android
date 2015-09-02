@@ -15,10 +15,9 @@ public class WelcomeActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final AccountManager accountManager = AccountManager.get(getApplicationContext());
-        final Account[] accounts = accountManager.getAccountsByType(JodoAuthenticator.ACCOUNT_TYPE);
+        final Account account = JodoAccounts.getAccount(getApplicationContext());
 
-        if(accounts.length == 0) {
+        if(account == null) {
             startLoginActivity();
         } else {
             startMainActivity();

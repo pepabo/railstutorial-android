@@ -165,10 +165,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                         @Override
                         public void onNext(Session session) {
                             if(session != null && session.getAuthToken() != null) {
-                                final Account account = new Account(email, JodoAuthenticator.ACCOUNT_TYPE);
-                                final AccountManager accountManager = AccountManager.get(getApplicationContext());
-                                accountManager.addAccountExplicitly(account, null, null);
-                                accountManager.setAuthToken(account, JodoAuthenticator.ACCOUNT_TOKEN_TYPE, session.getAuthToken());
+                                JodoAccounts.addAccount(getApplicationContext(),
+                                        email, session.getAuthToken());
 
                                 setResult(RESULT_OK);
                                 finish();
