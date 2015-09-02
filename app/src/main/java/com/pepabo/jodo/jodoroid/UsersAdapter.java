@@ -13,26 +13,47 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 class UsersAdapter extends ArrayAdapter<User> {
-    LayoutInflater mInflater;
-    Picasso mPicasso;
+    final LayoutInflater mInflater;
+    final Picasso mPicasso;
 
     public UsersAdapter(Context context, Picasso picasso, List<User> objects) {
         super(context, 0, objects);
-        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mInflater = LayoutInflater.from(context);
         mPicasso = picasso;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        final View view = convertView != null ? convertView :
-                mInflater.inflate(R.layout.view_user, parent, false);
+    public View getView(int position, View view, ViewGroup parent) {
+        final ViewHolder holder;
+        if (view == null) {
+            view = mInflater.inflate(R.layout.view_user, parent, false);
+            holder = new ViewHolder(view);
+            view.setTag(holder);
+        } else {
+            holder = (ViewHolder) view.getTag();
+        }
 
         final User user = getItem(position);
 
-        mPicasso.load(user.getAvatarUrl()).fit().into((ImageView) view.findViewById(R.id.imageView_user_avatar));
-        ((TextView) view.findViewById(R.id.textView_user_name)).setText(user.getName());
+        mPicasso.load(user.getAvatarUrl()).fit().into(holder.avatar);
+        holder.userName.setText(user.getName());
 
         return view;
+    }
+
+    static class ViewHolder {
+        @Bind(R.id.imageView_user_avatar)
+        ImageView avatar;
+
+        @Bind(R.id.textView_user_name)
+        TextView userName;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 }

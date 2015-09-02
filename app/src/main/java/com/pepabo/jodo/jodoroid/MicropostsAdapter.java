@@ -13,50 +13,55 @@ import com.pepabo.jodo.jodoroid.models.Micropost;
 import com.pepabo.jodo.jodoroid.models.User;
 import com.squareup.picasso.Picasso;
 
-import java.net.URI;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 class MicropostsAdapter extends ArrayAdapter<Micropost> {
-    LayoutInflater mInflater;
-    Picasso mPicasso;
+    final LayoutInflater mInflater;
+    final Picasso mPicasso;
 
     public MicropostsAdapter(Context context, Picasso picasso, List<Micropost> objects) {
         super(context, 0, objects);
-        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mInflater = LayoutInflater.from(context);
         mPicasso = picasso;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        final View view = convertView != null ? convertView :
-                mInflater.inflate(R.layout.view_micropost, parent, false);
-
-        final Micropost micropost = getItem(position);
-
-        final User user = micropost.getUser();
-        if (user != null) {
-            mPicasso.load(user.getAvatarUrl()).fit().into((ImageView) view.findViewById(R.id.avatar));
-            ((TextView) view.findViewById(R.id.username)).setText(user.getName());
+    public View getView(int position, View view, ViewGroup parent) {
+        final ViewHolder holder;
+        if (view == null) {
+            view = mInflater.inflate(R.layout.view_micropost, parent, false);
+            holder = new ViewHolder(view);
+            view.setTag(holder);
         } else {
-            ((ImageView) view.findViewById(R.id.avatar)).setImageDrawable(null);
-            ((TextView) view.findViewById(R.id.username)).setText("");
+            holder = (ViewHolder) view.getTag();
         }
 
-        ((TextView) view.findViewById(R.id.content)).setText(micropost.getContent());
-        ((TextView) view.findViewById(R.id.timestamp)).setText(formatDate(micropost.getCreatedAt()));
+        final Micropost micropost = getItem(position);
+        final User user = micropost.getUser();
 
-        if (micropost.getPictureUrl() != null) {
-            // Workaround
-            final Uri uri = Uri.parse(URI.create(JodoroidApplication.ENDPOINT)
-                    .resolve(micropost.getPictureUrl().toString()).toString());
-
-            mPicasso.load(uri)
-                    .resize(400, 400).onlyScaleDown().centerInside()
-                    .into((ImageView) view.findViewById(R.id.picture));
+        if (user != null) {
+            mPicasso.load(user.getAvatarUrl()).fit().into(holder.avatar);
+            holder.username.setText(user.getName());
         } else {
-            ((ImageView) view.findViewById(R.id.picture)).setImageDrawable(null);
+            holder.avatar.setImageDrawable(null);
+            holder.username.setText("");
+        }
+
+        holder.content.setText(micropost.getContent());
+        holder.timestamp.setText(formatDate(micropost.getCreatedAt()));
+
+        final Uri pictureUrl = micropost.getPictureUrl();
+        if (pictureUrl != null) {
+            mPicasso.load(pictureUrl)
+                    .resize(400, 400).onlyScaleDown().centerInside()
+                    .into(holder.picture);
+        } else {
+            holder.picture.setImageDrawable(null);
         }
 
         return view;
@@ -65,5 +70,26 @@ class MicropostsAdapter extends ArrayAdapter<Micropost> {
     String formatDate(Date date) {
         DateFormat f = DateFormat.getDateTimeInstance();
         return f.format(date);
+    }
+
+    static class ViewHolder {
+        @Bind(R.id.content)
+        TextView content;
+
+        @Bind(R.id.timestamp)
+        TextView timestamp;
+
+        @Bind(R.id.username)
+        TextView username;
+
+        @Bind(R.id.avatar)
+        ImageView avatar;
+
+        @Bind(R.id.picture)
+        ImageView picture;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 }
