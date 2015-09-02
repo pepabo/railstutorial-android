@@ -16,9 +16,10 @@
         android:paddingBottom="8dp">
 
         <ImageView
-            android:id="@+id/avatar"
+            android:id="@+id/drawer_avatar"
             android:layout_width="60dp"
-            android:layout_height="60dp" />
+            android:layout_height="60dp"
+            android:clickable="true" />
     </RelativeLayout>
 
     <LinearLayout
@@ -28,14 +29,14 @@
         android:paddingBottom="8dp">
 
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/drawer_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/email"
+            android:id="@+id/drawer_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="14sp" />
