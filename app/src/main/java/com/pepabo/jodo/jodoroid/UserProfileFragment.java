@@ -109,6 +109,11 @@ public class UserProfileFragment extends MicropostListFragment
         setMicroposts(user.getMicroposts());
     }
 
+    @Override
+    public void onMoreModel(User user) {
+        
+    }
+
     private void setProfile(User user) {
         userNameView.setText(user.getName());
         followersView.setText(Long.toString(user.getFollowersCount()));

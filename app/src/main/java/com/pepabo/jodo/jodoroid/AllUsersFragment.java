@@ -53,6 +53,11 @@ public class AllUsersFragment extends UserListFragment
     }
 
     @Override
+    public void onMoreModel(List<User> users) {
+
+    }
+
+    @Override
     public void onLoadError(Throwable e) {
         Toast.makeText(getActivity(),
                 getString(R.string.toast_load_failure),
