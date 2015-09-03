@@ -14,7 +14,7 @@ public class PasswordValidator extends FormItemValidator {
         if (TextUtils.isEmpty(password)) {
             mError = mContext.getString(R.string.error_field_required);
         } else if (password.length() < 6) {
-            mError = mContext.getString(R.string.error_invalid_email);
+            mError = mContext.getString(R.string.error_invalid_password);
         }
     }
 }
