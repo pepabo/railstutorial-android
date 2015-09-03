@@ -1,8 +1,8 @@
 package com.pepabo.jodo.jodoroid;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pepabo.jodo.jodoroid.models.APIService;
 import com.pepabo.jodo.jodoroid.models.Follow;
@@ -21,25 +22,36 @@ import butterknife.ButterKnife;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link UserProfileFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link UserProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class UserProfileFragment extends MicropostListFragment implements View.OnClickListener {
+public class UserProfileFragment extends MicropostListFragment
+        implements View.OnClickListener, RefreshableView<User> {
     private static final String ARG_USER_ID = "user_id";
-    private long user_id;
+    private long mUserId;
 
-    private User mUser;
-    private View mProfileView;
     private boolean following;
     private APIService mAPIService;
+    private Picasso mPicasso;
+    private UserProfilePresenter mPresenter;
 
-    @Bind(R.id.button_follow_unfollow) Button follow_unfollowButton;
+    @Bind(R.id.layout_followers)
+    View followersLayoutView;
+
+    @Bind(R.id.layout_following)
+    View followingLayoutView;
+
+    @Bind(R.id.button_follow_unfollow)
+    Button followUnfollowButton;
+
+    @Bind(R.id.textView_user_name)
+    TextView userNameView;
+
+    @Bind(R.id.textView_followers)
+    TextView followersView;
+
+    @Bind(R.id.textView_following)
+    TextView followingView;
+
+    @Bind(R.id.imageView_user_avatar)
+    ImageView userAvatarView;
 
     public static UserProfileFragment newInstance(long userId) {
         UserProfileFragment fragment = new UserProfileFragment();
@@ -54,70 +66,62 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        mAPIService = ((JodoroidApplication) activity.getApplication()).getAPIService();
+        mPicasso = ((JodoroidApplication) activity.getApplication()).getPicasso();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAPIService = ((JodoroidApplication) getActivity().getApplication()).getAPIService();
-        user_id = getArguments().getLong(ARG_USER_ID);
+        mUserId = getArguments().getLong(ARG_USER_ID);
     }
 
     @Override
     public void onActivityCreated(Bundle SavedInstanveState) {
         super.onActivityCreated(SavedInstanveState);
 
-        if (getArguments() != null) {
-            loadUserPage();
-            if(JodoAccounts.isMe(getActivity().getApplicationContext(), user_id)) {
-                follow_unfollowButton.setVisibility(View.GONE);
-
-            } else {
-                loadFollow();
-            }
+        if (JodoAccounts.isMe(getActivity().getApplicationContext(), mUserId)) {
+            followUnfollowButton.setVisibility(View.GONE);
+        } else {
+            loadFollow();
         }
 
-        follow_unfollowButton.setOnClickListener(this);
+        mPresenter = new UserProfilePresenter(this, mAPIService, mUserId);
+        mPresenter.refresh();
+
+        followUnfollowButton.setOnClickListener(this);
     }
 
-    private void loadUserPage() {
-        mAPIService
-                .fetchUser(user_id, 1)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<User>() {
-                    @Override
-                    public void onCompleted() {
+    @Override
+    public void onRefresh() {
+        super.onRefresh();
 
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(User user) {
-                        mUser = user;
-                        setProfile(user);
-                        setMicroposts(user.getMicroposts());
-                    }
-                });
+        mPresenter.refresh();
     }
 
-    private void setProfile(User user){
-        final Picasso picasso = ((JodoroidApplication) getActivity().getApplication()).getPicasso();
-        ((TextView) mProfileView.findViewById(R.id.textView_user_name)).setText(user.getName());
-        ((TextView) mProfileView.findViewById(R.id.textView_followers))
-                .setText(Long.toString(user.getFollowersCount()));
-        ((TextView) mProfileView.findViewById(R.id.textView_following))
-                .setText(Long.toString(user.getFollowingCount()));
-        picasso.load(user.getAvatarUrl()).fit().into((ImageView) mProfileView.findViewById(R.id.imageView_user_avatar));
+    @Override
+    public void onNextModel(User user) {
+        setProfile(user);
+        setMicroposts(user.getMicroposts());
+    }
 
-        ((View) mProfileView.findViewById(R.id.layout_followers)).setOnClickListener(this);
-        ((View) mProfileView.findViewById(R.id.layout_following)).setOnClickListener(this);
+    private void setProfile(User user) {
+        userNameView.setText(user.getName());
+        followersView.setText(Long.toString(user.getFollowersCount()));
+        followingView.setText(Long.toString(user.getFollowingCount()));
+        mPicasso.load(user.getAvatarUrl()).fit().into(userAvatarView);
+
+        followingLayoutView.setOnClickListener(this);
+        followersLayoutView.setOnClickListener(this);
     }
 
     private void loadFollow() {
         mAPIService
-                .fetchFollow(user_id)
+                .fetchFollow(mUserId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Follow>() {
                     @Override
@@ -140,13 +144,13 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
 
     private void followUser() {
         mAPIService
-                .followUser(user_id, "")
+                .followUser(mUserId, "")
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Void>() {
                     @Override
                     public void onCompleted() {
                         loadFollow();
-                        loadUserPage();
+                        mPresenter.refresh();
                     }
 
                     @Override
@@ -162,13 +166,13 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
 
     private void unfollowUser() {
         mAPIService
-                .unfollowUser(user_id)
+                .unfollowUser(mUserId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Void>() {
                     @Override
                     public void onCompleted() {
                         loadFollow();
-                        loadUserPage();
+                        mPresenter.refresh();
                     }
 
                     @Override
@@ -183,20 +187,20 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
     }
 
     private void changeButtonText() {
-        if(following) {
-            follow_unfollowButton.setText(getText(R.string.action_unfollow));
+        if (following) {
+            followUnfollowButton.setText(getText(R.string.action_unfollow));
         } else {
-            follow_unfollowButton.setText(getText(R.string.action_follow));
+            followUnfollowButton.setText(getText(R.string.action_follow));
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-        ListView list = (ListView) view.findViewById(android.R.id.list);
-        mProfileView = inflater.inflate(R.layout.view_user_profile, list, false);
-        list.addHeaderView(mProfileView);
-        ButterKnife.bind(this, mProfileView);
+        final View view = super.onCreateView(inflater, container, savedInstanceState);
+        final ListView list = (ListView) view.findViewById(android.R.id.list);
+        final View header = inflater.inflate(R.layout.view_user_profile, list, false);
+        list.addHeaderView(header);
+        ButterKnife.bind(this, header);
         return view;
     }
 
@@ -207,24 +211,30 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
             case R.id.layout_followers:
                 intent = new Intent(getActivity(), MainActivity.class);
                 intent.setAction(MainActivity.ACTION_VIEW_FOLLOWERS);
-                intent.putExtra(MainActivity.EXTRA_USER_ID, mUser.getId());
+                intent.putExtra(MainActivity.EXTRA_USER_ID, mUserId);
                 break;
             case R.id.layout_following:
                 intent = new Intent(getActivity(), MainActivity.class);
                 intent.setAction(MainActivity.ACTION_VIEW_FOLLOWING);
-                intent.putExtra(MainActivity.EXTRA_USER_ID, mUser.getId());
+                intent.putExtra(MainActivity.EXTRA_USER_ID, mUserId);
                 break;
             case R.id.button_follow_unfollow:
-                if(following) {
+                if (following) {
                     unfollowUser();
                 } else {
                     followUser();
                 }
                 break;
         }
-        if(intent != null) {
+        if (intent != null) {
             startActivity(intent);
         }
     }
 
+    @Override
+    public void onLoadError(Throwable e) {
+        Toast.makeText(getActivity(),
+                getString(R.string.toast_load_failure),
+                Toast.LENGTH_SHORT).show();
+    }
 }
