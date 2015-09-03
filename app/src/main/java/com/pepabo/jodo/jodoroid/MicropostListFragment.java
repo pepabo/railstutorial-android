@@ -30,8 +30,8 @@ public class MicropostListFragment extends SwipeRefreshListFragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public MicropostListFragment() {
-    }
+    public MicropostListFragment() { }
+
 
     @Override
     public void onStart() {
@@ -69,6 +69,11 @@ public class MicropostListFragment extends SwipeRefreshListFragment {
             setListAdapter(mAdapter);
         }
 
+        mAdapter.notifyDataSetChanged();
+    }
+
+    protected void addMicroposts(List<Micropost> microposts) {
+        mMicroposts.addAll(microposts);
         mAdapter.notifyDataSetChanged();
     }
 

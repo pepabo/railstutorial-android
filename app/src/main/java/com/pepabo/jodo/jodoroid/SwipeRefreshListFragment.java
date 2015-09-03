@@ -7,11 +7,36 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.ListView;
 
 public class SwipeRefreshListFragment extends ListFragment
         implements SwipeRefreshLayout.OnRefreshListener {
 
     SwipeRefreshLayout mSwipeRefreshLayout;
+
+    @Override
+    public void onActivityCreated(Bundle b) {
+        super.onActivityCreated(b);
+
+        ListView v = getListView();
+        v.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if ((visibleItemCount > 0) && (firstVisibleItem + visibleItemCount >= totalItemCount)) {
+                    onLoadNextPage();
+                }
+            }
+        });
+    }
+
+    protected void onLoadNextPage() {
+        // nop. will be overridden.
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

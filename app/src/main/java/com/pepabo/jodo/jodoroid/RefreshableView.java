@@ -6,4 +6,6 @@ public interface RefreshableView<Model> {
 
     void onNextModel(Model model);
     void onLoadError(Throwable e);
+
+    void onMoreModel(Model model);
 }
