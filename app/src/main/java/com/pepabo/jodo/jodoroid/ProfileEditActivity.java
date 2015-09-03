@@ -39,9 +39,16 @@ public class ProfileEditActivity extends AppCompatActivity
         new EmailAutoCompletion().populate(mEmailView);
 
         mAPIService = ((JodoroidApplication) getApplication()).getAPIService();
-        mPresenter = new ProfileEditPresenter(this, mAPIService);
+        mPresenter = new ProfileEditPresenter(getApplicationContext(), this,
+                mAPIService, JodoAccount.getAccount(getApplicationContext()));
 
         mPresenter.start();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mPresenter.stop();
+        super.onDestroy();
     }
 
     @Override
@@ -99,7 +106,6 @@ public class ProfileEditActivity extends AppCompatActivity
     }
 
     private void updateProfile() {
-        // TODO: do your work
-        finish();
+        mPresenter.submit();
     }
 }
