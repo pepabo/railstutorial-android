@@ -48,8 +48,10 @@ public class MainActivity extends AppCompatActivity
     public static final String EXTRA_USER_ID = "userId";
 
     private ActionBarDrawerToggle mDrawerToggle;
-    @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    @Bind(R.id.navigation_drawer) NavigationView mDrawer;
+    @Bind(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @Bind(R.id.navigation_drawer)
+    NavigationView mDrawer;
 
     private Subscription mAccountSubscription;
     private User mSelf;
@@ -57,9 +59,12 @@ public class MainActivity extends AppCompatActivity
     private APIService mAPIService;
     private Picasso mPicasso;
 
-    @Bind(R.id.drawer_email) TextView mDrawerEmail;
-    @Bind(R.id.drawer_name) TextView mDrawerName;
-    @Bind(R.id.drawer_avatar) ImageView mDrawerAvatar;
+    @Bind(R.id.drawer_email)
+    TextView mDrawerEmail;
+    @Bind(R.id.drawer_name)
+    TextView mDrawerName;
+    @Bind(R.id.drawer_avatar)
+    ImageView mDrawerAvatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -274,11 +279,17 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(mDrawer)) {
+            mDrawerLayout.closeDrawer(mDrawer);
+            return;
+        }
+
         final FragmentManager fragmentManager = getFragmentManager();
         if (fragmentManager.getBackStackEntryCount() > 1) {
             fragmentManager.popBackStack();
-        } else {
-            super.onBackPressed();
+            return;
         }
+
+        super.onBackPressed();
     }
 }
