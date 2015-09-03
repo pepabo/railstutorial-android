@@ -1,12 +1,9 @@
 package com.pepabo.jodo.jodoroid;
 
 import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
-import java.util.List;
 
 public class WelcomeActivity extends Activity {
     private static final int REQUEST_LOGIN = 100;
@@ -15,7 +12,7 @@ public class WelcomeActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final Account account = JodoAccounts.getAccount(getApplicationContext());
+        final JodoAccount account = JodoAccount.getAccount(getApplicationContext());
 
         if(account == null) {
             startLoginActivity();

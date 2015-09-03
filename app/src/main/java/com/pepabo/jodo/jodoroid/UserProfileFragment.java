@@ -84,7 +84,7 @@ public class UserProfileFragment extends MicropostListFragment
     public void onActivityCreated(Bundle SavedInstanveState) {
         super.onActivityCreated(SavedInstanveState);
 
-        if (JodoAccounts.isMe(getActivity().getApplicationContext(), mUserId)) {
+        if (JodoAccount.isMe(getActivity().getApplicationContext(), mUserId)) {
             followUnfollowButton.setVisibility(View.GONE);
         } else {
             loadFollow();

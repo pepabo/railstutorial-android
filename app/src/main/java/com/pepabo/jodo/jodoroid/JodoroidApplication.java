@@ -159,13 +159,12 @@ public class JodoroidApplication extends Application {
         }
 
         private String getAuthToken() {
-            final Account account = JodoAccounts.getAccount(mContext);
+            final JodoAccount account = JodoAccount.getAccount(mContext);
             if(account == null) {
                 return null;
             }
 
-            final AccountManager accountManager = AccountManager.get(mContext);
-            return accountManager.peekAuthToken(account, JodoAuthenticator.ACCOUNT_TOKEN_TYPE);
+            return account.getAuthToken();
         }
     }
 }

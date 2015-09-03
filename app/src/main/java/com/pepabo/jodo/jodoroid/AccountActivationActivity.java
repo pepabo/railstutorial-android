@@ -74,7 +74,7 @@ public class AccountActivationActivity extends Activity {
             final AccountActivationActivity activity = mActivity.get();
             if (activity != null) {
                 if(session != null && session.getAuthToken() != null) {
-                    JodoAccounts.addAccount(activity, mEmail, session);
+                    JodoAccount.addAccount(activity, mEmail, session);
 
                     activity.setResult(RESULT_OK);
                     Toast.makeText(activity, R.string.toast_account_activated, Toast.LENGTH_LONG).show();
