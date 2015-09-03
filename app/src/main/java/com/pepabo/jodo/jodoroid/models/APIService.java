@@ -2,6 +2,7 @@ package com.pepabo.jodo.jodoroid.models;
 
 import java.util.List;
 
+import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.Field;
 import retrofit.http.FormUrlEncoded;
@@ -44,13 +45,15 @@ public interface APIService {
                               @Field("user[email]")    String email,
                               @Field("user[password]") String password);
 
+    @GET("/users/{id}/follow")
+    Observable<Follow> fetchFollow(@Path("id") long userId);
+
     @POST("/users/{id}/follow")
-    Observable<Void> followUser(@Path("id")    long userId,
-                                @Query("page") int  page);
+    Observable<Void> followUser(@Path("id") long userId,
+                                @Body       String dummy);
 
     @DELETE("/users/{id}/follow")
-    Observable<Void> unfollowUser(@Path("id")    long userId,
-                                  @Query("page") int  page);
+    Observable<Void> unfollowUser(@Path("id")    long userId);
 
     @GET("/users/{id}/following")
     Observable<List<User>> fetchFollowing(@Path("id")    long userId,

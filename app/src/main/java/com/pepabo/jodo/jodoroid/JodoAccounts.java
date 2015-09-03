@@ -27,4 +27,13 @@ public class JodoAccounts {
         final User user = session.getUser();
         accountManager.setUserData(account, JodoAuthenticator.ACCOUNT_ID_TYPE, Long.toString(user.getId()));
     }
+
+    public static boolean isMe(Context context, long userId) {
+        final Account account = getAccount(context);
+        final AccountManager accountManager = AccountManager.get(context);
+
+        long id = Long.parseLong(accountManager.getUserData(account, JodoAuthenticator.ACCOUNT_ID_TYPE));
+
+        return (userId == id);
+    }
 }
