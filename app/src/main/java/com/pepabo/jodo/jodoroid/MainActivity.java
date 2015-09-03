@@ -20,9 +20,14 @@ import android.content.Intent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.pepabo.jodo.jodoroid.models.APIService;
 import com.pepabo.jodo.jodoroid.models.Micropost;
 import com.pepabo.jodo.jodoroid.models.User;
+import com.squareup.picasso.Picasso;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.psdev.licensesdialog.LicenseResolver;
 import de.psdev.licensesdialog.LicensesDialog;
 import rx.Observer;
@@ -30,13 +35,11 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class MainActivity extends AppCompatActivity
-        implements
-        NavigationView.OnNavigationItemSelectedListener,
-        MicropostListFragment.OnFragmentInteractionListener,
-        UserListFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String ACTION_VIEW_HOME = "com.pepabo.jodo.jodoroid.VIEW_HOME";
     public static final String ACTION_VIEW_SELF_PROFILE = "com.pepabo.jodo.jodoroid.VIEW_SELF_PROFILE";
+    public static final String ACTION_VIEW_USER_PROFILE = "com.pepabo.jodo.jodoroid.VIEW_USER_PROFILE";
     public static final String ACTION_VIEW_ALL_USERS = "com.pepabo.jodo.jodoroid.VIEW_ALL_USERS";
     public static final String ACTION_VIEW_FOLLOWERS = "com.pepabo.jodo.jodoroid.VIEW_FOLLOWERS";
     public static final String ACTION_VIEW_FOLLOWING = "com.pepabo.jodo.jodoroid.VIEW_FOLLOWING";
@@ -44,59 +47,41 @@ public class MainActivity extends AppCompatActivity
     public static final String EXTRA_USER_ID = "userId";
 
     private ActionBarDrawerToggle mDrawerToggle;
-    private DrawerLayout mDrawerLayout;
-    private NavigationView mDrawer;
+    @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @Bind(R.id.navigation_drawer) NavigationView mDrawer;
 
     private Subscription mAccountSubscription;
     private User mSelf;
-    private TextView mDrawerEmail;
-    private TextView mDrawerName;
-    private ImageView mDrawerAvatar;
+
+    private APIService mAPIService;
+    private Picasso mPicasso;
+
+    @Bind(R.id.drawer_email) TextView mDrawerEmail;
+    @Bind(R.id.drawer_name) TextView mDrawerName;
+    @Bind(R.id.drawer_avatar) ImageView mDrawerAvatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawer.setNavigationItemSelectedListener(this);
+
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        mDrawer = (NavigationView) findViewById(R.id.navigation_drawer);
-        mDrawer.inflateHeaderView(R.layout.view_drawer_accounts);
-        mDrawer.setNavigationItemSelectedListener(this);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), PostMicropost.class);
-                startActivity(intent);
-            }
-        });
-
-        mDrawerEmail = (TextView) mDrawer.findViewById(R.id.email);
-        mDrawerName = (TextView) mDrawer.findViewById(R.id.name);
-        mDrawerAvatar = (ImageView) mDrawer.findViewById(R.id.avatar);
-
         mDrawerEmail.setText(JodoAccounts.getAccount(this).name);
-        mDrawerAvatar.setClickable(true);
-        mDrawerAvatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.setAction(ACTION_VIEW_SELF_PROFILE);
-                mDrawerLayout.closeDrawer(mDrawer);
-                startActivity(intent);
-            }
-        });
 
-        final JodoroidApplication app = (JodoroidApplication) getApplication();
-        mAccountSubscription = app.getAPIService()
+        mAPIService = ((JodoroidApplication) getApplication()).getAPIService();
+        mPicasso = ((JodoroidApplication) getApplication()).getPicasso();
+
+        mAccountSubscription = mAPIService
                 .fetchMe(1)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<User>() {
@@ -114,7 +99,7 @@ public class MainActivity extends AppCompatActivity
                     public void onNext(User user) {
                         mSelf = user;
                         mDrawerName.setText(mSelf.getName());
-                        app.getPicasso().load(mSelf.getAvatarUrl()).fit().into(mDrawerAvatar);
+                        mPicasso.load(mSelf.getAvatarUrl()).fit().into(mDrawerAvatar);
                     }
                 });
 
@@ -123,6 +108,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
+        ButterKnife.unbind(this);
         super.onDestroy();
 
         if (mAccountSubscription != null) {
@@ -149,16 +135,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentInteraction(Micropost micropost) {
-        onFragmentInteraction(micropost.getUser());
-    }
-
-    @Override
-    public void onFragmentInteraction(User user) {
-        showFragment(UserProfileFragment.newInstance(user.getId()));
-    }
-
-    @Override
     protected void onNewIntent(Intent intent) {
         if (processIntent(intent)) return;
         super.onNewIntent(intent);
@@ -174,6 +150,9 @@ public class MainActivity extends AppCompatActivity
                 return true;
             case ACTION_VIEW_SELF_PROFILE:
                 showSelf();
+                return true;
+            case ACTION_VIEW_USER_PROFILE:
+                showUser(getUserIdFromIntent(intent));
                 return true;
             case ACTION_VIEW_ALL_USERS:
                 showAllUsers();
@@ -220,6 +199,10 @@ public class MainActivity extends AppCompatActivity
                 .show();
     }
 
+    private void showUser(long userId) {
+        showFragment(UserProfileFragment.newInstance(userId));
+    }
+
     private void showSelf() {
         if (mSelf != null) {
             showFragment(UserProfileFragment.newInstance(mSelf.getId()));
@@ -239,6 +222,20 @@ public class MainActivity extends AppCompatActivity
             throw new RuntimeException("Intent has no EXTRA_USER_ID");
         }
         return userId;
+    }
+
+    @OnClick(R.id.fab)
+    void newPost() {
+        final Intent intent = new Intent(getApplicationContext(), PostMicropost.class);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.drawer_avatar)
+    void openSelfProfile() {
+        mDrawerLayout.closeDrawer(mDrawer);
+        final Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.setAction(ACTION_VIEW_SELF_PROFILE);
+        startActivity(intent);
     }
 
     @Override
