@@ -41,6 +41,7 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
     private User mUser;
     private View mProfileView;
     private boolean following;
+    private APIService mAPIService;
 
     @Bind(R.id.button_follow_unfollow) Button follow_unfollowButton;
 
@@ -59,6 +60,8 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mAPIService = ((JodoroidApplication) getActivity().getApplication()).getAPIService();
     }
 
     @Override
@@ -68,8 +71,6 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
         if (getArguments() != null) {
             loadUserPage();
             loadFollow();
-            System.out.println("#################" + following);
-
         }
 
         follow_unfollowButton.setOnClickListener(this);
@@ -113,7 +114,7 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
     }
 
     private void loadFollow() {
-        ((JodoroidApplication) getActivity().getApplication()).getAPIService()
+        mAPIService
                 .fetchFollow(getArguments().getLong(ARG_USER_ID))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Follow>() {
@@ -136,13 +137,14 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
     }
 
     private void followUser() {
-        ((JodoroidApplication) getActivity().getApplication()).getAPIService()
+        mAPIService
                 .followUser(getArguments().getLong(ARG_USER_ID), "")
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Void>() {
                     @Override
                     public void onCompleted() {
                         loadFollow();
+                        loadUserPage();
                     }
 
                     @Override
@@ -157,13 +159,14 @@ public class UserProfileFragment extends MicropostListFragment implements View.O
     }
 
     private void unfollowUser() {
-        ((JodoroidApplication) getActivity().getApplication()).getAPIService()
+        mAPIService
                 .unfollowUser(getArguments().getLong(ARG_USER_ID))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Void>() {
                     @Override
                     public void onCompleted() {
                         loadFollow();
+                        loadUserPage();
                     }
 
                     @Override
