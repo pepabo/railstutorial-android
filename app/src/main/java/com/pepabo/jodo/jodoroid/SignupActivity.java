@@ -1,7 +1,5 @@
 package com.pepabo.jodo.jodoroid;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -36,6 +34,8 @@ public class SignupActivity extends AppCompatActivity {
     @Bind(R.id.progress)
     View mProgressView;
 
+    ProgressToggle mProgressToggle;
+
     EmailValidator mEmailValidator;
     NameValidator mNameValidator;
     PasswordValidator mPasswordValidator;
@@ -51,6 +51,8 @@ public class SignupActivity extends AppCompatActivity {
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        mProgressToggle = new ProgressToggle(this, mProgressView, mFormView);
 
         mEmailValidator = new EmailValidator(getApplicationContext());
         mNameValidator = new NameValidator(getApplicationContext());
@@ -124,25 +126,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     void showProgress(final boolean show) {
-        final int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-        mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        mFormView.animate().setDuration(shortAnimTime).alpha(show ? 0 : 1)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                    }
-                });
-
-        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-        mProgressView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                    }
-                });
+        mProgressToggle.showProgress(show);
     }
 
     static class SignupSubscriber extends Subscriber<Void> {
