@@ -105,7 +105,7 @@ public abstract class RefreshPresenter<Model> {
                     public void onError(Throwable e) {
                         final RefreshableView<Model> view = getView();
                         if (view != null) {
-                            getView().onLoadError(e);
+                            view.onLoadError(e);
                         }
                     }
 
@@ -113,7 +113,7 @@ public abstract class RefreshPresenter<Model> {
                     public void onNext(Model model) {
                         final RefreshableView<Model> view = getView();
                         if (view != null) {
-                            getView().onMoreModel(model);
+                            view.onMoreModel(model);
                         }
                     }
                 });
