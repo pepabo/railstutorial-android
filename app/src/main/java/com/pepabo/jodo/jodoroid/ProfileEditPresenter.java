@@ -7,9 +7,11 @@ import com.pepabo.jodo.jodoroid.models.User;
 
 import java.lang.ref.WeakReference;
 
+import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.subscriptions.Subscriptions;
 
 public class ProfileEditPresenter {
@@ -66,7 +68,19 @@ public class ProfileEditPresenter {
                 if (!error) {
                     mSubscription = mAPIService.updateMe(name, email, null)
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new UpdateSubscriber(email));
+                            .flatMap(new Func1<User, Observable<User>>() {
+                                @Override
+                                public Observable<User> call(final User user) {
+                                    return mAccount.changeEmail(email)
+                                            .map(new Func1<JodoAccount, User>() {
+                                                @Override
+                                                public User call(JodoAccount unused) {
+                                                    return user;
+                                                }
+                                            });
+                                }
+                            })
+                            .subscribe(new UpdateSubscriber());
                 }
             }
         }
@@ -93,6 +107,7 @@ public class ProfileEditPresenter {
         public void onError(Throwable e) {
             final ProfileEditView view = mView.get();
             if (view != null) {
+                view.onError(e);
                 view.finish();
             }
         }
@@ -108,12 +123,6 @@ public class ProfileEditPresenter {
     }
 
     class UpdateSubscriber extends Subscriber<User> {
-        final String mEmail;
-
-        public UpdateSubscriber(String email) {
-            mEmail = email;
-        }
-
         @Override
         public void onStart() {
             final ProfileEditView view = mView.get();
@@ -134,6 +143,7 @@ public class ProfileEditPresenter {
         public void onError(Throwable e) {
             final ProfileEditView view = mView.get();
             if (view != null) {
+                view.onError(e);
                 view.finish();
             }
         }
@@ -142,7 +152,6 @@ public class ProfileEditPresenter {
         public void onNext(User unused) {
             final ProfileEditView view = mView.get();
             if (view != null) {
-                mAccount.changeEmail(mEmail);
                 view.finish();
             }
         }

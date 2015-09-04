@@ -11,5 +11,6 @@ public interface ProfileEditView {
 
     void showProgress(boolean show);
 
+    void onError(Throwable e);
     void finish();
 }

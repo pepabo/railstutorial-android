@@ -6,6 +6,7 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.content.Context;
 import android.os.Handler;
+import android.support.annotation.CheckResult;
 
 import com.pepabo.jodo.jodoroid.models.Session;
 import com.pepabo.jodo.jodoroid.models.User;
@@ -14,6 +15,7 @@ import java.io.IOException;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.schedulers.Schedulers;
 
 public class JodoAccount {
 
@@ -58,6 +60,7 @@ public class JodoAccount {
         return mAccount.name;
     }
 
+    @CheckResult
     public Observable<JodoAccount> changeEmail(final String newEmail) {
         return Observable.create(new Observable.OnSubscribe<JodoAccount>() {
             @Override
@@ -69,7 +72,7 @@ public class JodoAccount {
 
                     final boolean removed = mAccountManager.removeAccount(mAccount, null, null).getResult();
                     if(removed) {
-                        mAccount = new Account(email, JodoAuthenticator.ACCOUNT_TYPE);
+                        mAccount = new Account(newEmail, JodoAuthenticator.ACCOUNT_TYPE);
                         mAccountManager.addAccountExplicitly(mAccount, null, null);
                         mAccountManager.setAuthToken(mAccount, JodoAuthenticator.ACCOUNT_TOKEN_TYPE, authToken);
                         mAccountManager.setUserData(mAccount, JodoAuthenticator.ACCOUNT_ID_TYPE, Long.toString(userId));
@@ -80,7 +83,7 @@ public class JodoAccount {
                     subscriber.onError(e);
                 }
             }
-        });
+        }).subscribeOn(Schedulers.io());
     }
 
     public String getAuthToken() {

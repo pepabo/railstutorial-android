@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.pepabo.jodo.jodoroid.models.APIService;
 
@@ -107,5 +108,10 @@ public class ProfileEditActivity extends AppCompatActivity
 
     private void updateProfile() {
         mPresenter.submit();
+    }
+
+    @Override
+    public void onError(Throwable e) {
+        Toast.makeText(this, ErrorUtils.getMessage(e), Toast.LENGTH_SHORT).show();
     }
 }
