@@ -12,24 +12,19 @@
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_marginBottom="8dp" android:visibility="gone" />
 
-    <ScrollView android:id="@+id/post_form"
-        android:layout_width="match_parent" android:layout_height="match_parent">
+    <LinearLayout android:id="@+id/post_form"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="vertical">
+        <EditText android:id="@+id/article" android:inputType="textMultiLine"
+            android:layout_width="match_parent" android:layout_height="100dp"
+            android:layout_marginTop="64dp" android:background="@drawable/post_frame"
+            android:gravity="top|start" />
 
-            <EditText android:id="@+id/article" android:inputType="textMultiLine"
-                android:layout_width="match_parent" android:layout_height="100dp"
-                android:layout_marginTop="64dp" android:background="@drawable/post_frame"
-                android:gravity="top|start" />
+        <ImageView android:id="@+id/imgview" android:contentDescription="@string/description_attached_image"
+            android:layout_width="match_parent" android:layout_height="250dp"
+            android:layout_marginTop="30dp" />
 
-            <ImageView android:id="@+id/imgview" android:contentDescription="@string/description_attached_image"
-                       android:layout_width="match_parent" android:layout_height="250dp"
-                       android:layout_marginTop="30dp" />
-
-        </LinearLayout>
-
-    </ScrollView>
+    </LinearLayout>
 
 </LinearLayout>
