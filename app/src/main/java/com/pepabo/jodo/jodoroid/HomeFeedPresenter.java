@@ -13,20 +13,17 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class HomeFeedPresenter extends RefreshPresenter<List<Micropost>> {
     APIService mAPIService;
-    int mPage;
-    boolean mStopped;
 
     public HomeFeedPresenter(RefreshableView<List<Micropost>> view, APIService apiService) {
         super(view);
         mAPIService = apiService;
-        reset();
+        resetPagination();
     }
 
     @Override
     public void refresh() {
         super.refresh();
-
-        reset();
+        resetPagination();
     }
 
     @Override
@@ -37,10 +34,6 @@ public class HomeFeedPresenter extends RefreshPresenter<List<Micropost>> {
     public Observable<List<Micropost>> loadNextPage() {
         mPage++;
         return mAPIService.fetchFeed(mPage);
-    }
-
-    public void stop() {
-        mStopped = true;
     }
 
     public void onLoadNextPage() {
@@ -63,14 +56,9 @@ public class HomeFeedPresenter extends RefreshPresenter<List<Micropost>> {
 
                     @Override
                     public void onNext(List<Micropost> microposts) {
-                        if (microposts.size() == 0) stop();
+                        if (microposts.size() == 0) noMorePagination();
                         getView().onMoreModel(microposts);
                     }
                 });
-    }
-
-    private void reset() {
-        mStopped = false;
-        mPage    = 1;
     }
 }

@@ -23,6 +23,9 @@ public abstract class RefreshPresenter<Model> {
         this.mView = new WeakReference<>(view);
     }
 
+    protected int mPage;
+    protected boolean mStopped;
+
     protected abstract Observable<Model> getObservable();
     protected Observer<Model> getObserver(){
         return new RefreshSubscriber();
@@ -34,6 +37,15 @@ public abstract class RefreshPresenter<Model> {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(getObserver());
         }
+    }
+
+    protected void resetPagination() {
+        mPage    = 1;
+        mStopped = false;
+    }
+
+    public void noMorePagination() {
+        mStopped = true;
     }
 
     public RefreshableView<Model> getView() {
