@@ -11,8 +11,8 @@ public class AllUsersPresenter extends RefreshPresenter<List<User>> {
 
     APIService mAPIService;
 
-    public AllUsersPresenter(RefreshableView<List<User>> view, APIService apiService) {
-        super(view);
+    public AllUsersPresenter(APIService apiService) {
+        super();
         mAPIService = apiService;
     }
 

@@ -15,8 +15,8 @@ public class UserFollowersPresenter extends RefreshPresenter<List<User>> {
     int mType;
     long mUserId;
 
-    public UserFollowersPresenter(RefreshableView<List<User>> view, APIService apiService, int type, long userId) {
-        super(view);
+    public UserFollowersPresenter(APIService apiService, int type, long userId) {
+        super();
         mAPIService = apiService;
         mType = type;
         mUserId = userId;

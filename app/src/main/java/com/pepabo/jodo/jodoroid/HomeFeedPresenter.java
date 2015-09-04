@@ -10,10 +10,9 @@ import rx.Observable;
 public class HomeFeedPresenter extends RefreshPresenter<List<Micropost>> {
     APIService mAPIService;
 
-    public HomeFeedPresenter(RefreshableView<List<Micropost>> view, APIService apiService) {
-        super(view);
+    public HomeFeedPresenter(APIService apiService) {
+        super();
         mAPIService = apiService;
-        resetPagination();
     }
 
     @Override
