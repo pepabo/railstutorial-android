@@ -14,8 +14,11 @@ import android.widget.Toast;
 
 import com.pepabo.jodo.jodoroid.models.APIService;
 import com.pepabo.jodo.jodoroid.models.Follow;
+import com.pepabo.jodo.jodoroid.models.Micropost;
 import com.pepabo.jodo.jodoroid.models.User;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -111,7 +114,8 @@ public class UserProfileFragment extends MicropostListFragment
 
     @Override
     public void onMoreModel(User user) {
-        
+        setProfile(user);
+        addMicroposts(user.getMicroposts());
     }
 
     private void setProfile(User user) {
@@ -241,5 +245,10 @@ public class UserProfileFragment extends MicropostListFragment
         Toast.makeText(getActivity(),
                 getString(R.string.toast_load_failure),
                 Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onLoadNextPage() {
+        mPresenter.onLoadNextPage();
     }
 }
