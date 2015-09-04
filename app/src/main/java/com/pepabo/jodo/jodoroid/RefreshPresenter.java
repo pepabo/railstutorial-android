@@ -19,12 +19,13 @@ public abstract class RefreshPresenter<Model> {
     WeakReference<RefreshableView<Model>> mView;
     Subscription mSubscription = Subscriptions.unsubscribed();
 
-    public RefreshPresenter(RefreshableView<Model> view) {
-        this.mView = new WeakReference<>(view);
-    }
-
     protected int mPage;
     protected boolean mStopped;
+
+    public RefreshPresenter(RefreshableView<Model> view) {
+        this.mView = new WeakReference<>(view);
+        resetPagination();
+    }
 
     protected abstract Observable<Model> getObservable();
     protected Observer<Model> getObserver(){
@@ -37,6 +38,7 @@ public abstract class RefreshPresenter<Model> {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(getObserver());
         }
+        resetPagination();
     }
 
     protected void resetPagination() {
@@ -85,5 +87,30 @@ public abstract class RefreshPresenter<Model> {
                 view.setRefreshing(false);
             }
         }
+    }
+
+    abstract protected Observable<Model> loadNextPage(int pageNumber);
+
+    public void onLoadNextPage() {
+        if (!mSubscription.isUnsubscribed() || mStopped) return;
+
+        mPage++;
+        mSubscription = loadNextPage(mPage)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Model>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getView().onLoadError(e);
+                    }
+
+                    @Override
+                    public void onNext(Model model) {
+                        getView().onMoreModel(model);
+                    }
+                });
     }
 }

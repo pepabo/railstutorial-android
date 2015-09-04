@@ -62,13 +62,14 @@ public class HomeFeedFragment extends MicropostListFragment
                 Toast.LENGTH_SHORT).show();
     }
 
-
+    @Override
     public void onMoreModel(List<Micropost> microposts) {
+        if (microposts.size() == 0) mPresenter.noMorePagination();
         addMicroposts(microposts);
     }
 
     @Override
-    public void onLoadNextPage() {
+    protected void onLoadNextPage() {
         mPresenter.onLoadNextPage();
     }
 }

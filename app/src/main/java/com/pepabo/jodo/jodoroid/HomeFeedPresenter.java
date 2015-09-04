@@ -21,44 +21,12 @@ public class HomeFeedPresenter extends RefreshPresenter<List<Micropost>> {
     }
 
     @Override
-    public void refresh() {
-        super.refresh();
-        resetPagination();
-    }
-
-    @Override
     protected Observable<List<Micropost>> getObservable() {
         return mAPIService.fetchFeed(1);
     }
 
-    public Observable<List<Micropost>> loadNextPage() {
-        mPage++;
-        return mAPIService.fetchFeed(mPage);
-    }
-
-    public void onLoadNextPage() {
-
-        if (!mSubscription.isUnsubscribed() || mStopped) {
-            return;
-        }
-
-        mSubscription = loadNextPage()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Micropost>>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        getView().onLoadError(e);
-                    }
-
-                    @Override
-                    public void onNext(List<Micropost> microposts) {
-                        if (microposts.size() == 0) noMorePagination();
-                        getView().onMoreModel(microposts);
-                    }
-                });
+    @Override
+    public Observable<List<Micropost>> loadNextPage(int pageNumber) {
+        return mAPIService.fetchFeed(pageNumber);
     }
 }

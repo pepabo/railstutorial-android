@@ -21,44 +21,12 @@ public class UserProfilePresenter extends RefreshPresenter<User> {
     }
 
     @Override
-    public void refresh() {
-        super.refresh();
-        resetPagination();
-    }
-
-    @Override
     protected Observable<User> getObservable() {
         return mAPIService.fetchUser(mUserId, 1);
     }
 
-    public Observable<User> loadNextPage() {
-        mPage++;
-        return mAPIService.fetchUser(mUserId, mPage);
-    }
-
-    public void onLoadNextPage() {
-
-        if (!mSubscription.isUnsubscribed() || mStopped) {
-            return;
-        }
-
-        mSubscription = loadNextPage()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<User>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        getView().onLoadError(e);
-                    }
-
-                    @Override
-                    public void onNext(User user) {
-                        if (user.getMicroposts().size() == 0) noMorePagination();
-                        getView().onMoreModel(user);
-                    }
-                });
+    @Override
+    public Observable<User> loadNextPage(int pageNumber) {
+        return mAPIService.fetchUser(mUserId, pageNumber);
     }
 }
