@@ -33,11 +33,24 @@ public class HomeFeedFragment extends MicropostListFragment
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mPresenter = new HomeFeedPresenter(mAPIService);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mPresenter = new HomeFeedPresenter(this, mAPIService);
+        mPresenter.setView(this);
         mPresenter.refresh();
+    }
+
+    @Override
+    public void onDestroyView() {
+        mPresenter.setView(null);
+        super.onDestroyView();
     }
 
     @Override

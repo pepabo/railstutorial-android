@@ -14,8 +14,8 @@ public class UserProfilePresenter extends RefreshPresenter<User> {
     APIService mAPIService;
     long mUserId;
 
-    public UserProfilePresenter(RefreshableView<User> view, APIService apiService, long userId) {
-        super(view);
+    public UserProfilePresenter(APIService apiService, long userId) {
+        super();
         mAPIService = apiService;
         mUserId = userId;
     }

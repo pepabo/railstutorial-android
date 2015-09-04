@@ -81,6 +81,8 @@ public class UserProfileFragment extends MicropostListFragment
         super.onCreate(savedInstanceState);
 
         mUserId = getArguments().getLong(ARG_USER_ID);
+
+        mPresenter = new UserProfilePresenter(mAPIService, mUserId);
     }
 
     @Override
@@ -93,10 +95,16 @@ public class UserProfileFragment extends MicropostListFragment
             loadFollow();
         }
 
-        mPresenter = new UserProfilePresenter(this, mAPIService, mUserId);
+        mPresenter.setView(this);
         mPresenter.refresh();
 
         followUnfollowButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        mPresenter.setView(this);
+        super.onDestroyView();
     }
 
     @Override

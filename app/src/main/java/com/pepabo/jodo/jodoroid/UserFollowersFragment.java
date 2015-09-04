@@ -46,14 +46,22 @@ public class UserFollowersFragment extends UserListFragment
 
         mUserId = getArguments().getLong(ARG_USER_ID);
         mType = getArguments().getInt(ARG_TYPE);
+
+        mPresenter = new UserFollowersPresenter(mAPIService, mType, mUserId);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mPresenter = new UserFollowersPresenter(this, mAPIService, mType, mUserId);
+        mPresenter.setView(this);
         mPresenter.refresh();
+    }
+
+    @Override
+    public void onDestroyView() {
+        mPresenter.setView(null);
+        super.onDestroyView();
     }
 
     @Override
