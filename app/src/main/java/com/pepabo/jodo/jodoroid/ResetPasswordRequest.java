@@ -39,8 +39,6 @@ public class ResetPasswordRequest extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        activity = this;
-
     }
 
     @Override
@@ -98,13 +96,13 @@ public class ResetPasswordRequest extends AppCompatActivity {
                     @Override
                     public void onError(Throwable e) {
                         showProgress(false);
-                        Toast.makeText(activity, ErrorUtils.getMessage(e), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ResetPasswordRequest.this, ErrorUtils.getMessage(e), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onNext(Void aVoid) {
                         setResult(RESULT_OK);
-                        Toast.makeText(activity, R.string.toast_check_email_reset_password, Toast.LENGTH_LONG).show();
+                        Toast.makeText(ResetPasswordRequest.this, R.string.toast_check_email_reset_password, Toast.LENGTH_LONG).show();
                         finish();
                     }
                 });
