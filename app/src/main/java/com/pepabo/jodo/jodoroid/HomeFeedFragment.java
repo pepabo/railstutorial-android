@@ -9,9 +9,6 @@ import com.pepabo.jodo.jodoroid.models.Micropost;
 
 import java.util.List;
 
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-
 public class HomeFeedFragment extends MicropostListFragment
         implements RefreshableView<List<Micropost>> {
 
@@ -62,13 +59,14 @@ public class HomeFeedFragment extends MicropostListFragment
                 Toast.LENGTH_SHORT).show();
     }
 
-
+    @Override
     public void onMoreModel(List<Micropost> microposts) {
+        if (microposts.size() == 0) mPresenter.noMorePagination();
         addMicroposts(microposts);
     }
 
     @Override
-    public void onLoadNextPage() {
+    protected void onLoadNextPage() {
         mPresenter.onLoadNextPage();
     }
 }

@@ -1,11 +1,6 @@
 package com.pepabo.jodo.jodoroid;
 
-import android.view.View;
-
-import com.pepabo.jodo.jodoroid.models.Micropost;
-
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 import rx.Observable;
 import rx.Observer;
@@ -19,8 +14,12 @@ public abstract class RefreshPresenter<Model> {
     WeakReference<RefreshableView<Model>> mView;
     Subscription mSubscription = Subscriptions.unsubscribed();
 
+    protected int mPage;
+    protected boolean mStopped;
+
     public RefreshPresenter(RefreshableView<Model> view) {
         this.mView = new WeakReference<>(view);
+        resetPagination();
     }
 
     protected abstract Observable<Model> getObservable();
@@ -34,6 +33,16 @@ public abstract class RefreshPresenter<Model> {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(getObserver());
         }
+        resetPagination();
+    }
+
+    protected void resetPagination() {
+        mPage    = 1;
+        mStopped = false;
+    }
+
+    public void noMorePagination() {
+        mStopped = true;
     }
 
     public RefreshableView<Model> getView() {
@@ -73,5 +82,30 @@ public abstract class RefreshPresenter<Model> {
                 view.setRefreshing(false);
             }
         }
+    }
+
+    abstract protected Observable<Model> loadNextPage(int pageNumber);
+
+    public void onLoadNextPage() {
+        if (!mSubscription.isUnsubscribed() || mStopped) return;
+
+        mPage++;
+        mSubscription = loadNextPage(mPage)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Model>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getView().onLoadError(e);
+                    }
+
+                    @Override
+                    public void onNext(Model model) {
+                        getView().onMoreModel(model);
+                    }
+                });
     }
 }

@@ -70,7 +70,7 @@ public class UserFollowersFragment extends UserListFragment
 
     @Override
     public void onMoreModel(List<User> users) {
-
+        addUsers(users);
     }
 
     @Override
@@ -78,5 +78,10 @@ public class UserFollowersFragment extends UserListFragment
         Toast.makeText(getActivity(),
                 getString(R.string.toast_load_failure),
                 Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onLoadNextPage() {
+        mPresenter.onLoadNextPage();
     }
 }
