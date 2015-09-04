@@ -1,15 +1,11 @@
 package com.pepabo.jodo.jodoroid;
 
-import android.widget.Toast;
-
 import com.pepabo.jodo.jodoroid.models.APIService;
 import com.pepabo.jodo.jodoroid.models.Micropost;
 
 import java.util.List;
 
 import rx.Observable;
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
 
 public class HomeFeedPresenter extends RefreshPresenter<List<Micropost>> {
     APIService mAPIService;

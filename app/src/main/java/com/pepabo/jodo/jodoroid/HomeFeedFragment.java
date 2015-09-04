@@ -9,9 +9,6 @@ import com.pepabo.jodo.jodoroid.models.Micropost;
 
 import java.util.List;
 
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-
 public class HomeFeedFragment extends MicropostListFragment
         implements RefreshableView<List<Micropost>> {
 

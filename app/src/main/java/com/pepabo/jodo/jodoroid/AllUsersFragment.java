@@ -54,7 +54,7 @@ public class AllUsersFragment extends UserListFragment
 
     @Override
     public void onMoreModel(List<User> users) {
-
+        addUsers(users);
     }
 
     @Override

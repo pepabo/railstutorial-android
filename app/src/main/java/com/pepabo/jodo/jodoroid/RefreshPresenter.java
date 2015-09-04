@@ -1,11 +1,6 @@
 package com.pepabo.jodo.jodoroid;
 
-import android.view.View;
-
-import com.pepabo.jodo.jodoroid.models.Micropost;
-
 import java.lang.ref.WeakReference;
-import java.util.List;
 
 import rx.Observable;
 import rx.Observer;
