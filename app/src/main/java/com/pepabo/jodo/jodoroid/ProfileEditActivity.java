@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,14 @@ public class ProfileEditActivity extends AppCompatActivity
     @Bind(R.id.name)
     TextView mNameView;
 
+    @Bind(R.id.progress)
+    View mProgressView;
+
+    @Bind(R.id.form)
+    View mFormView;
+
+    ProgressToggle mProgressToggle;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +47,8 @@ public class ProfileEditActivity extends AppCompatActivity
         actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
 
         new EmailAutoCompletion().populate(mEmailView);
+
+        mProgressToggle = new ProgressToggle(this, mProgressView, mFormView);
 
         mAPIService = ((JodoroidApplication) getApplication()).getAPIService();
         mPresenter = new ProfileEditPresenter(getApplicationContext(), this,
@@ -103,7 +114,7 @@ public class ProfileEditActivity extends AppCompatActivity
 
     @Override
     public void showProgress(boolean show) {
-
+        mProgressToggle.showProgress(show);
     }
 
     private void updateProfile() {

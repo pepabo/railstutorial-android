@@ -67,7 +67,6 @@ public class ProfileEditPresenter {
 
                 if (!error) {
                     mSubscription = mAPIService.updateMe(name, email, null)
-                            .observeOn(AndroidSchedulers.mainThread())
                             .flatMap(new Func1<User, Observable<User>>() {
                                 @Override
                                 public Observable<User> call(final User user) {
@@ -80,6 +79,7 @@ public class ProfileEditPresenter {
                                             });
                                 }
                             })
+                            .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new UpdateSubscriber());
                 }
             }
