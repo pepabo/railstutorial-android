@@ -135,7 +135,7 @@ public class ProfileEditPresenter {
         public void onCompleted() {
             final ProfileEditView view = mView.get();
             if (view != null) {
-                view.showProgress(false);
+                view.finish();
             }
         }
 
@@ -144,16 +144,12 @@ public class ProfileEditPresenter {
             final ProfileEditView view = mView.get();
             if (view != null) {
                 view.onError(e);
-                view.finish();
+                view.showProgress(false);
             }
         }
 
         @Override
         public void onNext(User unused) {
-            final ProfileEditView view = mView.get();
-            if (view != null) {
-                view.finish();
-            }
         }
     }
 }
