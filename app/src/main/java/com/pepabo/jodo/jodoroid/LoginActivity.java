@@ -142,7 +142,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onNext(Session session) {
                             if(session != null && session.getAuthToken() != null) {
-                                JodoAccounts.addAccount(getApplicationContext(), email, session);
+                                JodoAccount.addAccount(getApplicationContext(), email, session);
 
                                 setResult(RESULT_OK);
                                 finish();

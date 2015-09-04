@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        mDrawerEmail.setText(JodoAccounts.getAccount(this).name);
+        mDrawerEmail.setText(JodoAccount.getAccount(this).getEmail());
 
         mAPIService = ((JodoroidApplication) getApplication()).getAPIService();
         mPicasso = ((JodoroidApplication) getApplication()).getPicasso();
