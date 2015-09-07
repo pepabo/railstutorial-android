@@ -17,6 +17,7 @@
     <string name="label_following">Following</string>
     <string name="title_activity_reset_password_request">ResetPasswordRequest</string>
     <string name="title_activity_reset_password">ResetPassword</string>
+    <string name="toast_password_reset">Your password is reset.</string>
 
     <string name="title_section_profile">Edit your profile</string>
     <string name="title_section_oss_license">Open source licenses</string>
@@ -26,6 +27,7 @@
     <string name="hint_name">Name</string>
     <string name="action_save">Save</string>
     <string name="hint_password">Password</string>
+    <string name="hint_new_password">New password</string>
     <string name="title_activity_password_change">Change password</string>
     <string name="title_section_password">Change password</string>
     <string name="action_change">Change</string>
