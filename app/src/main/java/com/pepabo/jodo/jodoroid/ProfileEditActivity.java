@@ -1,5 +1,8 @@
 package com.pepabo.jodo.jodoroid;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -36,6 +39,8 @@ public class ProfileEditActivity extends AppCompatActivity
 
     ProgressToggle mProgressToggle;
 
+    BroadcastReceiver mLogoutReceiver;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,11 +60,19 @@ public class ProfileEditActivity extends AppCompatActivity
                 mAPIService, JodoAccount.getAccount(getApplicationContext()));
 
         mPresenter.start();
+
+        registerReceiver(mLogoutReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                finish();
+            }
+        }, JodoroidApplication.createLoggedOutIntentFilter());
     }
 
     @Override
     protected void onDestroy() {
         mPresenter.stop();
+        unregisterReceiver(mLogoutReceiver);
         super.onDestroy();
     }
 
