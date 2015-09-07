@@ -26,6 +26,7 @@
     <string name="hint_name">Name</string>
     <string name="action_save">Save</string>
     <string name="hint_password">Password</string>
+    <string name="hint_new_password">New password</string>
     <string name="title_activity_password_change">Change password</string>
     <string name="title_section_password">Change password</string>
     <string name="action_change">Change</string>
