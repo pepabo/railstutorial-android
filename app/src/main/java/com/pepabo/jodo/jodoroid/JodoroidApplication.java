@@ -2,8 +2,11 @@ package com.pepabo.jodo.jodoroid;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.OnAccountsUpdateListener;
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
@@ -38,9 +41,11 @@ import retrofit.android.AndroidLog;
 import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 
-public class JodoroidApplication extends Application {
+public class JodoroidApplication extends Application implements OnAccountsUpdateListener {
     public static final String ENDPOINT = "https://157.7.190.186/api/";
     private static final String CACHE_DIR_NAME = "http-cache";
+
+    public static final String ACTION_LOGGED_OUT = "com.pepabo.jodo.jodoroid.LOGGED_OUT";
 
     APIService mService;
     Picasso mPicasso;
@@ -58,6 +63,8 @@ public class JodoroidApplication extends Application {
 
         mPicasso = createPicasso(this, mHttpClient);
         mService = createAPIService(this, mHttpClient);
+
+        AccountManager.get(this).addOnAccountsUpdatedListener(this, null, true);
     }
 
     public Picasso getPicasso() {
@@ -160,11 +167,30 @@ public class JodoroidApplication extends Application {
 
         private String getAuthToken() {
             final JodoAccount account = JodoAccount.getAccount(mContext);
-            if(account == null) {
+            if (account == null) {
                 return null;
             }
 
             return account.getAuthToken();
         }
+    }
+
+    @Override
+    public void onAccountsUpdated(Account[] accounts) {
+        boolean found = false;
+
+        for (Account account : accounts) {
+            if(account.type.equals(JodoAuthenticator.ACCOUNT_TYPE)) {
+                found = true;
+            }
+        }
+
+        if(!found) {
+            sendBroadcast(new Intent(ACTION_LOGGED_OUT));
+        }
+    }
+
+    public static IntentFilter createLoggedOutIntentFilter() {
+        return new IntentFilter(ACTION_LOGGED_OUT);
     }
 }
