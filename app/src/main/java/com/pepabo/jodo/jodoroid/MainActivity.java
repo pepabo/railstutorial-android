@@ -112,7 +112,9 @@ public class MainActivity extends AppCompatActivity
             }
         }, JodoroidApplication.createLoggedOutIntentFilter());
 
-        processIntent(getIntent());
+        if (savedInstanceState == null) {
+            processIntent(getIntent());
+        }
     }
 
     @Override
