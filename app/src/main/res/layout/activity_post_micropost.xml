@@ -1,37 +1,51 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center_horizontal"
     tools:context="com.pepabo.jodo.jodoroid.PostMicropost">
 
-    <ProgressBar android:id="@+id/post_progress" style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp" android:visibility="gone" />
+    <ProgressBar
+        android:id="@+id/post_progress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <LinearLayout android:id="@+id/post_form"
-            android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:paddingTop="16dp" android:paddingBottom="16dp"
-            android:paddingLeft="16dp" android:paddingRight="16dp"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText android:id="@+id/article" android:inputType="textMultiLine"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:layout_marginTop="20dp" android:hint="@string/whats_happened"
+            <EditText
+                android:id="@+id/article"
+                android:inputType="textMultiLine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:hint="@string/whats_happened"
                 android:gravity="top|start" />
 
         </android.support.design.widget.TextInputLayout>
 
-            <ImageView android:id="@+id/imgview" android:contentDescription="@string/description_attached_image"
-                android:layout_width="match_parent" android:layout_height="wrap_content"
+            <ImageView
+                android:id="@+id/imgview"
+                android:contentDescription="@string/description_attached_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="30dp" />
 
         </LinearLayout>
