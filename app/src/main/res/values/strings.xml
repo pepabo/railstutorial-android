@@ -39,6 +39,8 @@
     <string name="description_attached_image">Attached Image</string>
     <string name="description_user_avatar">User avatar</string>
 
+    <string name="whats_happened">What\'s happened?</string>
+
     <string name="title_delete_micropost">Delete This Post</string>
     <string name="description_delete_micropost">Are You Sure?</string>
     <string name="toast_deletion_succeed">Deleted Successfully.</string>

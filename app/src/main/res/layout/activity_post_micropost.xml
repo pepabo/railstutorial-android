@@ -20,10 +20,16 @@
             android:layout_width="match_parent" android:layout_height="wrap_content"
             android:orientation="vertical">
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
             <EditText android:id="@+id/article" android:inputType="textMultiLine"
-                android:layout_width="match_parent" android:layout_height="100dp"
-                android:layout_marginTop="64dp" android:background="@drawable/post_frame"
+                android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="20dp" android:hint="@string/whats_happened"
                 android:gravity="top|start" />
+
+        </android.support.design.widget.TextInputLayout>
 
             <ImageView android:id="@+id/imgview" android:contentDescription="@string/description_attached_image"
                 android:layout_width="match_parent" android:layout_height="wrap_content"
