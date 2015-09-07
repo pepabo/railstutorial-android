@@ -3,6 +3,8 @@ package com.pepabo.jodo.jodoroid;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -37,6 +39,8 @@ public class PostMicropost extends AppCompatActivity {
     private View mPostformView;
     private View mProgressView;
 
+    BroadcastReceiver mLoggoutReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +54,19 @@ public class PostMicropost extends AppCompatActivity {
         
         mPostformView = findViewById(R.id.post_form);
         mProgressView = findViewById(R.id.post_progress);
+
+        registerReceiver(mLoggoutReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                finish();
+            }
+        }, JodoroidApplication.createLoggedOutIntentFilter());
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(mLoggoutReceiver);
+        super.onDestroy();
     }
 
     @Override
