@@ -13,7 +13,7 @@ public class HomeFeedFragment extends MicropostListFragment
         implements RefreshableView<List<Micropost>> {
 
     APIService mAPIService;
-    RefreshPresenter<List<Micropost>> mPresenter;
+    HomeFeedPresenter mPresenter;
 
     public static HomeFeedFragment newInstance() {
         HomeFeedFragment fragment = new HomeFeedFragment();
@@ -33,11 +33,24 @@ public class HomeFeedFragment extends MicropostListFragment
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mPresenter = new HomeFeedPresenter(mAPIService);
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mPresenter = new HomeFeedPresenter(this, mAPIService);
+        mPresenter.setView(this);
         mPresenter.refresh();
+    }
+
+    @Override
+    public void onDestroyView() {
+        mPresenter.setView(null);
+        super.onDestroyView();
     }
 
     @Override
@@ -57,5 +70,16 @@ public class HomeFeedFragment extends MicropostListFragment
         Toast.makeText(getActivity(),
                 getString(R.string.toast_load_failure),
                 Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onMoreModel(List<Micropost> microposts) {
+        if (microposts.size() == 0) mPresenter.noMorePagination();
+        addMicroposts(microposts);
+    }
+
+    @Override
+    protected void onLoadNextPage() {
+        mPresenter.onLoadNextPage();
     }
 }

@@ -40,6 +40,11 @@ public class UserListFragment extends SwipeRefreshListFragment {
         mAdapter.notifyDataSetChanged();
     }
 
+    protected void addUsers(List<User> users) {
+        mUsers.addAll(users);
+        mAdapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);

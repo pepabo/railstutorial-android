@@ -1,25 +1,25 @@
 package com.pepabo.jodo.jodoroid;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import com.pepabo.jodo.jodoroid.models.APIService;
 import com.pepabo.jodo.jodoroid.models.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
+public class UserFollowersFragment extends UserListFragment
+        implements RefreshableView<List<User>> {
 
-public class UserFollowersFragment extends UserListFragment {
-    public static final int TYPE_FOLLOWERS = 0;
-    public static final int TYPE_FOLLOWING = 1;
+    static final String ARG_USER_ID = "user_id";
+    static final String ARG_TYPE = "type";
 
+    int mType;
+    long mUserId;
 
-    private static final String ARG_USER_ID = "user_id";
-    private static final String ARG_TYPE = "type";
-
+    APIService mAPIService;
+    RefreshPresenter<List<User>> mPresenter;
 
     public static UserFollowersFragment newInstance(long userId, int type) {
         UserFollowersFragment fragment = new UserFollowersFragment();
@@ -34,50 +34,62 @@ public class UserFollowersFragment extends UserListFragment {
     }
 
     @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        mAPIService = ((JodoroidApplication) getActivity().getApplication()).getAPIService();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        long userId = getArguments().getLong(ARG_USER_ID);
-        Observer<List<User>> observer = new Observer<List<User>>() {
-            @Override
-            public void onCompleted() {}
+        mUserId = getArguments().getLong(ARG_USER_ID);
+        mType = getArguments().getInt(ARG_TYPE);
 
-            @Override
-            public void onError(Throwable e) {
-                showErrorToast(e);
-                setUsers(new ArrayList<User>());
-            }
-
-            @Override
-            public void onNext(List<User> users) {
-                setUsers(users);
-            }
-        };
-
-        switch (getArguments().getInt(ARG_TYPE)) {
-            case TYPE_FOLLOWERS:
-                getAPIService()
-                        .fetchFollowers(userId, 1)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(observer);
-                break;
-            case TYPE_FOLLOWING:
-                getAPIService()
-                        .fetchFollowing(userId, 1)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(observer);
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
+        mPresenter = new UserFollowersPresenter(mAPIService, mType, mUserId);
     }
 
-    private APIService getAPIService() {
-        return ((JodoroidApplication) getActivity().getApplication()).getAPIService();
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mPresenter.setView(this);
+        mPresenter.refresh();
     }
 
-    private void showErrorToast(Throwable e) {
-        String message = getString(R.string.toast_load_failure);
-        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+    @Override
+    public void onDestroyView() {
+        mPresenter.setView(null);
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onRefresh() {
+        super.onRefresh();
+
+        mPresenter.refresh();
+    }
+
+    @Override
+    public void onNextModel(List<User> users) {
+        setUsers(users);
+    }
+
+    @Override
+    public void onMoreModel(List<User> users) {
+        addUsers(users);
+    }
+
+    @Override
+    public void onLoadError(Throwable e) {
+        Toast.makeText(getActivity(),
+                getString(R.string.toast_load_failure),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onLoadNextPage() {
+        mPresenter.onLoadNextPage();
     }
 }

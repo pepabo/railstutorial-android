@@ -10,13 +10,18 @@ import rx.Observable;
 public class HomeFeedPresenter extends RefreshPresenter<List<Micropost>> {
     APIService mAPIService;
 
-    public HomeFeedPresenter(RefreshableView<List<Micropost>> view, APIService apiService) {
-        super(view);
+    public HomeFeedPresenter(APIService apiService) {
+        super();
         mAPIService = apiService;
     }
 
     @Override
     protected Observable<List<Micropost>> getObservable() {
         return mAPIService.fetchFeed(1);
+    }
+
+    @Override
+    public Observable<List<Micropost>> loadNextPage(int pageNumber) {
+        return mAPIService.fetchFeed(pageNumber);
     }
 }

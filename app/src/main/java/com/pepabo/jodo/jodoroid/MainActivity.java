@@ -2,26 +2,19 @@ package com.pepabo.jodo.jodoroid;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.res.Configuration;
-import android.media.Image;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
-import android.view.View;
 import android.content.Intent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pepabo.jodo.jodoroid.models.APIService;
-import com.pepabo.jodo.jodoroid.models.Micropost;
 import com.pepabo.jodo.jodoroid.models.User;
 import com.squareup.picasso.Picasso;
 
@@ -47,8 +40,10 @@ public class MainActivity extends AppCompatActivity
     public static final String EXTRA_USER_ID = "userId";
 
     private ActionBarDrawerToggle mDrawerToggle;
-    @Bind(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-    @Bind(R.id.navigation_drawer) NavigationView mDrawer;
+    @Bind(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
+    @Bind(R.id.navigation_drawer)
+    NavigationView mDrawer;
 
     private Subscription mAccountSubscription;
     private User mSelf;
@@ -56,9 +51,12 @@ public class MainActivity extends AppCompatActivity
     private APIService mAPIService;
     private Picasso mPicasso;
 
-    @Bind(R.id.drawer_email) TextView mDrawerEmail;
-    @Bind(R.id.drawer_name) TextView mDrawerName;
-    @Bind(R.id.drawer_avatar) ImageView mDrawerAvatar;
+    @Bind(R.id.drawer_email)
+    TextView mDrawerEmail;
+    @Bind(R.id.drawer_name)
+    TextView mDrawerName;
+    @Bind(R.id.drawer_avatar)
+    ImageView mDrawerAvatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +74,7 @@ public class MainActivity extends AppCompatActivity
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowHomeEnabled(true);
 
-        mDrawerEmail.setText(JodoAccounts.getAccount(this).name);
+        mDrawerEmail.setText(JodoAccount.getAccount(this).getEmail());
 
         mAPIService = ((JodoroidApplication) getApplication()).getAPIService();
         mPicasso = ((JodoroidApplication) getApplication()).getPicasso();
@@ -180,12 +178,12 @@ public class MainActivity extends AppCompatActivity
 
     private void showFollowers(long userId) {
         showFragment(UserFollowersFragment
-                .newInstance(userId, UserFollowersFragment.TYPE_FOLLOWERS));
+                .newInstance(userId, UserFollowersPresenter.TYPE_FOLLOWERS));
     }
 
     private void showFollowing(long userId) {
         showFragment(UserFollowersFragment
-                .newInstance(userId, UserFollowersFragment.TYPE_FOLLOWING));
+                .newInstance(userId, UserFollowersPresenter.TYPE_FOLLOWING));
     }
 
     static {
@@ -273,11 +271,17 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        if (mDrawerLayout.isDrawerOpen(mDrawer)) {
+            mDrawerLayout.closeDrawer(mDrawer);
+            return;
+        }
+
         final FragmentManager fragmentManager = getFragmentManager();
         if (fragmentManager.getBackStackEntryCount() > 1) {
             fragmentManager.popBackStack();
-        } else {
-            super.onBackPressed();
+            return;
         }
+
+        super.onBackPressed();
     }
 }

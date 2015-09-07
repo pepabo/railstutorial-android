@@ -11,11 +11,22 @@ import rx.subscriptions.Subscriptions;
 
 public abstract class RefreshPresenter<Model> {
 
-    WeakReference<RefreshableView<Model>> mView;
+    RefreshableView<Model> mView;
     Subscription mSubscription = Subscriptions.unsubscribed();
 
-    public RefreshPresenter(RefreshableView<Model> view) {
-        this.mView = new WeakReference<>(view);
+    protected int mPage;
+    protected boolean mStopped;
+
+    public RefreshPresenter() {
+        resetPagination();
+    }
+
+    public void setView (RefreshableView<Model> view) {
+        mView = view;
+    }
+
+    public RefreshableView<Model> getView() {
+        return mView;
     }
 
     protected abstract Observable<Model> getObservable();
@@ -29,12 +40,23 @@ public abstract class RefreshPresenter<Model> {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(getObserver());
         }
+        resetPagination();
     }
+
+    protected void resetPagination() {
+        mPage    = 1;
+        mStopped = false;
+    }
+
+    public void noMorePagination() {
+        mStopped = true;
+    }
+
 
     class RefreshSubscriber extends Subscriber<Model> {
         @Override
         public void onStart() {
-            final RefreshableView<Model> view = mView.get();
+            final RefreshableView<Model> view = getView();
             if (view != null) {
                 view.setRefreshing(true);
             }
@@ -42,7 +64,7 @@ public abstract class RefreshPresenter<Model> {
 
         @Override
         public void onNext(Model model) {
-            final RefreshableView<Model> view = mView.get();
+            final RefreshableView<Model> view = getView();
             if (view != null) {
                 view.onNextModel(model);
             }
@@ -50,7 +72,7 @@ public abstract class RefreshPresenter<Model> {
 
         @Override
         public void onCompleted() {
-            final RefreshableView<Model> view = mView.get();
+            final RefreshableView<Model> view = getView();
             if (view != null) {
                 view.setRefreshing(false);
             }
@@ -58,11 +80,42 @@ public abstract class RefreshPresenter<Model> {
 
         @Override
         public void onError(Throwable e) {
-            final RefreshableView<Model> view = mView.get();
+            final RefreshableView<Model> view = getView();
             if (view != null) {
                 view.onLoadError(e);
                 view.setRefreshing(false);
             }
         }
+    }
+
+    abstract protected Observable<Model> loadNextPage(int pageNumber);
+
+    public void onLoadNextPage() {
+        if (!mSubscription.isUnsubscribed() || mStopped) return;
+
+        mPage++;
+        mSubscription = loadNextPage(mPage)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Model>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        final RefreshableView<Model> view = getView();
+                        if (view != null) {
+                            view.onLoadError(e);
+                        }
+                    }
+
+                    @Override
+                    public void onNext(Model model) {
+                        final RefreshableView<Model> view = getView();
+                        if (view != null) {
+                            view.onMoreModel(model);
+                        }
+                    }
+                });
     }
 }
