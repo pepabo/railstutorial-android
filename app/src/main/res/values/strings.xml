@@ -13,6 +13,7 @@
     <string name="label_following">Following</string>
     <string name="title_activity_reset_password_request">ResetPasswordRequest</string>
     <string name="title_activity_reset_password">ResetPassword</string>
+    <string name="toast_password_reset">Your password is reset.</string>
 
     <string name="title_section_profile">Edit your profile</string>
     <string name="title_section_oss_license">Open source licenses</string>

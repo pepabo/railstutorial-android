@@ -66,7 +66,7 @@ public class ResetPassword extends AppCompatActivity {
                     public void onNext(Session session) {
                         Activity activity = ResetPassword.this;
                         JodoAccounts.addAccount(activity, email, session);
-                        Toast.makeText(activity, R.string.toast_account_activated, Toast.LENGTH_LONG).show();
+                        Toast.makeText(activity, R.string.toast_password_reset, Toast.LENGTH_LONG).show();
                     }
                 });
     }
