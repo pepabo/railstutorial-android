@@ -68,8 +68,15 @@ class MicropostsAdapter extends ArrayAdapter<Micropost> {
     }
 
     CharSequence formatDate(Date date) {
-        return DateUtils.getRelativeTimeSpanString(date.getTime(),
-                System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
+        final long now = System.currentTimeMillis();
+        long time = date.getTime();
+
+        // Display "0 seconds ago" when given date is in future (due to inaccurate system clock).
+        if(time > now) {
+            time = now;
+        }
+
+        return DateUtils.getRelativeTimeSpanString(time, now, DateUtils.SECOND_IN_MILLIS);
     }
 
     static class ViewHolder {
