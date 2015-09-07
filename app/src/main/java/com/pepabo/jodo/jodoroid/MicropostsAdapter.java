@@ -2,6 +2,7 @@ package com.pepabo.jodo.jodoroid;
 
 import android.content.Context;
 import android.net.Uri;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,6 @@ import com.pepabo.jodo.jodoroid.models.Micropost;
 import com.pepabo.jodo.jodoroid.models.User;
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -67,9 +67,16 @@ class MicropostsAdapter extends ArrayAdapter<Micropost> {
         return view;
     }
 
-    String formatDate(Date date) {
-        DateFormat f = DateFormat.getDateTimeInstance();
-        return f.format(date);
+    CharSequence formatDate(Date date) {
+        final long now = System.currentTimeMillis();
+        long time = date.getTime();
+
+        // Display "0 seconds ago" when given date is in future (due to inaccurate system clock).
+        if(time > now) {
+            time = now;
+        }
+
+        return DateUtils.getRelativeTimeSpanString(time, now, DateUtils.SECOND_IN_MILLIS);
     }
 
     static class ViewHolder {
