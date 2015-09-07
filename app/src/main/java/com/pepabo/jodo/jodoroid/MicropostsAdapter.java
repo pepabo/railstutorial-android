@@ -1,13 +1,9 @@
 package com.pepabo.jodo.jodoroid;
 
-import android.app.Activity;
-import android.app.FragmentTransaction;
-import android.content.Intent;
-import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.net.Uri;
-import android.text.format.DateUtils;
 import android.support.v7.app.AlertDialog;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +14,6 @@ import android.widget.TextView;
 import com.pepabo.jodo.jodoroid.models.Micropost;
 import com.pepabo.jodo.jodoroid.models.User;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
 
 import java.util.Date;
 import java.util.List;
