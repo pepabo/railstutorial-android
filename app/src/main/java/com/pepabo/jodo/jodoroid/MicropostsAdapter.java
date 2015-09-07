@@ -1,8 +1,13 @@
 package com.pepabo.jodo.jodoroid;
 
+import android.app.Activity;
+import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.net.Uri;
 import android.text.format.DateUtils;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +18,7 @@ import android.widget.TextView;
 import com.pepabo.jodo.jodoroid.models.Micropost;
 import com.pepabo.jodo.jodoroid.models.User;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.util.Date;
 import java.util.List;
@@ -31,7 +37,7 @@ class MicropostsAdapter extends ArrayAdapter<Micropost> {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(int position, View view, final ViewGroup parent) {
         final ViewHolder holder;
         if (view == null) {
             view = mInflater.inflate(R.layout.view_micropost, parent, false);
@@ -57,9 +63,19 @@ class MicropostsAdapter extends ArrayAdapter<Micropost> {
 
         final Uri pictureUrl = micropost.getPictureUrl();
         if (pictureUrl != null) {
-            mPicasso.load(pictureUrl)
-                    .resize(400, 400).onlyScaleDown().centerInside()
-                    .into(holder.picture);
+            mPicasso.load(pictureUrl).resize(400, 400).onlyScaleDown().centerInside().into(holder.picture);
+
+            holder.picture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ImageView image = new ImageView(getContext());
+                    image.setMaxHeight(1000);
+                    image.setMaxWidth(1000);
+                    mPicasso.load(pictureUrl).resize(1000, 1000).centerInside().into(image);
+
+                    new AlertDialog.Builder(getContext()).setView(image).show();
+                }
+            });
         } else {
             holder.picture.setImageDrawable(null);
         }
