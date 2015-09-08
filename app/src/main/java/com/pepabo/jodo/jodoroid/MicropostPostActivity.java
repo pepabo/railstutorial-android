@@ -25,16 +25,28 @@ import com.pepabo.jodo.jodoroid.models.Micropost;
 import java.io.File;
 import java.io.InputStream;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import retrofit.mime.TypedFile;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class MicropostPostActivity extends AppCompatActivity {
     public final static int REQUEST_GALLERY = 0;
-    private EditText article;
+
+    @Bind(R.id.article)
+    EditText mArticleView;
+
+    @Bind(R.id.post_form)
+    View mPostformView;
+
+    @Bind(R.id.post_progress)
+    View mProgressView;
+
+    @Bind(R.id.imgview)
+    ImageView mAttachmentImageView;
+
     private TypedFile imgtype;
-    private View mPostformView;
-    private View mProgressView;
 
     BroadcastReceiver mLoggoutReceiver;
 
@@ -42,15 +54,11 @@ public class MicropostPostActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_micropost);
-
-        article = (EditText) findViewById(R.id.article);
+        ButterKnife.bind(this);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
-
-        mPostformView = findViewById(R.id.post_form);
-        mProgressView = findViewById(R.id.post_progress);
 
         registerReceiver(mLoggoutReceiver = new BroadcastReceiver() {
             @Override
@@ -104,12 +112,11 @@ public class MicropostPostActivity extends AppCompatActivity {
             File file = new File(imagePath(intent));
             imgtype = new TypedFile("image/*", file);
 
-            ImageView imgview = (ImageView) findViewById(R.id.imgview);
             try {
                 InputStream stream = getContentResolver().openInputStream(intent.getData());
                 Bitmap bmp = BitmapFactory.decodeStream(stream);
                 stream.close();
-                imgview.setImageBitmap(bmp);
+                mAttachmentImageView.setImageBitmap(bmp);
             } catch (Exception e) {
             }
         }
@@ -124,7 +131,7 @@ public class MicropostPostActivity extends AppCompatActivity {
 
     private void postMicropost() {
         ((JodoroidApplication) getApplication()).getAPIService()
-                .createMicropost(article.getText().toString(), imgtype)
+                .createMicropost(mArticleView.getText().toString(), imgtype)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Micropost>() {
                     @Override
