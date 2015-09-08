@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import com.pepabo.jodo.jodoroid.models.Micropost;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
 import butterknife.Bind;
@@ -90,12 +92,12 @@ public class MicropostPostActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 break;
-            case R.id.action_Attach:
-                Intent intent = new Intent();
+            case R.id.action_Attach: {
+                final Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
-                intent.setAction(Intent.ACTION_PICK);
                 startActivityForResult(intent, REQUEST_GALLERY);
                 break;
+            }
             case R.id.action_Send:
                 showProgress(true);
                 postMicropost();
@@ -105,28 +107,38 @@ public class MicropostPostActivity extends AppCompatActivity {
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
+        if (requestCode == REQUEST_GALLERY) {
+            if (resultCode == RESULT_OK && null != intent) {
+                mAttachmentImage = asTypedFile(intent.getData());
 
-        if (requestCode == REQUEST_GALLERY && resultCode == RESULT_OK && null != intent) {
-
-            File file = new File(imagePath(intent));
-            mAttachmentImage = new TypedFile("image/*", file);
-
-            try {
-                InputStream stream = getContentResolver().openInputStream(intent.getData());
-                Bitmap bmp = BitmapFactory.decodeStream(stream);
-                stream.close();
-                mAttachmentImageView.setImageBitmap(bmp);
-            } catch (Exception e) {
+                try {
+                    final InputStream in = mAttachmentImage.in();
+                    try {
+                        final Bitmap bitmap = BitmapFactory.decodeStream(mAttachmentImage.in());
+                        mAttachmentImageView.setImageBitmap(bitmap);
+                    } finally {
+                        in.close();
+                    }
+                } catch (IOException e) {
+                    // ignore
+                }
             }
+        } else {
+            super.onActivityResult(requestCode, resultCode, intent);
         }
     }
 
-    private String imagePath(Intent intent) {
-        String[] columns = {MediaStore.Images.Media.DATA};
-        Cursor c = getContentResolver().query(intent.getData(), columns, null, null, null);
-        c.moveToFirst();
-        return c.getString(0);
+    private TypedFile asTypedFile(Uri uri) {
+        final String[] columns = {MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.MIME_TYPE};
+        final Cursor c = getContentResolver().query(uri, columns, null, null, null);
+        try {
+            c.moveToFirst();
+            final String path = c.getString(0);
+            final String mimeType = c.getString(1);
+            return new TypedFile(mimeType, new File(path));
+        } finally {
+            c.close();
+        }
     }
 
     private void postMicropost() {
