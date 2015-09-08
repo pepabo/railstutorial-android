@@ -10,23 +10,20 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
 import android.os.Bundle;
-import android.text.Html;
+import android.provider.MediaStore;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 
 import com.pepabo.jodo.jodoroid.models.Micropost;
 
 import java.io.File;
 import java.io.InputStream;
-
 
 import retrofit.mime.TypedFile;
 import rx.Observer;
@@ -51,7 +48,7 @@ public class PostMicropost extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
-        
+
         mPostformView = findViewById(R.id.post_form);
         mProgressView = findViewById(R.id.post_progress);
 
@@ -102,7 +99,7 @@ public class PostMicropost extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
-        if(requestCode == REQUEST_GALLERY && resultCode == RESULT_OK && null != intent) {
+        if (requestCode == REQUEST_GALLERY && resultCode == RESULT_OK && null != intent) {
 
             File file = new File(imagePath(intent));
             imgtype = new TypedFile("image/*", file);
