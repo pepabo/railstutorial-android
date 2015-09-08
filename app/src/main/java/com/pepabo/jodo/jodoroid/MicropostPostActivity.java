@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -31,6 +32,9 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class MicropostPostActivity extends AppCompatActivity {
     public final static int REQUEST_GALLERY = 0;
+
+    final static String STATE_ATTACHMENT_PATH = "attachmentPath";
+    final static String STATE_ATTACHMENT_TYPE = "attachmentType";
 
     @Bind(R.id.article)
     EditText mArticleView;
@@ -77,6 +81,28 @@ public class MicropostPostActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        if (mAttachmentImage != null) {
+            outState.putString(STATE_ATTACHMENT_PATH, mAttachmentImage.file().getPath());
+            outState.putString(STATE_ATTACHMENT_TYPE, mAttachmentImage.mimeType());
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        final String attachmentPath = savedInstanceState.getString(STATE_ATTACHMENT_PATH);
+        final String attachmentType = savedInstanceState.getString(STATE_ATTACHMENT_TYPE);
+        if (attachmentPath != null && attachmentType != null) {
+            mAttachmentImage = new TypedFile(attachmentType, new File(attachmentPath));
+            previewAttachmentImage();
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_post_micropost, menu);
@@ -106,22 +132,25 @@ public class MicropostPostActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    void previewAttachmentImage() {
+        try {
+            final InputStream in = mAttachmentImage.in();
+            try {
+                final Bitmap bitmap = BitmapFactory.decodeStream(mAttachmentImage.in());
+                mAttachmentImageView.setImageBitmap(bitmap);
+            } finally {
+                in.close();
+            }
+        } catch (IOException e) {
+            // ignore
+        }
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == REQUEST_GALLERY) {
             if (resultCode == RESULT_OK && null != intent) {
                 mAttachmentImage = asTypedFile(intent.getData());
-
-                try {
-                    final InputStream in = mAttachmentImage.in();
-                    try {
-                        final Bitmap bitmap = BitmapFactory.decodeStream(mAttachmentImage.in());
-                        mAttachmentImageView.setImageBitmap(bitmap);
-                    } finally {
-                        in.close();
-                    }
-                } catch (IOException e) {
-                    // ignore
-                }
+                previewAttachmentImage();
             }
         } else {
             super.onActivityResult(requestCode, resultCode, intent);
