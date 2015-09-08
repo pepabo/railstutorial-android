@@ -38,7 +38,7 @@ public class MicropostPostActivity extends AppCompatActivity {
     EditText mArticleView;
 
     @Bind(R.id.post_form)
-    View mPostformView;
+    View mFormView;
 
     @Bind(R.id.post_progress)
     View mProgressView;
@@ -46,7 +46,7 @@ public class MicropostPostActivity extends AppCompatActivity {
     @Bind(R.id.imgview)
     ImageView mAttachmentImageView;
 
-    private TypedFile imgtype;
+    private TypedFile mAttachmentImage;
 
     BroadcastReceiver mLoggoutReceiver;
 
@@ -110,7 +110,7 @@ public class MicropostPostActivity extends AppCompatActivity {
         if (requestCode == REQUEST_GALLERY && resultCode == RESULT_OK && null != intent) {
 
             File file = new File(imagePath(intent));
-            imgtype = new TypedFile("image/*", file);
+            mAttachmentImage = new TypedFile("image/*", file);
 
             try {
                 InputStream stream = getContentResolver().openInputStream(intent.getData());
@@ -131,7 +131,7 @@ public class MicropostPostActivity extends AppCompatActivity {
 
     private void postMicropost() {
         ((JodoroidApplication) getApplication()).getAPIService()
-                .createMicropost(mArticleView.getText().toString(), imgtype)
+                .createMicropost(mArticleView.getText().toString(), mAttachmentImage)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Micropost>() {
                     @Override
@@ -160,12 +160,12 @@ public class MicropostPostActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            mPostformView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mPostformView.animate().setDuration(shortAnimTime).alpha(
+            mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mFormView.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mPostformView.setVisibility(show ? View.GONE : View.VISIBLE);
+                    mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
                 }
             });
 
@@ -181,7 +181,7 @@ public class MicropostPostActivity extends AppCompatActivity {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mPostformView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
