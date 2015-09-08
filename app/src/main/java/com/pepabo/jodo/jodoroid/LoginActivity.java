@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.reset_password_request_button)
     void gotoPasswordReset() {
-        Intent intent = new Intent(getApplicationContext(), ResetPasswordRequest.class);
+        Intent intent = new Intent(getApplicationContext(), ResetPasswordRequestActivity.class);
         startActivity(intent);
     }
 

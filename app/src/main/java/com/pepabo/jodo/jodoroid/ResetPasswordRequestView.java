@@ -9,8 +9,7 @@ public interface ResetPasswordRequestView {
     void showProgress(boolean show);
 
     void onError(Throwable e);
-
-    void setResult(int resultCode);
+    void onSuccess();
 
     void finish();
 }
