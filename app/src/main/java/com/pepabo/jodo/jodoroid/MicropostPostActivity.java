@@ -29,7 +29,7 @@ import retrofit.mime.TypedFile;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class PostMicropost extends AppCompatActivity {
+public class MicropostPostActivity extends AppCompatActivity {
     public final static int REQUEST_GALLERY = 0;
     private EditText article;
     private TypedFile imgtype;
