@@ -49,6 +49,22 @@
         <activity
             android:name=".ResetPassword"
             android:label="@string/title_activity_reset_password" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http"
+                    android:host="www.joe-noh.pw"
+                    android:pathPrefix="/password_resets/" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https"
+                    android:host="www.joe-noh.pw"
+                    android:pathPrefix="/password_resets/" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".ProfileEditActivity"

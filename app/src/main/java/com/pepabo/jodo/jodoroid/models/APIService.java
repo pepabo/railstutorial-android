@@ -78,10 +78,11 @@ public interface APIService {
     @FormUrlEncoded
     Observable<Void> requestPasswordReset(@Field("password_reset[email]") String email);
 
-    @PUT("/password_resets")
+    @PUT("/password_resets/{id}")
     @FormUrlEncoded
-    Observable<Session> resetPassword(@Field("user[password]") String password,
-                                      @Query("email")          String email);
+    Observable<Session> resetPassword(@Path("id")              String token,
+                                      @Query("email")          String email,
+                                      @Field("user[password]") String password);
 
     @GET("/account_activations/{id}/edit")
     Observable<Session> activateAccount(@Path("id") String token,

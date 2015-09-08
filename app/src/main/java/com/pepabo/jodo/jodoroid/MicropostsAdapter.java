@@ -2,6 +2,8 @@ package com.pepabo.jodo.jodoroid;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.v7.app.AlertDialog;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +15,6 @@ import com.pepabo.jodo.jodoroid.models.Micropost;
 import com.pepabo.jodo.jodoroid.models.User;
 import com.squareup.picasso.Picasso;
 
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +32,7 @@ class MicropostsAdapter extends ArrayAdapter<Micropost> {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup parent) {
+    public View getView(int position, View view, final ViewGroup parent) {
         final ViewHolder holder;
         if (view == null) {
             view = mInflater.inflate(R.layout.view_micropost, parent, false);
@@ -57,9 +58,19 @@ class MicropostsAdapter extends ArrayAdapter<Micropost> {
 
         final Uri pictureUrl = micropost.getPictureUrl();
         if (pictureUrl != null) {
-            mPicasso.load(pictureUrl)
-                    .resize(400, 400).onlyScaleDown().centerInside()
-                    .into(holder.picture);
+            mPicasso.load(pictureUrl).resize(400, 400).onlyScaleDown().centerInside().into(holder.picture);
+
+            holder.picture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ImageView image = new ImageView(getContext());
+                    image.setMaxHeight(1000);
+                    image.setMaxWidth(1000);
+                    mPicasso.load(pictureUrl).resize(1000, 1000).centerInside().into(image);
+
+                    new AlertDialog.Builder(getContext()).setView(image).show();
+                }
+            });
         } else {
             holder.picture.setImageDrawable(null);
         }
@@ -67,9 +78,16 @@ class MicropostsAdapter extends ArrayAdapter<Micropost> {
         return view;
     }
 
-    String formatDate(Date date) {
-        DateFormat f = DateFormat.getDateTimeInstance();
-        return f.format(date);
+    CharSequence formatDate(Date date) {
+        final long now = System.currentTimeMillis();
+        long time = date.getTime();
+
+        // Display "0 seconds ago" when given date is in future (due to inaccurate system clock).
+        if(time > now) {
+            time = now;
+        }
+
+        return DateUtils.getRelativeTimeSpanString(time, now, DateUtils.SECOND_IN_MILLIS);
     }
 
     static class ViewHolder {

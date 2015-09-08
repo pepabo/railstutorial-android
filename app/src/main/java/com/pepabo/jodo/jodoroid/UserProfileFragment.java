@@ -103,7 +103,7 @@ public class UserProfileFragment extends MicropostListFragment
 
     @Override
     public void onDestroyView() {
-        mPresenter.setView(this);
+        mPresenter.setView(null);
         super.onDestroyView();
     }
 

@@ -2,15 +2,17 @@ package com.pepabo.jodo.jodoroid;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
-import android.os.Bundle;
 import android.view.MenuItem;
-import android.support.v4.widget.DrawerLayout;
-import android.content.Intent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.drawer_avatar)
     ImageView mDrawerAvatar;
 
+    BroadcastReceiver mLogoutReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,12 +105,22 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
-        processIntent(getIntent());
+        registerReceiver(mLogoutReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                finish();
+            }
+        }, JodoroidApplication.createLoggedOutIntentFilter());
+
+        if (savedInstanceState == null) {
+            processIntent(getIntent());
+        }
     }
 
     @Override
     protected void onDestroy() {
         ButterKnife.unbind(this);
+        unregisterReceiver(mLogoutReceiver);
         super.onDestroy();
 
         if (mAccountSubscription != null) {
