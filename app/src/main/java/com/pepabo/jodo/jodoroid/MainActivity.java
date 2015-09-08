@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity
 
     @OnClick(R.id.fab)
     void newPost() {
-        final Intent intent = new Intent(getApplicationContext(), PostMicropost.class);
+        final Intent intent = new Intent(getApplicationContext(), MicropostPostActivity.class);
         startActivity(intent);
     }
 

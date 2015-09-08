@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context="com.pepabo.jodo.jodoroid.PostMicropost">
+    tools:context="com.pepabo.jodo.jodoroid.MicropostPostActivity">
 
     <ProgressBar
         android:id="@+id/post_progress"

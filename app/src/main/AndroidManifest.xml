@@ -34,7 +34,7 @@
             android:launchMode="singleTop" >
         </activity>
         <activity
-            android:name=".PostMicropost"
+            android:name=".MicropostPostActivity"
             android:label="@string/title_activity_post_micropost" >
         </activity>
         <activity
