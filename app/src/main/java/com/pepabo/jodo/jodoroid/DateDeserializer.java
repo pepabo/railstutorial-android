@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-class DateDeserializer implements JsonDeserializer<Date> {
+public class DateDeserializer implements JsonDeserializer<Date> {
     private static final String FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
     private ThreadLocal<DateFormat> mDateFormatThreadLocal = new ThreadLocal<DateFormat>() {
         @Override

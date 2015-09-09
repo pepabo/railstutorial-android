@@ -28,7 +28,10 @@ public class JodoAccount {
     }
 
     public static JodoAccount getAccount(Context context) {
-        final AccountManager accountManager = AccountManager.get(context);
+        return getAccount(AccountManager.get(context));
+    }
+
+    public static JodoAccount getAccount(AccountManager accountManager) {
         final Account[] accounts = accountManager.getAccountsByType(JodoAuthenticator.ACCOUNT_TYPE);
 
         if (accounts.length == 0) {

@@ -9,7 +9,7 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-class UriDeserializer implements JsonDeserializer<Uri> {
+public class UriDeserializer implements JsonDeserializer<Uri> {
     @Override
     public Uri deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         if(json.isJsonNull()) {
