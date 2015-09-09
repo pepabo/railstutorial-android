@@ -43,7 +43,7 @@
             android:windowSoftInputMode="adjustResize|stateVisible" >
         </activity>
         <activity
-            android:name=".ResetPasswordRequest"
+            android:name=".ResetPasswordRequestActivity"
             android:label="@string/title_activity_reset_password_request" >
         </activity>
         <activity
