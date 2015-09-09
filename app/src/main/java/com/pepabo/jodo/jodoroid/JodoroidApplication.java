@@ -49,20 +49,18 @@ public class JodoroidApplication extends Application implements OnAccountsUpdate
 
     APIService mService;
     Picasso mPicasso;
-    private static OkHttpClient mHttpClient;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         try {
-            mHttpClient = getOkHttpClient(this);
+            final OkHttpClient httpClient = getOkHttpClient(this);
+            mPicasso = createPicasso(this, httpClient);
+            mService = createAPIService(this, httpClient);
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             throw new RuntimeException(e);
         }
-
-        mPicasso = createPicasso(this, mHttpClient);
-        mService = createAPIService(this, mHttpClient);
 
         AccountManager.get(this).addOnAccountsUpdatedListener(this, null, true);
     }
