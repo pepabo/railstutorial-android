@@ -6,7 +6,6 @@ import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -25,16 +24,13 @@ public class ResetPasswordRequestActivity extends AppCompatActivity implements R
     ProgressToggle mProgressToggle;
 
     @Bind(R.id.reset_password_request_email)
-    EditText ResetPasswordRequestEmail;
-
-    @Bind(R.id.reset_password_request_button)
-    Button ResetPasswordRequestButton;
+    EditText mEmailView;
 
     @Bind(R.id.progress)
-    ProgressBar ProgressView;
+    ProgressBar mProgressView;
 
     @Bind(R.id.reset_password_request_form)
-    View ResetPasswordRequestForm;
+    View mFormView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,7 +38,7 @@ public class ResetPasswordRequestActivity extends AppCompatActivity implements R
         setContentView(R.layout.activity_reset_password_request);
         ButterKnife.bind(this);
 
-        mProgressToggle = new ProgressToggle(this, ProgressView, ResetPasswordRequestForm);
+        mProgressToggle = new ProgressToggle(this, mProgressView, mFormView);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -74,17 +70,17 @@ public class ResetPasswordRequestActivity extends AppCompatActivity implements R
 
     @Override
     public void setEmailError(String message) {
-        ResetPasswordRequestEmail.setError(message);
+        mEmailView.setError(message);
     }
 
     @Override
     public String getEmail() {
-        return ResetPasswordRequestEmail.getText().toString();
+        return mEmailView.getText().toString();
     }
 
     @Override
     public void setEmail(String value) {
-        ResetPasswordRequestEmail.setText(value);
+        mEmailView.setText(value);
     }
 
     @Override
