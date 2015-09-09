@@ -4,13 +4,12 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.OnAccountsUpdateListener;
 import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
 import com.pepabo.jodo.jodoroid.modules.APIModule;
 import com.pepabo.jodo.jodoroid.modules.HttpModule;
-import com.squareup.picasso.OkHttpDownloader;
+import com.pepabo.jodo.jodoroid.modules.PicassoModule;
 import com.squareup.picasso.Picasso;
 
 
@@ -33,7 +32,7 @@ public class JodoroidApplication extends Application implements OnAccountsUpdate
 
         try {
             final OkHttpClient httpClient = HttpModule.provideHttpClient(this);
-            mPicasso = createPicasso(this, httpClient);
+            mPicasso = PicassoModule.createPicasso(this, httpClient);
             mService = APIModule.createAPIService(this, httpClient);
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             throw new RuntimeException(e);
@@ -48,14 +47,6 @@ public class JodoroidApplication extends Application implements OnAccountsUpdate
 
     public APIService getAPIService() {
         return mService;
-    }
-
-    private static Picasso createPicasso(Context context, OkHttpClient httpClient) {
-        return new Picasso.Builder(context)
-                .loggingEnabled(true)
-                .downloader(new OkHttpDownloader(httpClient))
-                .indicatorsEnabled(BuildConfig.DEBUG)
-                .build();
     }
 
     @Override
