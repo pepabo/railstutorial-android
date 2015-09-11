@@ -193,4 +193,11 @@ public class JodoroidApplication extends Application implements OnAccountsUpdate
     public static IntentFilter createLoggedOutIntentFilter() {
         return new IntentFilter(ACTION_LOGGED_OUT);
     }
+
+    public void doIntentTransition(Class cls) {
+        final Intent intent = new Intent(this, cls);
+        intent.setFlags(intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
 }
