@@ -16,7 +16,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ResetPassword extends AppCompatActivity implements ResetPasswordView{
+public class ResetPasswordActivity extends AppCompatActivity implements ResetPasswordView{
 
     APIService mAPIService;
     ResetPasswordPresenter mPresenter;
