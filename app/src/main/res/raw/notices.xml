@@ -64,6 +64,12 @@
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
+        <name>Dagger</name>
+        <url>https://google.github.io/dagger/</url>
+        <copyright><![CDATA[Copyright 2014 Google, Inc.<br />Copyright 2012 Square, Inc.]]></copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
         <name>FindBugs-jsr305</name>
         <url>https://code.google.com/p/findbugs/</url>
         <license>Apache Software License 2.0</license>
