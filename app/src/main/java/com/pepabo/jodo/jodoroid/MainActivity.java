@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity
     public static final String ACTION_VIEW_SELF_PROFILE = "com.pepabo.jodo.jodoroid.VIEW_SELF_PROFILE";
     public static final String ACTION_VIEW_USER_PROFILE = "com.pepabo.jodo.jodoroid.VIEW_USER_PROFILE";
     public static final String ACTION_VIEW_ALL_USERS = "com.pepabo.jodo.jodoroid.VIEW_ALL_USERS";
+    public static final String ACTION_VIEW_STAR_USERS = "com.pepabo.jodo.jodoroid.VIEW_STAR_USERS";
     public static final String ACTION_VIEW_FOLLOWERS = "com.pepabo.jodo.jodoroid.VIEW_FOLLOWERS";
     public static final String ACTION_VIEW_FOLLOWING = "com.pepabo.jodo.jodoroid.VIEW_FOLLOWING";
     public static final String ACTION_VIEW_LICENSES = "com.pepabo.jodo.jodoroid.VIEW_LICENSES";
@@ -169,6 +170,9 @@ public class MainActivity extends AppCompatActivity
             case ACTION_VIEW_ALL_USERS:
                 showAllUsers();
                 return true;
+            case ACTION_VIEW_STAR_USERS:
+                showStarUsers();
+                return true;
             case ACTION_VIEW_FOLLOWERS:
                 showFollowers(getUserIdFromIntent(intent));
                 return true;
@@ -188,6 +192,10 @@ public class MainActivity extends AppCompatActivity
 
     private void showAllUsers() {
         showFragment(AllUsersFragment.newInstance());
+    }
+
+    private void showStarUsers() {
+        showFragment(StarUsersFlagment.newInstance());
     }
 
     private void showFollowers(long userId) {
@@ -262,6 +270,10 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_view_all_users:
                 intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.setAction(ACTION_VIEW_ALL_USERS);
+                break;
+            case R.id.action_view_star_users:
+                intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.setAction(ACTION_VIEW_STAR_USERS);
                 break;
             case R.id.action_view_oss_license:
                 intent = new Intent(getApplicationContext(), MainActivity.class);
