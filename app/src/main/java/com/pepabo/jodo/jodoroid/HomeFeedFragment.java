@@ -1,6 +1,7 @@
 package com.pepabo.jodo.jodoroid;
 
 import android.app.Activity;
+import android.app.ListFragment;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -81,5 +82,10 @@ public class HomeFeedFragment extends MicropostListFragment
     @Override
     protected void onLoadNextPage() {
         mPresenter.onLoadNextPage();
+    }
+
+    @Override
+    public ListFragment getFragment() {
+        return this;
     }
 }

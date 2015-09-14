@@ -1,6 +1,7 @@
 package com.pepabo.jodo.jodoroid;
 
 import android.app.Activity;
+import android.app.ListFragment;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -66,6 +67,11 @@ public class StarUsersFlagment extends UserListFragment implements RefreshableVi
     @Override
     public void onLoadError(Throwable e) {
         Toast.makeText(getActivity(), getText(R.string.toast_load_failure), Toast.LENGTH_SHORT).show();
+
     }
 
+    @Override
+    public ListFragment getFragment() {
+        return this;
+    }
 }

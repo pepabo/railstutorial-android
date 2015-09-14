@@ -99,4 +99,5 @@ public class SwipeRefreshListFragment extends ListFragment
             return getListView().canScrollVertically(-1);
         }
     }
+
 }
