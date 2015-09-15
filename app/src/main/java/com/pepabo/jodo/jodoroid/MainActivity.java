@@ -12,11 +12,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pepabo.jodo.jodoroid.models.APIService;
+import com.pepabo.jodo.jodoroid.models.Stardom;
 import com.pepabo.jodo.jodoroid.models.User;
 import com.squareup.picasso.Picasso;
 
@@ -115,6 +117,32 @@ public class MainActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             processIntent(getIntent());
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mAPIService.checkStardom()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Stardom>() {
+                    @Override
+                    public void onCompleted() {}
+
+                    @Override
+                    public void onError(Throwable e) {}
+
+                    @Override
+                    public void onNext(Stardom stardom) {
+                        if (stardom.isActive()) {
+                            Log.d("stardom.isActive()", "active");
+                        } else {
+                            Log.d("stardom.isActive()", "inactive");
+                        }
+
+                        Log.d("stardom.getStarStatus()", stardom.getStarStatus());
+                    }
+                });
     }
 
     @Override

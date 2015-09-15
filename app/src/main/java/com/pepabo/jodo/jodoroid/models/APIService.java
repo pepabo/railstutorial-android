@@ -87,4 +87,7 @@ public interface APIService {
     @GET("/account_activations/{id}/edit")
     Observable<Session> activateAccount(@Path("id") String token,
                                         @Query("email") String email);
+
+    @GET("/stardom")
+    Observable<Stardom> checkStardom();
 }
