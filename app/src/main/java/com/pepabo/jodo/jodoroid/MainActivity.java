@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -11,8 +12,8 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -123,7 +124,7 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
-        mAPIService.checkStardom()
+        mAccountSubscription = mAPIService.checkStardom()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Stardom>() {
                     @Override
@@ -135,12 +136,10 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onNext(Stardom stardom) {
                         if (stardom.isActive()) {
-                            Log.d("stardom.isActive()", "active");
-                        } else {
-                            Log.d("stardom.isActive()", "inactive");
+                            if (stardom.isCandidate()) {
+                                showStarElectedDialog();
+                            }
                         }
-
-                        Log.d("stardom.getStarStatus()", stardom.getStarStatus());
                     }
                 });
     }
@@ -325,5 +324,39 @@ public class MainActivity extends AppCompatActivity
         }
 
         super.onBackPressed();
+    }
+
+    private void showStarElectedDialog() {
+        final Observer<Void> observer = new Observer<Void>() {
+            @Override
+            public void onCompleted() {}
+
+            @Override
+            public void onError(Throwable e) {}
+
+            @Override
+            public void onNext(Void aVoid) {}
+        };
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.star_candidate_title)
+                .setMessage(R.string.star_candidate_message)
+                .setPositiveButton(R.string.accept_stardom, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mAccountSubscription = mAPIService.acceptStardom(true)
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(observer);
+                    }
+                })
+                .setNegativeButton(R.string.decline_stardom, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mAccountSubscription = mAPIService.acceptStardom(false)
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(observer);
+                    }
+                })
+                .show();
     }
 }

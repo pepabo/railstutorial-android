@@ -90,4 +90,8 @@ public interface APIService {
 
     @GET("/stardom")
     Observable<Stardom> checkStardom();
+
+    @PATCH("/stardom")
+    @FormUrlEncoded
+    Observable<Void> acceptStardom(@Field("stardom[accept]") boolean accept);
 }
