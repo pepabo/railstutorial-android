@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showStarUsers() {
-        showFragment(StarUsersFlagment.newInstance());
+        showFragment(StarUsersFragment.newInstance());
     }
 
     private void showFollowers(long userId) {
