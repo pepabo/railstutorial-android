@@ -143,6 +143,9 @@ public class MainActivity extends AppCompatActivity
                                 showStarElectedDialog();
                             }
                         }
+
+                        mDrawer.getMenu().findItem(R.id.action_view_star_users)
+                                .setVisible(stardom.isActive());
                     }
                 });
     }
