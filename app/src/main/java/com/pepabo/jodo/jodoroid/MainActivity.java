@@ -104,7 +104,9 @@ public class MainActivity extends AppCompatActivity
                     public void onNext(User user) {
                         mSelf = user;
                         mDrawerName.setText(mSelf.getName());
-                        mPicasso.load(mSelf.getAvatarUrl()).fit().into(mDrawerAvatar);
+                        mPicasso.load(mSelf.getAvatarUrl()).fit()
+                                .transform(new StarTransformation(mSelf.isStar()))
+                                .into(mDrawerAvatar);
                     }
                 });
 

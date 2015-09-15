@@ -130,7 +130,8 @@ public class UserProfileFragment extends MicropostListFragment
         userNameView.setText(user.getName());
         followersView.setText(Long.toString(user.getFollowersCount()));
         followingView.setText(Long.toString(user.getFollowingCount()));
-        mPicasso.load(user.getAvatarUrl()).fit().into(userAvatarView);
+        mPicasso.load(user.getAvatarUrl()).fit()
+                .transform(new StarTransformation(user.isStar())).into(userAvatarView);
 
         followingLayoutView.setOnClickListener(this);
         followersLayoutView.setOnClickListener(this);

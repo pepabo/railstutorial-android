@@ -11,18 +11,21 @@ public class User {
     long followersCount;
     long followingCount;
     long micropostsCount;
+    boolean star;
     List<Micropost> microposts;
 
     public User() {
     }
 
-    public User(long id, String name, Uri avatarUrl, long followersCount, long followingCount, long micropostsCount, List<Micropost> microposts) {
+    public User(long id, String name, Uri avatarUrl, long followersCount, long followingCount,
+                long micropostsCount, boolean star, List<Micropost> microposts) {
         this.id = id;
         this.name = name;
         this.avatarUrl = avatarUrl;
         this.followersCount = followersCount;
         this.followingCount = followingCount;
         this.micropostsCount = micropostsCount;
+        this.star = star;
         this.microposts = microposts;
     }
 
@@ -51,4 +54,6 @@ public class User {
     public List<Micropost> getMicroposts() {
         return microposts;
     }
+
+    public boolean isStar() { return star; }
 }

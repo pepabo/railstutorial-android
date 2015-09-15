@@ -10,16 +10,18 @@ public class Micropost implements Comparable<Micropost> {
     User user;
     Date createdAt;
     Uri pictureUrl;
+    boolean starred;
 
     public Micropost() {
     }
 
-    public Micropost(long id, String content, User user, Date createdAt, Uri pictureUrl) {
+    public Micropost(long id, String content, User user, Date createdAt, Uri pictureUrl, boolean starred) {
         this.id = id;
         this.content = content;
         this.user = user;
         this.createdAt = createdAt;
         this.pictureUrl = pictureUrl;
+        this.starred = starred;
     }
 
     public long getId() {
@@ -40,6 +42,10 @@ public class Micropost implements Comparable<Micropost> {
 
     public Uri getPictureUrl() {
         return pictureUrl;
+    }
+
+    public boolean isStarred() {
+        return starred;
     }
 
     @Override
