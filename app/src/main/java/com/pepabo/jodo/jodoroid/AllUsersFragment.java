@@ -65,12 +65,12 @@ public class AllUsersFragment extends UserListFragment
 
     @Override
     public void onNextModel(List<User> users) {
-        setUsers(users);
+        setItems(users);
     }
 
     @Override
     public void onMoreModel(List<User> users) {
-        addUsers(users);
+        addItems(users);
     }
 
     @Override
