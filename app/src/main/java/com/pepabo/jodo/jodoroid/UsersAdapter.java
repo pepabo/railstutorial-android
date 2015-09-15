@@ -39,7 +39,8 @@ class UsersAdapter extends ArrayAdapter<User> {
 
         final User user = getItem(position);
 
-        mPicasso.load(user.getAvatarUrl()).fit().into(holder.avatar);
+        mPicasso.load(user.getAvatarUrl()).fit()
+                .transform(new StarTransformation(user.isStar())).into(holder.avatar);
         holder.userName.setText(user.getName());
 
         return view;
