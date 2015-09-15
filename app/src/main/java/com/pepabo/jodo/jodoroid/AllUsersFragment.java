@@ -1,7 +1,6 @@
 package com.pepabo.jodo.jodoroid;
 
 import android.app.Activity;
-import android.app.ListFragment;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -76,10 +75,5 @@ public class AllUsersFragment extends UserListFragment
         Toast.makeText(getActivity(),
                 getString(R.string.toast_load_failure),
                 Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public ListFragment getFragment() {
-        return this;
     }
 }

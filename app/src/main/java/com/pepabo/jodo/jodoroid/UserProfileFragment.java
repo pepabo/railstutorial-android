@@ -1,7 +1,6 @@
 package com.pepabo.jodo.jodoroid;
 
 import android.app.Activity;
-import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -256,10 +255,5 @@ public class UserProfileFragment extends MicropostListFragment
     @Override
     protected void onLoadNextPage() {
         mPresenter.onLoadNextPage();
-    }
-
-    @Override
-    public ListFragment getFragment() {
-        return this;
     }
 }

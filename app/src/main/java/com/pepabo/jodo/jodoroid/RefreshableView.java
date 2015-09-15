@@ -1,7 +1,5 @@
 package com.pepabo.jodo.jodoroid;
 
-import android.app.ListFragment;
-
 public interface RefreshableView<Model> {
     boolean isRefreshing();
     void setRefreshing(boolean refreshing);
@@ -10,7 +8,4 @@ public interface RefreshableView<Model> {
     void onLoadError(Throwable e);
 
     void onMoreModel(Model model);
-
-    ListFragment getFragment();
-
 }
