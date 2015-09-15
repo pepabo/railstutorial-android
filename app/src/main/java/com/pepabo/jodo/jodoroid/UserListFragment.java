@@ -14,35 +14,13 @@ import java.util.List;
 /**
  * A fragment representing a list of Items.
  */
-public class UserListFragment extends SwipeRefreshListFragment {
-
-    private List<User> mUsers = new ArrayList<User>();
-    private ArrayAdapter<User> mAdapter;
+public class UserListFragment extends SwipeRefreshListFragment<User> {
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
     public UserListFragment() {
-    }
-
-    protected void setUsers(List<User> users) {
-        mUsers.clear();
-        mUsers.addAll(users);
-
-        if(mAdapter == null) {
-            final Picasso picasso =
-                    ((JodoroidApplication) getActivity().getApplication()).getPicasso();
-            mAdapter = new UsersAdapter(getActivity(), picasso, mUsers);
-            setListAdapter(mAdapter);
-        }
-
-        mAdapter.notifyDataSetChanged();
-    }
-
-    protected void addUsers(List<User> users) {
-        mUsers.addAll(users);
-        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -56,5 +34,12 @@ public class UserListFragment extends SwipeRefreshListFragment {
             intent.putExtra(MainActivity.EXTRA_USER_ID, user.getId());
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected ArrayAdapter<User> createAdapter(List<User> list) {
+        final Picasso picasso =
+                ((JodoroidApplication) getActivity().getApplication()).getPicasso();
+        return new UsersAdapter(getActivity(), picasso, list);
     }
 }

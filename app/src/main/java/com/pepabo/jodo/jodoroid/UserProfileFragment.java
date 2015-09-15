@@ -117,13 +117,13 @@ public class UserProfileFragment extends MicropostListFragment
     @Override
     public void onNextModel(User user) {
         setProfile(user);
-        setMicroposts(user.getMicroposts());
+        setItems(user.getMicroposts());
     }
 
     @Override
     public void onMoreModel(User user) {
         setProfile(user);
-        addMicroposts(user.getMicroposts());
+        addItems(user.getMicroposts());
     }
 
     private void setProfile(User user) {
