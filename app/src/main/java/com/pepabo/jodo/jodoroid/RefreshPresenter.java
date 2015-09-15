@@ -1,7 +1,5 @@
 package com.pepabo.jodo.jodoroid;
 
-import java.lang.ref.WeakReference;
-
 import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;

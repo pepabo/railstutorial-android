@@ -6,6 +6,7 @@
 
     <string name="title_section_home">Home</string>
     <string name="title_section_all_users">All users</string>
+    <string name="title_section_star_users">Star users</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

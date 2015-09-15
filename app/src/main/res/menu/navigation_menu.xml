@@ -7,6 +7,9 @@
         android:id="@+id/action_view_all_users"
         android:title="@string/title_section_all_users" />
     <item
+        android:id="@+id/action_view_star_users"
+        android:title="@string/title_section_star_users" />
+    <item
         android:id="@+id/action_edit_profile"
         android:title="@string/title_section_profile" />
     <item
