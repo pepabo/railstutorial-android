@@ -55,12 +55,12 @@ public class StarUsersFragment extends UserListFragment implements RefreshableVi
 
     @Override
     public void onNextModel(List<User> stars) {
-        setUsers(stars);
+        setItems(stars);
     }
 
     @Override
     public void onMoreModel(List<User> stars) {
-        addUsers(stars);
+        addItems(stars);
     }
 
     @Override
