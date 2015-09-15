@@ -81,7 +81,6 @@ public abstract class RefreshPresenter<Model> {
             final RefreshableView<Model> view = getView();
             if (view != null) {
                 view.onLoadError(e);
-                view.setRefreshing(false);
             }
         }
     }

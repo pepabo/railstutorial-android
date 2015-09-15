@@ -3,6 +3,7 @@
 
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="reload">Reload</string>
 
     <string name="title_section_home">Home</string>
     <string name="title_section_all_users">All users</string>

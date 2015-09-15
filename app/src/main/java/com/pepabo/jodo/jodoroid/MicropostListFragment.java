@@ -128,4 +128,5 @@ public class MicropostListFragment extends SwipeRefreshListFragment {
                     });
         }
     }
+
 }
