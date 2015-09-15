@@ -80,6 +80,6 @@ public class HomeFeedFragment extends MicropostListFragment
 
     @Override
     protected void onLoadNextPage() {
-        mPresenter.onLoadNextPage();
+        mPresenter.loadNextPage();
     }
 }

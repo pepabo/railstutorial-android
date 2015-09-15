@@ -14,11 +14,8 @@ import android.widget.Toast;
 
 import com.pepabo.jodo.jodoroid.models.APIService;
 import com.pepabo.jodo.jodoroid.models.Follow;
-import com.pepabo.jodo.jodoroid.models.Micropost;
 import com.pepabo.jodo.jodoroid.models.User;
 import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -257,6 +254,6 @@ public class UserProfileFragment extends MicropostListFragment
 
     @Override
     protected void onLoadNextPage() {
-        mPresenter.onLoadNextPage();
+        mPresenter.loadNextPage();
     }
 }

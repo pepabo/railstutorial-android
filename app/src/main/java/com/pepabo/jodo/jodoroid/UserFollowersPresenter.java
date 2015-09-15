@@ -23,24 +23,12 @@ public class UserFollowersPresenter extends RefreshPresenter<List<User>> {
     }
 
     @Override
-    protected Observable<List<User>> getObservable() {
+    protected Observable<List<User>> getObservable(int page) {
         switch (mType){
             case TYPE_FOLLOWERS:
-                return mAPIService.fetchFollowers(mUserId, 1);
+                return mAPIService.fetchFollowers(mUserId, page);
             case TYPE_FOLLOWING:
-                return mAPIService.fetchFollowing(mUserId, 1);
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
-
-    @Override
-    protected Observable<List<User>> loadNextPage(int pageNumber) {
-        switch (mType){
-            case TYPE_FOLLOWERS:
-                return mAPIService.fetchFollowers(mUserId, pageNumber);
-            case TYPE_FOLLOWING:
-                return mAPIService.fetchFollowing(mUserId, pageNumber);
+                return mAPIService.fetchFollowing(mUserId, page);
             default:
                 throw new IllegalArgumentException();
         }
