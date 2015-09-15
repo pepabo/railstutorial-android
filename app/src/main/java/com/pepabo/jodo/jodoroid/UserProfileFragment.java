@@ -255,6 +255,6 @@ public class UserProfileFragment extends MicropostListFragment
 
     @Override
     protected void onLoadNextPage() {
-        mPresenter.onLoadNextPage();
+        mPresenter.loadNextPage();
     }
 }

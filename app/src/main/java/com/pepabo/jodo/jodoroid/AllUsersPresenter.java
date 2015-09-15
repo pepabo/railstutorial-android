@@ -17,12 +17,7 @@ public class AllUsersPresenter extends RefreshPresenter<List<User>> {
     }
 
     @Override
-    protected Observable<List<User>> getObservable() {
-        return mAPIService.fetchAllUsers(1);
-    }
-
-    @Override
-    protected Observable<List<User>> loadNextPage(int pageNumber) {
-        return mAPIService.fetchAllUsers(pageNumber);
+    protected Observable<List<User>> getObservable(int page) {
+        return mAPIService.fetchAllUsers(page);
     }
 }

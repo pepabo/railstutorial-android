@@ -90,6 +90,6 @@ public class UserFollowersFragment extends UserListFragment
 
     @Override
     protected void onLoadNextPage() {
-        mPresenter.onLoadNextPage();
+        mPresenter.loadNextPage();
     }
 }
