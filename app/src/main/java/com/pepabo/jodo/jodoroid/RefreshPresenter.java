@@ -61,10 +61,10 @@ public abstract class RefreshPresenter<Model> {
 
 
     class RefreshSubscriber extends Subscriber<Model> {
-        final int mPage;
+        final int mLoadedPage;
 
         public RefreshSubscriber(int page) {
-            this.mPage = page;
+            this.mLoadedPage = page;
         }
 
         @Override
@@ -79,7 +79,7 @@ public abstract class RefreshPresenter<Model> {
         public void onNext(Model model) {
             final RefreshableView<Model> view = getView();
             if (view != null) {
-                if (mPage == 1) {
+                if (mLoadedPage == 1) {
                     view.onNextModel(model);
                 } else {
                     view.onMoreModel(model);
@@ -89,7 +89,7 @@ public abstract class RefreshPresenter<Model> {
 
         @Override
         public void onCompleted() {
-            RefreshPresenter.this.mPage++;
+            mPage++;
 
             final RefreshableView<Model> view = getView();
             if (view != null) {
