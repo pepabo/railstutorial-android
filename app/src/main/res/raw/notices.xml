@@ -70,6 +70,12 @@
         <license>Apache Software License 2.0</license>
     </notice>
     <notice>
+        <name>Joda-Time</name>
+        <url>http://www.joda.org/</url>
+        <copyright><![CDATA[This product includes software developed by Joda.org (http://www.joda.org/).]]></copyright>
+        <license>Apache Software License 2.0</license>
+    </notice>
+    <notice>
         <name>FindBugs-jsr305</name>
         <url>https://code.google.com/p/findbugs/</url>
         <license>Apache Software License 2.0</license>
