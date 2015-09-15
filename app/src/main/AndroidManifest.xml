@@ -47,7 +47,7 @@
             android:label="@string/title_activity_reset_password_request" >
         </activity>
         <activity
-            android:name=".ResetPassword"
+            android:name=".ResetPasswordActivity"
             android:label="@string/title_activity_reset_password" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
