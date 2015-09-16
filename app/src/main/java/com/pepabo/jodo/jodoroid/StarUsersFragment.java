@@ -66,5 +66,6 @@ public class StarUsersFragment extends UserListFragment implements RefreshableVi
     @Override
     public void onLoadError(Throwable e) {
         Toast.makeText(getActivity(), getText(R.string.toast_load_failure), Toast.LENGTH_SHORT).show();
+        super.onLoadError(e);
     }
 }
