@@ -9,16 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +27,6 @@ abstract public class SwipeRefreshListFragment<Model> extends ListFragment
     View mReloadView;
     SwipeRefreshLayout mSwipeRefreshLayout;
     ArrayAdapter<Model> mAdapter;
-
-    @Bind(R.id.reload_button)
-    Button reloadButton;
 
     @Override
     public void onActivityCreated(Bundle b) {
