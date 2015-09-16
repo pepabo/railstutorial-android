@@ -6,39 +6,38 @@
     android:paddingLeft="20dp"
     android:paddingTop="20dp">
 
-    <GridLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:columnCount="3"
-        android:rowCount="2">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/imageView_user_avatar"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_column="0"
-            android:layout_row="0"
-            android:layout_rowSpan="2"
             android:contentDescription="@string/description_user_avatar"
             android:layout_marginRight="10dp" />
 
-        <TextView
-            android:id="@+id/textView_user_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_row="0"
-            android:text=""
-            android:textStyle="bold" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/button_follow_unfollow"
-            android:layout_column="1"
-            android:layout_row="1"
-            android:text="@string/action_follow"
-            android:layout_gravity="center_vertical" />
+            <TextView
+                android:id="@+id/textView_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textStyle="bold"
+                android:layout_marginLeft="4dp" />
 
-    </GridLayout>
+            <Button
+                android:id="@+id/button_follow_unfollow"
+                android:text="@string/action_follow"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
