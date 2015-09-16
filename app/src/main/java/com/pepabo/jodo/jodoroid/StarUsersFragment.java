@@ -54,6 +54,13 @@ public class StarUsersFragment extends UserListFragment implements RefreshableVi
     }
 
     @Override
+    public void onRefresh() {
+        super.onRefresh();
+
+        mRefreshPresenter.refresh();
+    }
+
+    @Override
     public void onNextModel(List<User> stars) {
         setItems(stars);
     }
