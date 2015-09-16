@@ -8,37 +8,44 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingStart="16dp"
-    android:paddingTop="16dp">
+    android:paddingTop="16dp"
+    android:background="@color/material_deep_teal_500"
+    android:paddingBottom="16dp">
 
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="8dp">
+        android:layout_height="match_parent"
+        android:clickable="false">
 
         <ImageView
             android:id="@+id/drawer_avatar"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:clickable="true" />
-    </RelativeLayout>
+            android:clickable="true"
+            android:layout_marginRight="5dp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="8dp">
-
-        <TextView
-            android:id="@+id/drawer_name"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:orientation="vertical"
+            android:paddingBottom="8dp">
 
-        <TextView
-            android:id="@+id/drawer_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="14sp" />
+            <TextView
+                android:id="@+id/drawer_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_text_default_material_dark" />
+
+            <TextView
+                android:id="@+id/drawer_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="@color/primary_text_default_material_dark" />
+        </LinearLayout>
     </LinearLayout>
+
 </LinearLayout>
