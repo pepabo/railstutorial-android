@@ -2,17 +2,20 @@ package com.pepabo.jodo.jodoroid.models;
 
 public class Stardom {
     private final String CANDIDATE = "candidate";
-    private final String ACCEPTED  = "accepted";
-    private final String DECLIEND  = "declined";
+    private final String ACCEPTED = "accepted";
+    private final String DECLINED = "declined";
 
-    private boolean active     = false;
-    private String  starStatus = null;
+    private boolean active = false;
+    private String starStatus = null;
+    private String date;
 
-    public Stardom() {}
+    public Stardom() {
+    }
 
-    public Stardom(boolean active, String star_status) {
-        this.active     = active;
-        this.starStatus = star_status;
+    public Stardom(boolean active, String starStatus, String date) {
+        this.active = active;
+        this.starStatus = starStatus;
+        this.date = date;
     }
 
     public boolean isActive() {
@@ -21,6 +24,10 @@ public class Stardom {
 
     public String getStarStatus() {
         return this.starStatus;
+    }
+
+    public String getDate() {
+        return this.date;
     }
 
     public boolean isCandidate() {
@@ -32,6 +39,6 @@ public class Stardom {
     }
 
     public boolean isDeclined() {
-        return (this.starStatus != null) && this.starStatus.equals(DECLIEND);
+        return (this.starStatus != null) && this.starStatus.equals(DECLINED);
     }
 }
