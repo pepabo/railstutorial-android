@@ -25,4 +25,5 @@ public interface ApplicationComponent {
 
     // injectors
     void inject(ProfileEditActivity activity);
+    void inject(MicropostPostActivity activity);
 }
