@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -16,12 +17,19 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SwipeRefreshListFragment extends ListFragment
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+abstract public class SwipeRefreshListFragment<Model> extends ListFragment
         implements SwipeRefreshLayout.OnRefreshListener {
 
     FrameLayout mLayout;
     View mReloadView;
     SwipeRefreshLayout mSwipeRefreshLayout;
+    ArrayAdapter<Model> mAdapter;
 
     @Bind(R.id.reload_button)
     Button reloadButton;
@@ -94,7 +102,7 @@ public class SwipeRefreshListFragment extends ListFragment
         super.onPause();
 
         // Workaround https://stackoverflow.com/questions/27411397/new-version-of-swiperefreshlayout-causes-wrong-draw-of-views
-        if(mSwipeRefreshLayout != null) {
+        if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.clearAnimation();
         }
     }
@@ -130,8 +138,24 @@ public class SwipeRefreshListFragment extends ListFragment
         mReloadView.setVisibility(View.VISIBLE);
     }
 
+    abstract protected ArrayAdapter<Model> createAdapter(List<Model> list);
 
+    protected void setItems(List<Model> items) {
+        if (mAdapter == null) {
+            mAdapter = createAdapter(new ArrayList<Model>());
+            setListAdapter(mAdapter);
+        } else {
+            mAdapter.clear();
+        }
 
+        mAdapter.addAll(items);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    protected void addItems(List<Model> items) {
+        mAdapter.addAll(items);
+        mAdapter.notifyDataSetChanged();
+    }
 
     class ListFragmentSwipeRefreshLayout extends SwipeRefreshLayout {
         public ListFragmentSwipeRefreshLayout(Context context) {

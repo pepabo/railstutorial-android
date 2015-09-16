@@ -62,7 +62,7 @@ public class HomeFeedFragment extends MicropostListFragment
 
     @Override
     public void onNextModel(List<Micropost> microposts) {
-        setMicroposts(microposts);
+        setItems(microposts);
     }
 
     @Override
@@ -76,11 +76,11 @@ public class HomeFeedFragment extends MicropostListFragment
     @Override
     public void onMoreModel(List<Micropost> microposts) {
         if (microposts.size() == 0) mPresenter.noMorePagination();
-        addMicroposts(microposts);
+        addItems(microposts);
     }
 
     @Override
     protected void onLoadNextPage() {
-        mPresenter.onLoadNextPage();
+        mPresenter.loadNextPage();
     }
 }

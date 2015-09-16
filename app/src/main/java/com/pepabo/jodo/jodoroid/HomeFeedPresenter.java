@@ -16,12 +16,7 @@ public class HomeFeedPresenter extends RefreshPresenter<List<Micropost>> {
     }
 
     @Override
-    protected Observable<List<Micropost>> getObservable() {
-        return mAPIService.fetchFeed(1);
-    }
-
-    @Override
-    public Observable<List<Micropost>> loadNextPage(int pageNumber) {
-        return mAPIService.fetchFeed(pageNumber);
+    protected Observable<List<Micropost>> getObservable(int page) {
+        return mAPIService.fetchFeed(page);
     }
 }

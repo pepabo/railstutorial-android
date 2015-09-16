@@ -1,22 +1,29 @@
 package com.pepabo.jodo.jodoroid;
 
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pepabo.jodo.jodoroid.models.APIService;
+import com.pepabo.jodo.jodoroid.models.Stardom;
 import com.pepabo.jodo.jodoroid.models.User;
 import com.squareup.picasso.Picasso;
 
@@ -41,6 +48,8 @@ public class MainActivity extends AppCompatActivity
     public static final String ACTION_VIEW_FOLLOWING = "com.pepabo.jodo.jodoroid.VIEW_FOLLOWING";
     public static final String ACTION_VIEW_LICENSES = "com.pepabo.jodo.jodoroid.VIEW_LICENSES";
     public static final String EXTRA_USER_ID = "userId";
+
+    static final String PREF_STAR_INFO_LAST_SEEN = "star_info_last_seen";
 
     private ActionBarDrawerToggle mDrawerToggle;
     @Bind(R.id.drawer_layout)
@@ -102,7 +111,9 @@ public class MainActivity extends AppCompatActivity
                     public void onNext(User user) {
                         mSelf = user;
                         mDrawerName.setText(mSelf.getName());
-                        mPicasso.load(mSelf.getAvatarUrl()).fit().into(mDrawerAvatar);
+                        mPicasso.load(mSelf.getAvatarUrl()).fit()
+                                .transform(new StarTransformation(mSelf.isStar()))
+                                .into(mDrawerAvatar);
                     }
                 });
 
@@ -116,6 +127,43 @@ public class MainActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             processIntent(getIntent());
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        mAccountSubscription = mAPIService.checkStardom()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Stardom>() {
+                    @Override
+                    public void onCompleted() {}
+
+                    @Override
+                    public void onError(Throwable e) {}
+
+                    @Override
+                    public void onNext(Stardom stardom) {
+                        if (stardom.isActive()) {
+                            if (stardom.isCandidate()) {
+                                showStarElectedDialog();
+                            } else {
+                                final SharedPreferences prefs = ((JodoroidApplication)getApplication())
+                                        .component().sharedPreferences();
+                                final String last_seen = prefs.getString(PREF_STAR_INFO_LAST_SEEN, null);
+                                if(last_seen == null || !last_seen.equals(stardom.getDate())) {
+                                    prefs.edit()
+                                            .putString(PREF_STAR_INFO_LAST_SEEN, stardom.getDate())
+                                            .apply();
+                                    showStarInfoDialog();
+                                }
+                            }
+                        }
+
+                        mDrawer.getMenu().findItem(R.id.action_view_star_users)
+                                .setVisible(stardom.isActive());
+                    }
+                });
     }
 
     @Override
@@ -195,7 +243,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showStarUsers() {
-        showFragment(StarUsersFlagment.newInstance());
+        showFragment(StarUsersFragment.newInstance());
     }
 
     private void showFollowers(long userId) {
@@ -309,5 +357,72 @@ public class MainActivity extends AppCompatActivity
         }
 
         super.onBackPressed();
+    }
+
+    private void showStarElectedDialog() {
+        final Observer<Void> observer = new Observer<Void>() {
+            @Override
+            public void onCompleted() {}
+
+            @Override
+            public void onError(Throwable e) {}
+
+            @Override
+            public void onNext(Void aVoid) {}
+        };
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.star_candidate_title)
+                .setMessage(R.string.star_candidate_message)
+                .setPositiveButton(R.string.accept_stardom, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mAccountSubscription = mAPIService.acceptStardom(true)
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(observer);
+                    }
+                })
+                .setNegativeButton(R.string.decline_stardom, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mAccountSubscription = mAPIService.acceptStardom(false)
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(observer);
+                    }
+                })
+                .show();
+    }
+
+    void showStarInfoDialog() {
+        StarInfoDialogFragment.newInstance().show(getFragmentManager(), null);
+    }
+
+    public static class StarInfoDialogFragment extends DialogFragment {
+        public static StarInfoDialogFragment newInstance() {
+            Bundle args = new Bundle();
+            StarInfoDialogFragment fragment = new StarInfoDialogFragment();
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        public StarInfoDialogFragment() {
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.star_info_title)
+                    .setMessage(R.string.star_info_description)
+                    .setNeutralButton(R.string.star_info_check, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            final Intent intent = new Intent(ACTION_VIEW_STAR_USERS, null,
+                                    getActivity(), MainActivity.class);
+                            startActivity(intent);
+                        }
+                    })
+                    .setPositiveButton(R.string.ok, null)
+                    .create();
+        }
     }
 }

@@ -21,10 +21,7 @@ import rx.android.schedulers.AndroidSchedulers;
 /**
  * A fragment representing a list of Items.
  */
-public class MicropostListFragment extends SwipeRefreshListFragment {
-
-    private List<Micropost> mMicroposts = new ArrayList<>();
-    private ArrayAdapter<Micropost> mAdapter;
+public class MicropostListFragment extends SwipeRefreshListFragment<Micropost> {
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -56,25 +53,6 @@ public class MicropostListFragment extends SwipeRefreshListFragment {
                 }
             }
         });
-    }
-
-    protected void setMicroposts(List<Micropost> microposts) {
-        mMicroposts.clear();
-        mMicroposts.addAll(microposts);
-
-        if (mAdapter == null) {
-            final Picasso picasso =
-                    ((JodoroidApplication) getActivity().getApplication()).getPicasso();
-            mAdapter = new MicropostsAdapter(getActivity(), picasso, mMicroposts);
-            setListAdapter(mAdapter);
-        }
-
-        mAdapter.notifyDataSetChanged();
-    }
-
-    protected void addMicroposts(List<Micropost> microposts) {
-        mMicroposts.addAll(microposts);
-        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -129,4 +107,10 @@ public class MicropostListFragment extends SwipeRefreshListFragment {
         }
     }
 
+    @Override
+    protected ArrayAdapter<Micropost> createAdapter(List<Micropost> list) {
+        final Picasso picasso =
+                ((JodoroidApplication) getActivity().getApplication()).getPicasso();
+        return new MicropostsAdapter(getActivity(), picasso, list);
+    }
 }

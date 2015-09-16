@@ -49,4 +49,13 @@
     <string name="description_delete_micropost">Are You Sure?</string>
     <string name="toast_deletion_succeed">Deleted Successfully.</string>
     <string name="toast_deletion_failed">Deletion failed.</string>
+
+    <string name="star_candidate_title">You Got Stardom!!</string>
+    <string name="star_candidate_message">Everyone reads your post today!</string>
+    <string name="accept_stardom">Accept</string>
+    <string name="decline_stardom">Decline</string>
+    <string name="star_info_description">Several people are chosen as stars today!
+        Stars will appear on your feed with star-shaped avatars.</string>
+    <string name="star_info_title">Stars!</string>
+    <string name="star_info_check">Check stars</string>
 </resources>

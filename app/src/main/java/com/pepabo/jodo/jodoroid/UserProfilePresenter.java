@@ -21,12 +21,7 @@ public class UserProfilePresenter extends RefreshPresenter<User> {
     }
 
     @Override
-    protected Observable<User> getObservable() {
-        return mAPIService.fetchUser(mUserId, 1);
-    }
-
-    @Override
-    public Observable<User> loadNextPage(int pageNumber) {
-        return mAPIService.fetchUser(mUserId, pageNumber);
+    protected Observable<User> getObservable(int page) {
+        return mAPIService.fetchUser(mUserId, page);
     }
 }

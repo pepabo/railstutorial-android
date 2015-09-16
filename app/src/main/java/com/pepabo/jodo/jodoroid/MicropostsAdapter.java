@@ -46,7 +46,8 @@ class MicropostsAdapter extends ArrayAdapter<Micropost> {
         final User user = micropost.getUser();
 
         if (user != null) {
-            mPicasso.load(user.getAvatarUrl()).fit().into(holder.avatar);
+            mPicasso.load(user.getAvatarUrl()).fit()
+                    .transform(new StarTransformation(micropost.isStarred())).into(holder.avatar);
             holder.username.setText(user.getName());
         } else {
             holder.avatar.setImageDrawable(null);

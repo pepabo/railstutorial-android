@@ -12,14 +12,14 @@ public abstract class RefreshPresenter<Model> {
     RefreshableView<Model> mView;
     Subscription mSubscription = Subscriptions.unsubscribed();
 
-    protected int mPage;
-    protected boolean mStopped;
+    int mPage;
+    boolean mStopped;
 
     public RefreshPresenter() {
         resetPagination();
     }
 
-    public void setView (RefreshableView<Model> view) {
+    public void setView(RefreshableView<Model> view) {
         mView = view;
     }
 
@@ -27,22 +27,31 @@ public abstract class RefreshPresenter<Model> {
         return mView;
     }
 
-    protected abstract Observable<Model> getObservable();
-    protected Observer<Model> getObserver(){
-        return new RefreshSubscriber();
+    protected abstract Observable<Model> getObservable(int page);
+
+    protected Observer<Model> getObserver(int page) {
+        return new RefreshSubscriber(page);
     }
 
     public void refresh() {
-        if (mSubscription.isUnsubscribed()) {
-            mSubscription = getObservable()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(getObserver());
-        }
+        if (!mSubscription.isUnsubscribed()) return;
+
         resetPagination();
+        mSubscription = getObservable(mPage)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(getObserver(mPage));
     }
 
-    protected void resetPagination() {
-        mPage    = 1;
+    public void loadNextPage() {
+        if (!mSubscription.isUnsubscribed() || mStopped) return;
+
+        mSubscription = getObservable(mPage)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(getObserver(mPage));
+    }
+
+    void resetPagination() {
+        mPage = 1;
         mStopped = false;
     }
 
@@ -52,6 +61,12 @@ public abstract class RefreshPresenter<Model> {
 
 
     class RefreshSubscriber extends Subscriber<Model> {
+        final int mLoadedPage;
+
+        public RefreshSubscriber(int page) {
+            this.mLoadedPage = page;
+        }
+
         @Override
         public void onStart() {
             final RefreshableView<Model> view = getView();
@@ -64,12 +79,18 @@ public abstract class RefreshPresenter<Model> {
         public void onNext(Model model) {
             final RefreshableView<Model> view = getView();
             if (view != null) {
-                view.onNextModel(model);
+                if (mLoadedPage == 1) {
+                    view.onNextModel(model);
+                } else {
+                    view.onMoreModel(model);
+                }
             }
         }
 
         @Override
         public void onCompleted() {
+            mPage++;
+
             final RefreshableView<Model> view = getView();
             if (view != null) {
                 view.setRefreshing(false);
@@ -83,36 +104,5 @@ public abstract class RefreshPresenter<Model> {
                 view.onLoadError(e);
             }
         }
-    }
-
-    abstract protected Observable<Model> loadNextPage(int pageNumber);
-
-    public void onLoadNextPage() {
-        if (!mSubscription.isUnsubscribed() || mStopped) return;
-
-        mPage++;
-        mSubscription = loadNextPage(mPage)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Model>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        final RefreshableView<Model> view = getView();
-                        if (view != null) {
-                            view.onLoadError(e);
-                        }
-                    }
-
-                    @Override
-                    public void onNext(Model model) {
-                        final RefreshableView<Model> view = getView();
-                        if (view != null) {
-                            view.onMoreModel(model);
-                        }
-                    }
-                });
     }
 }

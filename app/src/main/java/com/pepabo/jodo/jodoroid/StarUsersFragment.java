@@ -9,19 +9,19 @@ import com.pepabo.jodo.jodoroid.models.User;
 
 import java.util.List;
 
-public class StarUsersFlagment extends UserListFragment implements RefreshableView<List<User>> {
+public class StarUsersFragment extends UserListFragment implements RefreshableView<List<User>> {
 
     APIService mAPIService;
     RefreshPresenter<List<User>> mRefreshPresenter;
 
-    public static StarUsersFlagment newInstance() {
-        StarUsersFlagment fragment = new StarUsersFlagment();
+    public static StarUsersFragment newInstance() {
+        StarUsersFragment fragment = new StarUsersFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public StarUsersFlagment() {
+    public StarUsersFragment() {
     }
 
     @Override
@@ -55,12 +55,12 @@ public class StarUsersFlagment extends UserListFragment implements RefreshableVi
 
     @Override
     public void onNextModel(List<User> stars) {
-        setUsers(stars);
+        setItems(stars);
     }
 
     @Override
     public void onMoreModel(List<User> stars) {
-        addUsers(stars);
+        addItems(stars);
     }
 
     @Override

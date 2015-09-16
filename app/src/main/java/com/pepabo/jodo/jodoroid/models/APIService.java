@@ -90,4 +90,11 @@ public interface APIService {
 
     @GET("/users/stars")
     Observable<List<User>> fetchStarUsers(@Query("page") int page);
+
+    @GET("/stardom")
+    Observable<Stardom> checkStardom();
+
+    @PATCH("/stardom")
+    @FormUrlEncoded
+    Observable<Void> acceptStardom(@Field("stardom[accept]") boolean accept);
 }
