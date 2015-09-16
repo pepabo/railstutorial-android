@@ -5,7 +5,7 @@ import android.content.Context;
 import com.pepabo.jodo.jodoroid.models.APIService;
 import com.pepabo.jodo.jodoroid.models.User;
 
-import java.lang.ref.WeakReference;
+import javax.inject.Inject;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -14,9 +14,13 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.subscriptions.Subscriptions;
 
-public class ProfileEditPresenter {
-    WeakReference<ProfileEditView> mView;
+public class ProfileEditPresenter extends BasePresenter<ProfileEditView> {
+    @Inject
     APIService mAPIService;
+
+    @Inject
+    ExpirationManager mExpirationManager;
+
     JodoAccount mAccount;
 
     Subscription mSubscription = Subscriptions.unsubscribed();
@@ -24,10 +28,10 @@ public class ProfileEditPresenter {
     FormItemValidator mEmailValidator;
     FormItemValidator mNameValidator;
 
-    public ProfileEditPresenter(Context context, ProfileEditView view, APIService apiService, JodoAccount account) {
-        mView = new WeakReference<>(view);
-        mAPIService = apiService;
-        mAccount = account;
+    @Inject
+    public ProfileEditPresenter(Context context) {
+        super();
+        mAccount = JodoAccount.getAccount(context);
         mEmailValidator = new EmailValidator(context);
         mNameValidator = new NameValidator(context);
     }
@@ -40,13 +44,9 @@ public class ProfileEditPresenter {
         }
     }
 
-    void stop() {
-        mSubscription.unsubscribe();
-    }
-
     void submit() {
-        if(mSubscription.isUnsubscribed()) {
-            final ProfileEditView view = mView.get();
+        if (mSubscription.isUnsubscribed()) {
+            final ProfileEditView view = getView();
             if (view != null) {
                 final String name = view.getName();
                 final String email = view.getEmail();
@@ -89,7 +89,7 @@ public class ProfileEditPresenter {
     class FetchSubscriber extends Subscriber<User> {
         @Override
         public void onStart() {
-            final ProfileEditView view = mView.get();
+            final ProfileEditView view = getView();
             if (view != null) {
                 view.showProgress(true);
             }
@@ -97,7 +97,7 @@ public class ProfileEditPresenter {
 
         @Override
         public void onCompleted() {
-            final ProfileEditView view = mView.get();
+            final ProfileEditView view = getView();
             if (view != null) {
                 view.showProgress(false);
             }
@@ -105,7 +105,7 @@ public class ProfileEditPresenter {
 
         @Override
         public void onError(Throwable e) {
-            final ProfileEditView view = mView.get();
+            final ProfileEditView view = getView();
             if (view != null) {
                 view.onError(e);
                 view.finish();
@@ -114,7 +114,7 @@ public class ProfileEditPresenter {
 
         @Override
         public void onNext(User user) {
-            final ProfileEditView view = mView.get();
+            final ProfileEditView view = getView();
             if (view != null) {
                 view.setEmail(mAccount.getEmail());
                 view.setName(user.getName());
@@ -125,7 +125,7 @@ public class ProfileEditPresenter {
     class UpdateSubscriber extends Subscriber<User> {
         @Override
         public void onStart() {
-            final ProfileEditView view = mView.get();
+            final ProfileEditView view = getView();
             if (view != null) {
                 view.showProgress(true);
             }
@@ -133,15 +133,16 @@ public class ProfileEditPresenter {
 
         @Override
         public void onCompleted() {
-            final ProfileEditView view = mView.get();
+            final ProfileEditView view = getView();
             if (view != null) {
+                mExpirationManager.expire();
                 view.finish();
             }
         }
 
         @Override
         public void onError(Throwable e) {
-            final ProfileEditView view = mView.get();
+            final ProfileEditView view = getView();
             if (view != null) {
                 view.onError(e);
                 view.showProgress(false);

@@ -22,4 +22,7 @@ public interface ApplicationComponent {
     APIService apiService();
     SharedPreferences sharedPreferences();
     ExpirationManager expirationManager();
+
+    // injectors
+    void inject(ProfileEditActivity activity);
 }
