@@ -1,5 +1,7 @@
 package com.pepabo.jodo.jodoroid;
 
+import android.content.SharedPreferences;
+
 import com.pepabo.jodo.jodoroid.models.APIService;
 import com.pepabo.jodo.jodoroid.modules.APIModule;
 import com.pepabo.jodo.jodoroid.modules.AndroidModule;
@@ -15,6 +17,6 @@ import dagger.Component;
 @Component(modules = {AndroidModule.class, APIModule.class, HttpModule.class, PicassoModule.class})
 public interface ApplicationComponent {
     Picasso picasso();
-
     APIService apiService();
+    SharedPreferences sharedPreferences();
 }

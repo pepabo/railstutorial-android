@@ -1,13 +1,17 @@
 package com.pepabo.jodo.jodoroid;
 
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -44,6 +48,8 @@ public class MainActivity extends AppCompatActivity
     public static final String ACTION_VIEW_FOLLOWING = "com.pepabo.jodo.jodoroid.VIEW_FOLLOWING";
     public static final String ACTION_VIEW_LICENSES = "com.pepabo.jodo.jodoroid.VIEW_LICENSES";
     public static final String EXTRA_USER_ID = "userId";
+
+    static final String PREF_STAR_INFO_LAST_SEEN = "star_info_last_seen";
 
     private ActionBarDrawerToggle mDrawerToggle;
     @Bind(R.id.drawer_layout)
@@ -141,6 +147,16 @@ public class MainActivity extends AppCompatActivity
                         if (stardom.isActive()) {
                             if (stardom.isCandidate()) {
                                 showStarElectedDialog();
+                            } else {
+                                final SharedPreferences prefs = ((JodoroidApplication)getApplication())
+                                        .component().sharedPreferences();
+                                final String last_seen = prefs.getString(PREF_STAR_INFO_LAST_SEEN, null);
+                                if(last_seen == null || !last_seen.equals(stardom.getDate())) {
+                                    prefs.edit()
+                                            .putString(PREF_STAR_INFO_LAST_SEEN, stardom.getDate())
+                                            .apply();
+                                    showStarInfoDialog();
+                                }
                             }
                         }
 
@@ -375,5 +391,38 @@ public class MainActivity extends AppCompatActivity
                     }
                 })
                 .show();
+    }
+
+    void showStarInfoDialog() {
+        StarInfoDialogFragment.newInstance().show(getFragmentManager(), null);
+    }
+
+    public static class StarInfoDialogFragment extends DialogFragment {
+        public static StarInfoDialogFragment newInstance() {
+            Bundle args = new Bundle();
+            StarInfoDialogFragment fragment = new StarInfoDialogFragment();
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        public StarInfoDialogFragment() {
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.star_info_title)
+                    .setMessage(R.string.star_info_description)
+                    .setNeutralButton(R.string.star_info_check, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            final Intent intent = new Intent(ACTION_VIEW_STAR_USERS, null,
+                                    getActivity(), MainActivity.class);
+                            startActivity(intent);
+                        }
+                    })
+                    .setPositiveButton(R.string.ok, null)
+                    .create();
+        }
     }
 }
