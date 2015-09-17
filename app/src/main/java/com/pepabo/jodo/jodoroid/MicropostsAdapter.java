@@ -50,6 +50,7 @@ class MicropostsAdapter extends ArrayAdapter<Micropost> {
                     .transform(new StarTransformation(micropost.isStarred())).into(holder.avatar);
             holder.username.setText(user.getName());
         } else {
+            mPicasso.cancelRequest(holder.avatar);
             holder.avatar.setImageDrawable(null);
             holder.username.setText("");
         }
@@ -73,6 +74,7 @@ class MicropostsAdapter extends ArrayAdapter<Micropost> {
                 }
             });
         } else {
+            mPicasso.cancelRequest(holder.picture);
             holder.picture.setImageDrawable(null);
         }
 
