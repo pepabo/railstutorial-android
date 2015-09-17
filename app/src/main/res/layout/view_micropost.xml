@@ -6,9 +6,10 @@
 
     <ImageView
         android:id="@+id/avatar"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        android:contentDescription="@string/description_user_avatar" />
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:contentDescription="@string/description_user_avatar"
+        android:layout_marginRight="3dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,22 +19,30 @@
         <TextView
             android:id="@+id/username"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="1dp" />
 
         <TextView
             android:id="@+id/content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:layout_marginRight="2dp" />
 
         <ImageView
             android:id="@+id/picture"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/description_attached_image" />
+            android:contentDescription="@string/description_attached_image"
+            android:layout_marginTop="2dp" />
 
         <TextView
             android:id="@+id/timestamp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:gravity="end" />
     </LinearLayout>
 </LinearLayout>
