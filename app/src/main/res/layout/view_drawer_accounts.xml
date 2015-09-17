@@ -3,49 +3,41 @@
     android:id="@+id/drawer_header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:background="@color/material_deep_teal_500"
+    android:clickable="true"
+    android:orientation="horizontal"
+    android:paddingBottom="16dp"
     android:paddingEnd="16dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingStart="16dp"
-    android:paddingTop="16dp"
-    android:background="@color/material_deep_teal_500"
-    android:paddingBottom="16dp">
+    android:paddingTop="16dp">
+
+    <ImageView
+        android:id="@+id/drawer_avatar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginRight="5dp" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="false">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="8dp">
 
-        <ImageView
-            android:id="@+id/drawer_avatar"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:clickable="true"
-            android:layout_marginRight="5dp" />
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/drawer_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="8dp">
+            android:textColor="@color/primary_text_default_material_dark"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/drawer_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="@color/primary_text_default_material_dark" />
-
-            <TextView
-                android:id="@+id/drawer_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="@color/primary_text_default_material_dark" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/drawer_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/primary_text_default_material_dark"
+            android:textSize="14sp" />
     </LinearLayout>
-
 </LinearLayout>

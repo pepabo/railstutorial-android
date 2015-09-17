@@ -298,11 +298,11 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    @OnClick(R.id.drawer_avatar)
+    @OnClick(R.id.drawer_header)
     void openSelfProfile() {
         mDrawerLayout.closeDrawer(mDrawer);
-        final Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.setAction(ACTION_VIEW_SELF_PROFILE);
+        final Intent intent = new Intent(ACTION_VIEW_SELF_PROFILE, null,
+                getApplicationContext(), MainActivity.class);
         startActivity(intent);
     }
 
