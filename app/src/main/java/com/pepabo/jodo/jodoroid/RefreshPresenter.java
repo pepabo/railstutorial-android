@@ -69,7 +69,6 @@ public abstract class RefreshPresenter<Model> extends BasePresenter<RefreshableV
         public void onStart() {
             final RefreshableView<Model> view = getView();
             if (view != null) {
-                view.setRefreshing(true);
             }
         }
 

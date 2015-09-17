@@ -55,6 +55,7 @@ abstract public class SwipeRefreshListFragment<Model> extends ListFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mLayout = new FrameLayout(container.getContext());
         mSwipeRefreshLayout = new ListFragmentSwipeRefreshLayout(container.getContext());
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.material_deep_teal_500);
 
         final View view = super.onCreateView(inflater, mSwipeRefreshLayout, savedInstanceState);
         mReloadView = inflater.inflate(R.layout.view_reload, mLayout, false);
@@ -128,8 +129,10 @@ abstract public class SwipeRefreshListFragment<Model> extends ListFragment
     }
 
     public void onLoadError(Throwable e) {
-        mSwipeRefreshLayout.setVisibility(View.GONE);
-        mReloadView.setVisibility(View.VISIBLE);
+        if(getListAdapter() == null) {
+            mSwipeRefreshLayout.setVisibility(View.GONE);
+            mReloadView.setVisibility(View.VISIBLE);
+        }
     }
 
     abstract protected ArrayAdapter<Model> createAdapter(List<Model> list);
