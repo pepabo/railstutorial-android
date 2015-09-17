@@ -128,8 +128,10 @@ abstract public class SwipeRefreshListFragment<Model> extends ListFragment
     }
 
     public void onLoadError(Throwable e) {
-        mSwipeRefreshLayout.setVisibility(View.GONE);
-        mReloadView.setVisibility(View.VISIBLE);
+        if(getListAdapter() == null) {
+            mSwipeRefreshLayout.setVisibility(View.GONE);
+            mReloadView.setVisibility(View.VISIBLE);
+        }
     }
 
     abstract protected ArrayAdapter<Model> createAdapter(List<Model> list);
