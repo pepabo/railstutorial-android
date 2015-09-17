@@ -14,8 +14,8 @@ public class UserProfilePresenter extends RefreshPresenter<User> {
     APIService mAPIService;
     long mUserId;
 
-    public UserProfilePresenter(APIService apiService, long userId) {
-        super();
+    public UserProfilePresenter(APIService apiService, ExpirationManager expirationManager, long userId) {
+        super(expirationManager);
         mAPIService = apiService;
         mUserId = userId;
     }
@@ -23,5 +23,10 @@ public class UserProfilePresenter extends RefreshPresenter<User> {
     @Override
     protected Observable<User> getObservable(int page) {
         return mAPIService.fetchUser(mUserId, page);
+    }
+
+    @Override
+    public boolean isLast(User user) {
+        return user.getMicroposts() == null || user.getMicroposts().size() == 0;
     }
 }

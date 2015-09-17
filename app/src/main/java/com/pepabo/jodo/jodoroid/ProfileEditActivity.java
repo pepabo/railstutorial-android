@@ -16,13 +16,19 @@ import android.widget.Toast;
 
 import com.pepabo.jodo.jodoroid.models.APIService;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import dagger.Module;
+import dagger.Provides;
+import dagger.Subcomponent;
 
 public class ProfileEditActivity extends AppCompatActivity
         implements ProfileEditView {
 
-    APIService mAPIService;
+    @Inject
     ProfileEditPresenter mPresenter;
 
     @Bind(R.id.email)
@@ -46,6 +52,7 @@ public class ProfileEditActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
         ButterKnife.bind(this);
+        ((JodoroidApplication) getApplication()).component().inject(this);
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -55,10 +62,7 @@ public class ProfileEditActivity extends AppCompatActivity
 
         mProgressToggle = new ProgressToggle(this, mProgressView, mFormView);
 
-        mAPIService = ((JodoroidApplication) getApplication()).getAPIService();
-        mPresenter = new ProfileEditPresenter(getApplicationContext(), this,
-                mAPIService, JodoAccount.getAccount(getApplicationContext()));
-
+        mPresenter.setView(this);
         mPresenter.start();
 
         registerReceiver(mLogoutReceiver = new BroadcastReceiver() {
@@ -71,7 +75,7 @@ public class ProfileEditActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        mPresenter.stop();
+        mPresenter.setView(null);
         unregisterReceiver(mLogoutReceiver);
         super.onDestroy();
     }

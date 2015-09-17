@@ -17,8 +17,11 @@ import com.pepabo.jodo.jodoroid.models.Follow;
 import com.pepabo.jodo.jodoroid.models.User;
 import com.squareup.picasso.Picasso;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import dagger.Provides;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -27,10 +30,37 @@ public class UserProfileFragment extends MicropostListFragment
     private static final String ARG_USER_ID = "user_id";
     private long mUserId;
 
+    @dagger.Module
+    static class Module {
+        long mUserId;
+
+        public Module(long userId) {
+            this.mUserId = userId;
+        }
+
+        @PerFragment
+        @Provides
+        RefreshPresenter<User> providePresenter(APIService apiService, ExpirationManager expirationManager) {
+            return new UserProfilePresenter(apiService, expirationManager, mUserId);
+        }
+    }
+
+    @PerFragment
+    @dagger.Component(dependencies = ApplicationComponent.class, modules = Module.class)
+    interface Component {
+        void inject(UserProfileFragment fragment);
+    }
+
+    @Inject
+    RefreshPresenter<User> mPresenter;
+
     private boolean following;
-    private APIService mAPIService;
-    private Picasso mPicasso;
-    private UserProfilePresenter mPresenter;
+
+    @Inject
+    APIService mAPIService;
+
+    @Inject
+    Picasso mPicasso;
 
     @Bind(R.id.layout_followers)
     View followersLayoutView;
@@ -68,9 +98,6 @@ public class UserProfileFragment extends MicropostListFragment
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
-        mAPIService = ((JodoroidApplication) activity.getApplication()).getAPIService();
-        mPicasso = ((JodoroidApplication) activity.getApplication()).getPicasso();
     }
 
     @Override
@@ -79,7 +106,10 @@ public class UserProfileFragment extends MicropostListFragment
 
         mUserId = getArguments().getLong(ARG_USER_ID);
 
-        mPresenter = new UserProfilePresenter(mAPIService, mUserId);
+        DaggerUserProfileFragment_Component.builder()
+                .applicationComponent(((JodoroidApplication) getActivity().getApplication()).component())
+                .module(new Module(mUserId))
+                .build().inject(this);
     }
 
     @Override
@@ -107,8 +137,13 @@ public class UserProfileFragment extends MicropostListFragment
     @Override
     public void onRefresh() {
         super.onRefresh();
-
         mPresenter.refresh();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.checkUpdate();
     }
 
     @Override

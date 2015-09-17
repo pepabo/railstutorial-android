@@ -1,6 +1,5 @@
 package com.pepabo.jodo.jodoroid;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -9,10 +8,32 @@ import com.pepabo.jodo.jodoroid.models.User;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.Provides;
+
 public class AllUsersFragment extends UserListFragment
         implements RefreshableView<List<User>> {
 
-    APIService mAPIService;
+    @dagger.Module
+    static class Module {
+        public Module() {
+        }
+
+        @PerFragment
+        @Provides
+        RefreshPresenter<List<User>> providePresenter(APIService apiService, ExpirationManager expirationManager) {
+            return new AllUsersPresenter(apiService, expirationManager);
+        }
+    }
+
+    @PerFragment
+    @dagger.Component(dependencies = ApplicationComponent.class, modules = Module.class)
+    interface Component {
+        void inject(AllUsersFragment fragment);
+    }
+
+    @Inject
     RefreshPresenter<List<User>> mPresenter;
 
     public static AllUsersFragment newInstance() {
@@ -26,17 +47,13 @@ public class AllUsersFragment extends UserListFragment
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        mAPIService = ((JodoroidApplication) getActivity().getApplication()).getAPIService();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mPresenter = new AllUsersPresenter(mAPIService);
+        DaggerAllUsersFragment_Component.builder()
+                .applicationComponent(((JodoroidApplication) getActivity().getApplication()).component())
+                .module(new Module())
+                .build().inject(this);
     }
 
     @Override
@@ -56,8 +73,13 @@ public class AllUsersFragment extends UserListFragment
     @Override
     public void onRefresh() {
         super.onRefresh();
-
         mPresenter.refresh();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.checkUpdate();
     }
 
     @Override

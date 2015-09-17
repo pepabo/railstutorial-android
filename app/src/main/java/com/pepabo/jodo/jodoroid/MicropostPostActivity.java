@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.pepabo.jodo.jodoroid.models.Micropost;
 
@@ -24,17 +25,23 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import retrofit.mime.TypedFile;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class MicropostPostActivity extends AppCompatActivity {
+public class MicropostPostActivity extends AppCompatActivity
+        implements MicropostPostView {
     public final static int REQUEST_GALLERY = 0;
 
     final static String STATE_ATTACHMENT_PATH = "attachmentPath";
     final static String STATE_ATTACHMENT_TYPE = "attachmentType";
+
+    @Inject
+    MicropostPostPresenter mPresenter;
 
     @Bind(R.id.article)
     EditText mArticleView;
@@ -59,12 +66,15 @@ public class MicropostPostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_micropost);
         ButterKnife.bind(this);
+        ((JodoroidApplication) getApplication()).component().inject(this);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_close_white_24dp);
 
         mProgressToggle = new ProgressToggle(this, mProgressView, mFormView);
+
+        mPresenter.setView(this);
 
         registerReceiver(mLoggoutReceiver = new BroadcastReceiver() {
             @Override
@@ -76,6 +86,7 @@ public class MicropostPostActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        mPresenter.setView(this);
         unregisterReceiver(mLoggoutReceiver);
         super.onDestroy();
     }
@@ -125,8 +136,7 @@ public class MicropostPostActivity extends AppCompatActivity {
                 break;
             }
             case R.id.action_Send:
-                showProgress(true);
-                postMicropost();
+                mPresenter.submit();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -170,31 +180,22 @@ public class MicropostPostActivity extends AppCompatActivity {
         }
     }
 
-    private void postMicropost() {
-        ((JodoroidApplication) getApplication()).getAPIService()
-                .createMicropost(mArticleView.getText().toString(), mAttachmentImage)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Micropost>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        showProgress(false);
-                    }
-
-                    @Override
-                    public void onNext(Micropost micropost) {
-                        setResult(RESULT_OK);
-                        finish();
-                    }
-                });
-    }
-
     public void showProgress(final boolean show) {
         mProgressToggle.showProgress(show);
     }
 
+    @Override
+    public String getContent() {
+        return mArticleView.getText().toString();
+    }
+
+    @Override
+    public TypedFile getAttachment() {
+        return mAttachmentImage;
+    }
+
+    @Override
+    public void onError(Throwable e) {
+        Toast.makeText(this, ErrorUtils.getMessage(e), Toast.LENGTH_SHORT).show();
+    }
 }
