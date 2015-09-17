@@ -215,7 +215,7 @@ public class UserProfileFragment extends MicropostListFragment
         final ListView list = (ListView) view.findViewById(android.R.id.list);
         final View header = inflater.inflate(R.layout.view_user_profile, list, false);
         list.addHeaderView(header);
-        ButterKnife.bind(this, header);
+        ButterKnife.bind(this, view);
         return view;
     }
 
@@ -251,6 +251,7 @@ public class UserProfileFragment extends MicropostListFragment
         Toast.makeText(getActivity(),
                 getString(R.string.toast_load_failure),
                 Toast.LENGTH_SHORT).show();
+        super.onLoadError(e);
     }
 
     @Override

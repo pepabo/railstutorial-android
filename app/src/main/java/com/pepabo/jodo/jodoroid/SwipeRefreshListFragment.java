@@ -8,8 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
+
+import android.widget.FrameLayout;
 import android.widget.ListView;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +23,8 @@ import java.util.List;
 abstract public class SwipeRefreshListFragment<Model> extends ListFragment
         implements SwipeRefreshLayout.OnRefreshListener {
 
+    FrameLayout mLayout;
+    View mReloadView;
     SwipeRefreshLayout mSwipeRefreshLayout;
     ArrayAdapter<Model> mAdapter;
 
@@ -45,9 +53,12 @@ abstract public class SwipeRefreshListFragment<Model> extends ListFragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mLayout = new FrameLayout(container.getContext());
         mSwipeRefreshLayout = new ListFragmentSwipeRefreshLayout(container.getContext());
 
         final View view = super.onCreateView(inflater, mSwipeRefreshLayout, savedInstanceState);
+        mReloadView = inflater.inflate(R.layout.view_reload, mLayout, false);
+
         if (view != null) {
             mSwipeRefreshLayout.addView(
                     view,
@@ -56,9 +67,22 @@ abstract public class SwipeRefreshListFragment<Model> extends ListFragment
                             ViewGroup.LayoutParams.MATCH_PARENT));
         }
 
-        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mLayout.addView(
+                mSwipeRefreshLayout,
+                new FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT));
 
-        return mSwipeRefreshLayout;
+        mLayout.addView(
+                mReloadView,
+                new FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT));
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        ButterKnife.bind(new ViewHolder(), mLayout);
+
+        return mLayout;
     }
 
     @Override
@@ -82,6 +106,15 @@ abstract public class SwipeRefreshListFragment<Model> extends ListFragment
         // nop by default
     }
 
+    public class ViewHolder {
+        @OnClick(R.id.reload_button)
+        public void refresh() {
+            onRefresh();
+            mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+            mReloadView.setVisibility(View.GONE);
+        }
+    }
+
     public SwipeRefreshLayout getSwipeRefreshLayout() {
         return mSwipeRefreshLayout;
     }
@@ -92,6 +125,11 @@ abstract public class SwipeRefreshListFragment<Model> extends ListFragment
 
     public void setRefreshing(boolean refreshing) {
         mSwipeRefreshLayout.setRefreshing(refreshing);
+    }
+
+    public void onLoadError(Throwable e) {
+        mSwipeRefreshLayout.setVisibility(View.GONE);
+        mReloadView.setVisibility(View.VISIBLE);
     }
 
     abstract protected ArrayAdapter<Model> createAdapter(List<Model> list);

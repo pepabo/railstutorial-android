@@ -75,5 +75,6 @@ public class AllUsersFragment extends UserListFragment
         Toast.makeText(getActivity(),
                 getString(R.string.toast_load_failure),
                 Toast.LENGTH_SHORT).show();
+        super.onLoadError(e);
     }
 }
