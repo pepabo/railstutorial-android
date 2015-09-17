@@ -69,18 +69,16 @@ public class JodoAccount {
             @Override
             public void call(Subscriber<? super JodoAccount> subscriber) {
                 try {
-                    final String email = getEmail();
-                    final long userId = getUserId();
-                    final String authToken = getAuthToken();
-
-                    final boolean removed = mAccountManager.removeAccount(mAccount, null, null).getResult();
-                    if(removed) {
-                        mAccount = new Account(newEmail, JodoAuthenticator.ACCOUNT_TYPE);
-                        mAccountManager.addAccountExplicitly(mAccount, null, null);
-                        mAccountManager.setAuthToken(mAccount, JodoAuthenticator.ACCOUNT_TOKEN_TYPE, authToken);
-                        mAccountManager.setUserData(mAccount, JodoAuthenticator.ACCOUNT_ID_TYPE, Long.toString(userId));
+                    if (getEmail().equals(newEmail)) {
+                        subscriber.onNext(JodoAccount.this);
+                    } else {
+                        final Account newAccount = new Account(newEmail, JodoAuthenticator.ACCOUNT_TYPE);
+                        mAccountManager.addAccountExplicitly(newAccount, null, null);
+                        mAccountManager.setAuthToken(newAccount, JodoAuthenticator.ACCOUNT_TOKEN_TYPE, getAuthToken());
+                        mAccountManager.setUserData(newAccount, JodoAuthenticator.ACCOUNT_ID_TYPE, Long.toString(getUserId()));
+                        mAccountManager.removeAccount(mAccount, null, null).getResult();
+                        subscriber.onNext(new JodoAccount(newAccount, mAccountManager));
                     }
-                    subscriber.onNext(JodoAccount.this);
                     subscriber.onCompleted();
                 } catch (AuthenticatorException | OperationCanceledException | IOException e) {
                     subscriber.onError(e);
