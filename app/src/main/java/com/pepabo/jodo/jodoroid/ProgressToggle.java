@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 public class ProgressToggle {
     final Context mContext;
@@ -49,5 +50,16 @@ public class ProgressToggle {
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
             mFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
+
+        if (show) {
+            hideKeyboard();
+        }
+    }
+
+    void hideKeyboard() {
+        final InputMethodManager inputMethodManager =
+                (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(mFormView.getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
     }
 }
