@@ -1,18 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context="com.pepabo.jodo.jodoroid.MicropostPostActivity">
 
-    <ProgressBar
-        android:id="@+id/post_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone" />
+    <include
+        android:id="@+id/progress"
+        layout="@layout/view_progress" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -49,7 +43,5 @@
                 android:layout_marginTop="30dp" />
 
         </LinearLayout>
-
     </ScrollView>
-
-</LinearLayout>
+</RelativeLayout>

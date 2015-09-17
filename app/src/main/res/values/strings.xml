@@ -58,4 +58,5 @@
         Stars will appear on your feed with star-shaped avatars.</string>
     <string name="star_info_title">Stars!</string>
     <string name="star_info_check">Check stars</string>
+    <string name="loading">Loading\u2026</string>
 </resources>
