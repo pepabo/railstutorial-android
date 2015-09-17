@@ -4,13 +4,9 @@
     android:layout_height="match_parent"
     tools:context="com.pepabo.jodo.jodoroid.SignupActivity">
 
-    <ProgressBar
+    <include
         android:id="@+id/progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="gone" />
+        layout="@layout/view_progress" />
 
     <ScrollView
         android:id="@+id/form"

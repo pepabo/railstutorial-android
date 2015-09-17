@@ -49,7 +49,7 @@ public class MicropostPostActivity extends AppCompatActivity
     @Bind(R.id.post_form)
     View mFormView;
 
-    @Bind(R.id.post_progress)
+    @Bind(R.id.progress)
     View mProgressView;
 
     @Bind(R.id.imgview)
