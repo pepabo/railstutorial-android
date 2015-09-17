@@ -11,6 +11,7 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class UserProfilePresenter extends RefreshPresenter<User> {
+    public static final long SELF_ID = -1;
     APIService mAPIService;
     long mUserId;
 
@@ -22,7 +23,11 @@ public class UserProfilePresenter extends RefreshPresenter<User> {
 
     @Override
     protected Observable<User> getObservable(int page) {
-        return mAPIService.fetchUser(mUserId, page);
+        if(mUserId == SELF_ID) {
+            return mAPIService.fetchMe(page);
+        } else {
+            return mAPIService.fetchUser(mUserId, page);
+        }
     }
 
     @Override

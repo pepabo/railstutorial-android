@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -35,9 +34,11 @@ import de.psdev.licensesdialog.LicensesDialog;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.Subscriptions;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        AccountInfoView {
 
     public static final String ACTION_VIEW_HOME = "com.pepabo.jodo.jodoroid.VIEW_HOME";
     public static final String ACTION_VIEW_SELF_PROFILE = "com.pepabo.jodo.jodoroid.VIEW_SELF_PROFILE";
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity
     public static final String EXTRA_USER_ID = "userId";
 
     static final String PREF_STAR_INFO_LAST_SEEN = "star_info_last_seen";
+    static final int REQUEST_UPDATE_PROFILE = 100;
 
     private ActionBarDrawerToggle mDrawerToggle;
     @Bind(R.id.drawer_layout)
@@ -57,11 +59,12 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.navigation_drawer)
     NavigationView mDrawer;
 
-    private Subscription mAccountSubscription;
-    private User mSelf;
+    private Subscription mAccountSubscription = Subscriptions.unsubscribed();
 
     private APIService mAPIService;
     private Picasso mPicasso;
+
+    AccountInfoPresenter mAccountInfoPresenter;
 
     @Bind(R.id.drawer_email)
     TextView mDrawerEmail;
@@ -93,29 +96,9 @@ public class MainActivity extends AppCompatActivity
         mAPIService = ((JodoroidApplication) getApplication()).getAPIService();
         mPicasso = ((JodoroidApplication) getApplication()).getPicasso();
 
-        mAccountSubscription = mAPIService
-                .fetchMe(1)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<User>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(User user) {
-                        mSelf = user;
-                        mDrawerName.setText(mSelf.getName());
-                        mPicasso.load(mSelf.getAvatarUrl()).fit()
-                                .transform(new StarTransformation(mSelf.isStar()))
-                                .into(mDrawerAvatar);
-                    }
-                });
+        mAccountInfoPresenter = new AccountInfoPresenter(mAPIService);
+        mAccountInfoPresenter.setView(this);
+        mAccountInfoPresenter.refresh();
 
         registerReceiver(mLogoutReceiver = new BroadcastReceiver() {
             @Override
@@ -137,10 +120,12 @@ public class MainActivity extends AppCompatActivity
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Stardom>() {
                     @Override
-                    public void onCompleted() {}
+                    public void onCompleted() {
+                    }
 
                     @Override
-                    public void onError(Throwable e) {}
+                    public void onError(Throwable e) {
+                    }
 
                     @Override
                     public void onNext(Stardom stardom) {
@@ -148,10 +133,10 @@ public class MainActivity extends AppCompatActivity
                             if (stardom.isCandidate()) {
                                 showStarElectedDialog();
                             } else {
-                                final SharedPreferences prefs = ((JodoroidApplication)getApplication())
+                                final SharedPreferences prefs = ((JodoroidApplication) getApplication())
                                         .component().sharedPreferences();
                                 final String last_seen = prefs.getString(PREF_STAR_INFO_LAST_SEEN, null);
-                                if(last_seen == null || !last_seen.equals(stardom.getDate())) {
+                                if (last_seen == null || !last_seen.equals(stardom.getDate())) {
                                     prefs.edit()
                                             .putString(PREF_STAR_INFO_LAST_SEEN, stardom.getDate())
                                             .apply();
@@ -168,13 +153,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
+        mAccountInfoPresenter.setView(null);
         ButterKnife.unbind(this);
         unregisterReceiver(mLogoutReceiver);
+        mAccountSubscription.unsubscribe();
         super.onDestroy();
-
-        if (mAccountSubscription != null) {
-            mAccountSubscription.unsubscribe();
-        }
     }
 
     @Override
@@ -272,9 +255,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showSelf() {
-        if (mSelf != null) {
-            showFragment(UserProfileFragment.newInstance(mSelf.getId()));
-        }
+        showFragment(UserProfileFragment.newInstance(UserProfilePresenter.SELF_ID));
     }
 
     private void showFragment(Fragment fragment) {
@@ -309,6 +290,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
         Intent intent = null;
+        int request = -1;
 
         switch (menuItem.getItemId()) {
             case R.id.action_view_home:
@@ -329,6 +311,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.action_edit_profile:
                 intent = new Intent(getApplicationContext(), ProfileEditActivity.class);
+                request = REQUEST_UPDATE_PROFILE;
                 break;
             case R.id.action_change_password:
                 intent = new Intent(getApplicationContext(), PasswordChangeActivity.class);
@@ -337,7 +320,11 @@ public class MainActivity extends AppCompatActivity
 
         if (intent != null) {
             mDrawerLayout.closeDrawers();
-            startActivity(intent);
+            if (request != -1) {
+                startActivityForResult(intent, request);
+            } else {
+                startActivity(intent);
+            }
             return true;
         }
         return false;
@@ -362,13 +349,16 @@ public class MainActivity extends AppCompatActivity
     private void showStarElectedDialog() {
         final Observer<Void> observer = new Observer<Void>() {
             @Override
-            public void onCompleted() {}
+            public void onCompleted() {
+            }
 
             @Override
-            public void onError(Throwable e) {}
+            public void onError(Throwable e) {
+            }
 
             @Override
-            public void onNext(Void aVoid) {}
+            public void onNext(Void aVoid) {
+            }
         };
 
         new AlertDialog.Builder(this)
@@ -423,6 +413,27 @@ public class MainActivity extends AppCompatActivity
                     })
                     .setPositiveButton(R.string.ok, null)
                     .create();
+        }
+    }
+
+    @Override
+    public void setAccountUser(User user) {
+        mDrawerName.setText(user.getName());
+        mPicasso.load(user.getAvatarUrl())
+                .fit()
+                .transform(new StarTransformation(user.isStar()))
+                .into(mDrawerAvatar);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQUEST_UPDATE_PROFILE: {
+                mDrawerEmail.setText(JodoAccount.getAccount(this).getEmail());
+                mAccountInfoPresenter.refresh();
+            }
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
         }
     }
 }
