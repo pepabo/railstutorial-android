@@ -417,11 +417,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void setAccountUser(User value) {
-        mDrawerName.setText(value.getName());
-        mPicasso.load(value.getAvatarUrl())
+    public void setAccountUser(User user) {
+        mDrawerName.setText(user.getName());
+        mPicasso.load(user.getAvatarUrl())
                 .fit()
-                .transform(new StarTransformation(value.isStar()))
+                .transform(new StarTransformation(user.isStar()))
                 .into(mDrawerAvatar);
     }
 
