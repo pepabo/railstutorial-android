@@ -15,8 +15,8 @@ public class UserFollowersPresenter extends RefreshPresenter<List<User>> {
     int mType;
     long mUserId;
 
-    public UserFollowersPresenter(APIService apiService, int type, long userId) {
-        super();
+    public UserFollowersPresenter(APIService apiService, ExpirationManager expirationManager, int type, long userId) {
+        super(expirationManager);
         mAPIService = apiService;
         mType = type;
         mUserId = userId;
@@ -32,5 +32,10 @@ public class UserFollowersPresenter extends RefreshPresenter<List<User>> {
             default:
                 throw new IllegalArgumentException();
         }
+    }
+
+    @Override
+    public boolean isLast(List<User> users) {
+        return users.size() == 0;
     }
 }

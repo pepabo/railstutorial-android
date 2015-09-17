@@ -1,6 +1,5 @@
 package com.pepabo.jodo.jodoroid;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -9,10 +8,32 @@ import com.pepabo.jodo.jodoroid.models.User;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.Provides;
+
 public class StarUsersFragment extends UserListFragment implements RefreshableView<List<User>> {
 
-    APIService mAPIService;
-    RefreshPresenter<List<User>> mRefreshPresenter;
+    @dagger.Module
+    static class Module {
+        public Module() {
+        }
+
+        @PerFragment
+        @Provides
+        RefreshPresenter<List<User>> providePresenter(APIService apiService, ExpirationManager expirationManager) {
+            return new StarUsersPresenter(apiService, expirationManager);
+        }
+    }
+
+    @PerFragment
+    @dagger.Component(dependencies = ApplicationComponent.class, modules = Module.class)
+    interface Component {
+        void inject(StarUsersFragment fragment);
+    }
+
+    @Inject
+    RefreshPresenter<List<User>> mPresenter;
 
     public static StarUsersFragment newInstance() {
         StarUsersFragment fragment = new StarUsersFragment();
@@ -25,17 +46,13 @@ public class StarUsersFragment extends UserListFragment implements RefreshableVi
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        mAPIService = ((JodoroidApplication) getActivity().getApplication()).getAPIService();
-    }
-
-    @Override
     public void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
 
-        mRefreshPresenter = new StarUsersPresenter(mAPIService);
+        DaggerStarUsersFragment_Component.builder()
+                .applicationComponent(((JodoroidApplication) getActivity().getApplication()).component())
+                .module(new Module())
+                .build().inject(this);
     }
 
 
@@ -43,21 +60,26 @@ public class StarUsersFragment extends UserListFragment implements RefreshableVi
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mRefreshPresenter.setView(this);
-        mRefreshPresenter.refresh();
+        mPresenter.setView(this);
+        mPresenter.refresh();
     }
 
     @Override
     public void onDestroyView() {
-        mRefreshPresenter.setView(null);
+        mPresenter.setView(null);
         super.onDestroyView();
     }
 
     @Override
     public void onRefresh() {
         super.onRefresh();
+        mPresenter.refresh();
+	}
 
-        mRefreshPresenter.refresh();
+    @Override
+	public void onResume() {
+        super.onResume();
+        mPresenter.checkUpdate();
     }
 
     @Override

@@ -7,24 +7,19 @@ import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.Subscriptions;
 
-public abstract class RefreshPresenter<Model> {
+public abstract class RefreshPresenter<Model> extends BasePresenter<RefreshableView<Model>> {
 
-    RefreshableView<Model> mView;
     Subscription mSubscription = Subscriptions.unsubscribed();
 
     int mPage;
     boolean mStopped;
+    long mUpdated;
 
-    public RefreshPresenter() {
+    ExpirationManager mExpirationManager;
+
+    public RefreshPresenter(ExpirationManager expirationManager) {
+        mExpirationManager = expirationManager;
         resetPagination();
-    }
-
-    public void setView(RefreshableView<Model> view) {
-        mView = view;
-    }
-
-    public RefreshableView<Model> getView() {
-        return mView;
     }
 
     protected abstract Observable<Model> getObservable(int page);
@@ -42,6 +37,12 @@ public abstract class RefreshPresenter<Model> {
                 .subscribe(getObserver(mPage));
     }
 
+    public void checkUpdate() {
+        if (mExpirationManager.isExpired(mUpdated)) {
+            refresh();
+        }
+    }
+
     public void loadNextPage() {
         if (!mSubscription.isUnsubscribed() || mStopped) return;
 
@@ -55,10 +56,7 @@ public abstract class RefreshPresenter<Model> {
         mStopped = false;
     }
 
-    public void noMorePagination() {
-        mStopped = true;
-    }
-
+    abstract public boolean isLast(Model model);
 
     class RefreshSubscriber extends Subscriber<Model> {
         final int mLoadedPage;
@@ -80,8 +78,10 @@ public abstract class RefreshPresenter<Model> {
             final RefreshableView<Model> view = getView();
             if (view != null) {
                 if (mLoadedPage == 1) {
+                    mUpdated = mExpirationManager.getCurrentTimestamp();
                     view.onNextModel(model);
                 } else {
+                    mStopped = isLast(model);
                     view.onMoreModel(model);
                 }
             }

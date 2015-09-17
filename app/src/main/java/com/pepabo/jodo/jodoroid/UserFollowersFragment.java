@@ -1,6 +1,5 @@
 package com.pepabo.jodo.jodoroid;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -9,16 +8,40 @@ import com.pepabo.jodo.jodoroid.models.User;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.Provides;
+
 public class UserFollowersFragment extends UserListFragment
         implements RefreshableView<List<User>> {
 
     static final String ARG_USER_ID = "user_id";
     static final String ARG_TYPE = "type";
 
-    int mType;
-    long mUserId;
+    @dagger.Module
+    static class Module {
+        int mType;
+        long mUserId;
 
-    APIService mAPIService;
+        public Module(int type, long userId) {
+            this.mType = type;
+            this.mUserId = userId;
+        }
+
+        @PerFragment
+        @Provides
+        RefreshPresenter<List<User>> providePresenter(APIService apiService, ExpirationManager expirationManager) {
+            return new UserFollowersPresenter(apiService, expirationManager, mType, mUserId);
+        }
+    }
+
+    @PerFragment
+    @dagger.Component(dependencies = ApplicationComponent.class, modules = Module.class)
+    interface Component {
+        void inject(UserFollowersFragment fragment);
+    }
+
+    @Inject
     RefreshPresenter<List<User>> mPresenter;
 
     public static UserFollowersFragment newInstance(long userId, int type) {
@@ -34,20 +57,16 @@ public class UserFollowersFragment extends UserListFragment
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-
-        mAPIService = ((JodoroidApplication) getActivity().getApplication()).getAPIService();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mUserId = getArguments().getLong(ARG_USER_ID);
-        mType = getArguments().getInt(ARG_TYPE);
+        final long userId = getArguments().getLong(ARG_USER_ID);
+        final int type = getArguments().getInt(ARG_TYPE);
 
-        mPresenter = new UserFollowersPresenter(mAPIService, mType, mUserId);
+        DaggerUserFollowersFragment_Component.builder()
+                .applicationComponent(((JodoroidApplication) getActivity().getApplication()).component())
+                .module(new Module(type, userId))
+                .build().inject(this);
     }
 
     @Override
@@ -67,8 +86,13 @@ public class UserFollowersFragment extends UserListFragment
     @Override
     public void onRefresh() {
         super.onRefresh();
-
         mPresenter.refresh();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.checkUpdate();
     }
 
     @Override
