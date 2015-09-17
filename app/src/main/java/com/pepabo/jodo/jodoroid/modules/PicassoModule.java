@@ -17,9 +17,7 @@ public class PicassoModule {
     @Provides
     public Picasso providePicasso(Context context, OkHttpClient httpClient) {
         return new Picasso.Builder(context)
-                .loggingEnabled(true)
                 .downloader(new OkHttpDownloader(httpClient))
-                .indicatorsEnabled(BuildConfig.DEBUG)
                 .build();
     }
 }
