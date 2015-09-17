@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.pepabo.jodo.jodoroid.models.Micropost;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observer;
@@ -27,7 +26,8 @@ public class MicropostListFragment extends SwipeRefreshListFragment<Micropost> {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public MicropostListFragment() { }
+    public MicropostListFragment() {
+    }
 
 
     @Override
@@ -38,6 +38,10 @@ public class MicropostListFragment extends SwipeRefreshListFragment<Micropost> {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 final Micropost m = (Micropost) parent.getItemAtPosition(position);
+                if (m == null) {
+                    return false;
+                }
+
                 long ownerId = m.getUser().getId();
 
                 if (JodoAccount.isMe(getActivity().getApplicationContext(), ownerId)) {
@@ -72,6 +76,10 @@ public class MicropostListFragment extends SwipeRefreshListFragment<Micropost> {
         private Micropost mMicropost;
 
         PositiveButtonClickListener(Micropost m) {
+            if (m == null) {
+                throw new IllegalArgumentException("m == null");
+            }
+
             mMicropost = m;
         }
 
@@ -97,6 +105,7 @@ public class MicropostListFragment extends SwipeRefreshListFragment<Micropost> {
 
                         @Override
                         public void onNext(Void v) {
+                            removeItem(mMicropost);
                             Toast.makeText(
                                     getActivity(),
                                     R.string.toast_deletion_succeed,

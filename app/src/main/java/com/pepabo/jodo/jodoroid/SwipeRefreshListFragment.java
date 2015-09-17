@@ -100,6 +100,7 @@ abstract public class SwipeRefreshListFragment<Model> extends ListFragment
         if (mAdapter == null) {
             mAdapter = createAdapter(new ArrayList<Model>());
             setListAdapter(mAdapter);
+            mAdapter.setNotifyOnChange(false);
         } else {
             mAdapter.clear();
         }
@@ -110,7 +111,10 @@ abstract public class SwipeRefreshListFragment<Model> extends ListFragment
 
     protected void addItems(List<Model> items) {
         mAdapter.addAll(items);
-        mAdapter.notifyDataSetChanged();
+    }
+
+    protected void removeItem(Model item) {
+        mAdapter.remove(item);
     }
 
     class ListFragmentSwipeRefreshLayout extends SwipeRefreshLayout {
