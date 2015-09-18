@@ -1,12 +1,13 @@
 package com.pepabo.jodo.jodoroid;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
-import android.support.v7.app.AlertDialog;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -69,7 +70,10 @@ class MicropostsAdapter extends ArrayAdapter<Micropost> {
                     image.setMaxWidth(1000);
                     mPicasso.load(pictureUrl).resize(1000, 1000).centerInside().into(image);
 
-                    new AlertDialog.Builder(getContext()).setView(image).show();
+                    Dialog dialog = new Dialog(getContext());
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.setContentView(image);
+                    dialog.show();
                 }
             });
         } else {
