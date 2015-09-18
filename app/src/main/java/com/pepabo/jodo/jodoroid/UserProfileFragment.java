@@ -293,4 +293,9 @@ public class UserProfileFragment extends MicropostListFragment
     protected void onLoadNextPage() {
         mPresenter.loadNextPage();
     }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        // no handling of item clicks in this list fragment
+    }
 }
