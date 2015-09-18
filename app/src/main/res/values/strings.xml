@@ -1,62 +1,78 @@
 <resources>
-    <string name="app_name" translatable="false">Jodoroid</string>
+    <string name="app_name">Jodoroid</string>
 
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="reload">Reload</string>
+    <string name="loading">Loading\u2026</string>
+
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="new_password">New password</string>
 
     <string name="title_section_home">Home</string>
     <string name="title_section_all_users">All users</string>
     <string name="title_section_star_users">Star users</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="title_activity_post_micropost">PostMicropost</string>
-    <string name="action_follow">Follow</string>
-    <string name="action_unfollow">UnFollow</string>
-    <string name="label_followers" translatable="false">Followers</string>
-    <string name="label_following" translatable="false">Following</string>
-    <string name="title_activity_reset_password_request">ResetPasswordRequest</string>
-    <string name="title_activity_reset_password">ResetPassword</string>
-    <string name="toast_password_reset">Your password is reset.</string>
-
+    <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_reset_password_request">Reset Password Request</string>
+    <string name="title_activity_reset_password">Reset Password</string>
+    <string name="title_activity_post_micropost">Post Micropost</string>
     <string name="title_section_profile">Edit your profile</string>
     <string name="title_section_oss_license">Open source licenses</string>
     <string name="title_activity_signup">Sign up</string>
     <string name="title_activity_profile_edit">Edit your profile</string>
-    <string name="hint_email">E-mail</string>
-    <string name="hint_name">Name</string>
-    <string name="action_save">Save</string>
-    <string name="hint_password">Password</string>
-    <string name="hint_new_password">New password</string>
     <string name="title_activity_password_change">Change password</string>
     <string name="title_section_password">Change password</string>
-    <string name="action_change">Change</string>
+    <string name="title_star_info">Stars!</string>
+    <string name="title_delete_micropost">Delete This Post</string>
+    <string name="title_star_candidate">You Got Stardom!!</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="link_sign_in">>> <u>Log in</u></string>
+    <string name="link_forgot_password">>> <u>Forgot Password</u></string>
+
+    <string name="label_followers" translatable="false">Followers</string>
+    <string name="label_following" translatable="false">Following</string>
 
     <string name="toast_load_failure">Unable to fetch data</string>
     <string name="toast_check_email">Check your mailbox for email verification!</string>
     <string name="toast_check_email_reset_password">Check your mailbox for password reset!</string>
+    <string name="toast_password_reset">Your password is reset.</string>
     <string name="toast_account_activated">Welcome to Jodo. Your account is activated.</string>
-    <string name="action_attach">Attach</string>
-    <string name="action_send">Send</string>
-    <string name="description_attached_image">Attached Image</string>
-    <string name="description_user_avatar">User avatar</string>
-
-    <string name="whats_happened">What\'s happened?</string>
-
-    <string name="title_delete_micropost">Delete This Post</string>
-    <string name="description_delete_micropost">Are You Sure?</string>
     <string name="toast_deletion_succeed">Deleted Successfully.</string>
     <string name="toast_deletion_failed">Deletion failed.</string>
 
-    <string name="star_candidate_title">You Got Stardom!!</string>
-    <string name="star_candidate_message">Everyone reads your post today!</string>
-    <string name="accept_stardom">Accept</string>
-    <string name="decline_stardom">Decline</string>
-    <string name="star_info_description">Several people are chosen as stars today!
+    <string name="description_attached_image">Attached Image</string>
+    <string name="description_user_avatar">User avatar</string>
+
+    <string name="message_delete_micropost">Are You Sure?</string>
+    <string name="message_star_candidate">Everyone reads your post today!</string>
+    <string name="message_star_info">Several people are chosen as stars today!
         Stars will appear on your feed with star-shaped avatars.</string>
-    <string name="star_info_title">Stars!</string>
-    <string name="star_info_check">Check stars</string>
-    <string name="loading">Loading\u2026</string>
+    <string name="message_whats_happened">What\'s happened?</string>
+
+    <string name="action_save">Save</string>
+    <string name="action_change">Change</string>
+    <string name="action_attach">Attach</string>
+    <string name="action_send">Send</string>
+    <string name="action_reset_password_request">Reset Password Request</string>
+    <string name="action_create_account">Create Account</string>
+    <string name="action_reset_password">Reset Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_if_forgot_password">If Forgot Password</string>
+    <string name="action_sign_up">Sign up</string>
+    <string name="action_check_star_info">Check stars</string>
+    <string name="action_accept_stardom">Accept</string>
+    <string name="action_decline_stardom">Decline</string>
+    <string name="action_follow">Follow</string>
+    <string name="action_unfollow">UnFollow</string>
+
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
 </resources>

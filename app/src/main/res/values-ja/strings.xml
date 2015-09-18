@@ -1,30 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name"></string>
-    <string name="accept_stardom">受諾</string>
+    <string name="app_name">Jodoroid</string>
     <string name="action_create_account">アカウントをつくる</string>
     <string name="action_if_forgot_password">パスワードをお忘れですか？</string>
     <string name="action_reset_password">パスワードをリセット</string>
     <string name="action_sign_in">サインイン</string>
     <string name="action_sign_in_short">サインイン</string>
     <string name="action_sign_up">新規登録</string>
-    <string name="decline_stardom">拒否</string>
     <string name="error_field_required">必須項目です</string>
     <string name="error_incorrect_password">パスワードが正しくありません</string>
     <string name="error_invalid_email">メールアドレスが不正です</string>
     <string name="error_invalid_password">パスワードが短すぎます</string>
     <string name="new_password">新しいパスワード</string>
-    <string name="prompt_email">メールアドレス</string>
-    <string name="prompt_password">パスワード</string>
-    <string name="reset_password_request_email">メールアドレス</string>
-    <string name="signup_email">メールアドレス</string>
-    <string name="signup_name">名前</string>
-    <string name="signup_password">パスワード</string>
-    <string name="star_candidate_message">本日のあなたの投稿は、全てのユーザに届きます！</string>
-    <string name="star_candidate_title">スター！！</string>
-    <string name="star_info_check">今日のスター</string>
-    <string name="star_info_description">今日はスターの日です！おもしろそうなスターをフォローしましょう！</string>
-    <string name="star_info_title">スター！</string>
     <string name="title_activity_login">サインイン</string>
     <string name="title_activity_password_change">パスワードの変更</string>
     <string name="title_activity_post_micropost">投稿</string>
@@ -46,7 +33,6 @@
     <string name="toast_deletion_succeed">削除しました。</string>
     <string name="toast_load_failure">おや？何かがおかしいです！</string>
     <string name="toast_password_reset">パスワードがリセットされました。</string>
-    <string name="whats_happened">ねぇ、今どんな気持ち？？？？？</string>
     <string name="reload">再読み込み</string>
     <string name="ok">OK</string>
     <string name="loading">読み込み中\u2026</string>
@@ -59,13 +45,21 @@
     <string name="action_send">送信</string>
     <string name="cancel">キャンセル</string>
     <string name="description_attached_image">添付画像</string>
-    <string name="description_delete_micropost">本当によろしいですか？</string>
     <string name="description_user_avatar">ユーザのアバター画像</string>
-    <string name="hint_email">メールアドレス</string>
-    <string name="hint_name">名前</string>
-    <string name="hint_new_password">新しいパスワード</string>
-    <string name="hint_password">パスワード</string>
-    <string name="label_followers"></string>
     <string name="navigation_drawer_close">メニューを閉じる</string>
     <string name="navigation_drawer_open">メニューを開く</string>
+    <string name="name">名前</string>
+    <string name="email">メールアドレス</string>
+    <string name="password">パスワード</string>
+    <string name="message_delete_micropost">本当によろしいですか？</string>
+    <string name="message_star_candidate">本日のあなたの投稿は、全てのユーザに届きます！</string>
+    <string name="message_star_info">今日はスターの日です！おもしろそうなスターをフォローしましょう！</string>
+    <string name="message_whats_happened">ねぇ、今どんな気持ち？？？？？</string>
+    <string name="title_star_candidate">スターに選ばれました！</string>
+    <string name="title_star_info">スターの日です</string>
+    <string name="action_decline_stardom">拒否</string>
+    <string name="action_accept_stardom">受諾</string>
+    <string name="action_check_star_info">スターを見る</string>
+    <string name="link_forgot_password">>> パスワードをお忘れなら></string>
+    <string name="link_sign_in">>> ログイン</string>
 </resources>

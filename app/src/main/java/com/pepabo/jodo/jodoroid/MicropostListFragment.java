@@ -47,7 +47,7 @@ public class MicropostListFragment extends SwipeRefreshListFragment<Micropost> {
                 if (JodoAccount.isMe(getActivity().getApplicationContext(), ownerId)) {
                     new AlertDialog.Builder(getActivity())
                             .setTitle(R.string.title_delete_micropost)
-                            .setMessage(R.string.description_delete_micropost)
+                            .setMessage(R.string.message_delete_micropost)
                             .setPositiveButton(R.string.ok, new PositiveButtonClickListener(m))
                             .setNegativeButton(R.string.cancel, null)
                             .show();

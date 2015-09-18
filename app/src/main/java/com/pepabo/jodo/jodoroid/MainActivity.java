@@ -362,9 +362,9 @@ public class MainActivity extends AppCompatActivity
         };
 
         new AlertDialog.Builder(this)
-                .setTitle(R.string.star_candidate_title)
-                .setMessage(R.string.star_candidate_message)
-                .setPositiveButton(R.string.accept_stardom, new DialogInterface.OnClickListener() {
+                .setTitle(R.string.title_star_candidate)
+                .setMessage(R.string.message_star_candidate)
+                .setPositiveButton(R.string.action_accept_stardom, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mAccountSubscription = mAPIService.acceptStardom(true)
@@ -372,7 +372,7 @@ public class MainActivity extends AppCompatActivity
                                 .subscribe(observer);
                     }
                 })
-                .setNegativeButton(R.string.decline_stardom, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.action_decline_stardom, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mAccountSubscription = mAPIService.acceptStardom(false)
@@ -401,9 +401,9 @@ public class MainActivity extends AppCompatActivity
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return new AlertDialog.Builder(getActivity())
-                    .setTitle(R.string.star_info_title)
-                    .setMessage(R.string.star_info_description)
-                    .setNeutralButton(R.string.star_info_check, new DialogInterface.OnClickListener() {
+                    .setTitle(R.string.title_star_info)
+                    .setMessage(R.string.message_star_info)
+                    .setNeutralButton(R.string.action_check_star_info, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             final Intent intent = new Intent(ACTION_VIEW_STAR_USERS, null,
