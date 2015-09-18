@@ -2,7 +2,9 @@ package com.pepabo.jodo.jodoroid;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
@@ -41,6 +43,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         mProgressToggle = new ProgressToggle(this, mProgressView, mFormView);
 
         // Set up the login form.
@@ -53,16 +59,16 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.unbind(this);
     }
 
-    @OnClick(R.id.reset_password_request_button)
-    void gotoPasswordReset() {
-        Intent intent = new Intent(getApplicationContext(), ResetPasswordRequestActivity.class);
-        startActivity(intent);
-    }
 
-    @OnClick(R.id.sign_up_button)
-    void gotoSignUp() {
-        Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-        startActivity(intent);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @OnEditorAction(R.id.password)
@@ -143,13 +149,18 @@ public class LoginActivity extends AppCompatActivity {
                         public void onNext(Session session) {
                             if(session != null && session.getAuthToken() != null) {
                                 JodoAccount.addAccount(getApplicationContext(), email, session);
-
                                 setResult(RESULT_OK);
                                 finish();
                             }
                         }
                     });
         }
+    }
+
+    @OnClick(R.id.forgot_password)
+    void gotoPasswordReset() {
+        Intent intent = new Intent(getApplicationContext(), ResetPasswordRequestActivity.class);
+        startActivity(intent);
     }
 
     public void showProgress(final boolean show) {

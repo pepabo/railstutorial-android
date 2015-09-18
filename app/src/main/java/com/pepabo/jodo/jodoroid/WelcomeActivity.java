@@ -1,12 +1,11 @@
 package com.pepabo.jodo.jodoroid;
 
-import android.accounts.Account;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
 public class WelcomeActivity extends Activity {
-    private static final int REQUEST_LOGIN = 100;
+    private static final int REQUEST_SIGNUP = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,7 +14,7 @@ public class WelcomeActivity extends Activity {
         final JodoAccount account = JodoAccount.getAccount(getApplicationContext());
 
         if(account == null) {
-            startLoginActivity();
+            startSignupActivity();
         } else {
             startMainActivity();
             finish();
@@ -24,8 +23,8 @@ public class WelcomeActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_LOGIN) {
-            if(resultCode == RESULT_OK) {
+        if(requestCode == REQUEST_SIGNUP) {
+            if (resultCode == RESULT_OK) {
                 startMainActivity();
             }
         } else {
@@ -34,9 +33,9 @@ public class WelcomeActivity extends Activity {
         finish();
     }
 
-    private void startLoginActivity() {
-        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        startActivityForResult(intent, REQUEST_LOGIN);
+    private void startSignupActivity() {
+        Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
+        startActivityForResult(intent, REQUEST_SIGNUP);
     }
 
     private void startMainActivity() {

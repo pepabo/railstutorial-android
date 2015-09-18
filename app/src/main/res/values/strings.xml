@@ -23,7 +23,7 @@
 
     <string name="title_section_profile">Edit your profile</string>
     <string name="title_section_oss_license">Open source licenses</string>
-    <string name="title_activity_signup">Signup</string>
+    <string name="title_activity_signup">Sign up</string>
     <string name="title_activity_profile_edit">Edit your profile</string>
     <string name="hint_email">E-mail</string>
     <string name="hint_name">Name</string>
