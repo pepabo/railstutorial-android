@@ -54,7 +54,6 @@ public class JodoAccount {
 
     public static boolean isMe(Context context, long userId) {
         final JodoAccount account = getAccount(context);
-        final AccountManager accountManager = AccountManager.get(context);
 
         return userId == account.getUserId();
     }
