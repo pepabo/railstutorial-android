@@ -55,7 +55,7 @@
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:singleLine="true" />
-            </android.support.design.widget.TextInputLayout>
+                </android.support.design.widget.TextInputLayout>
 
             <Button
                 android:id="@+id/email_sign_in_button"
@@ -66,24 +66,16 @@
                 android:text="@string/action_sign_in"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/sign_up_button"
-                style="?android:textAppearanceSmall"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/action_sign_up"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/reset_password_request_button"
-                style="?android:textAppearanceSmall"
+            <TextView
+                android:id="@+id/forgot_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_marginTop="16dp"
-                android:text="@string/action_if_forgot_password"
-                android:textStyle="bold" />
+                android:layout_gravity="end"
+                android:text="@string/link_forgot_password"
+                android:textSize="18sp"
+                android:textColor="@drawable/textview_feedback"/>
+
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

@@ -157,6 +157,12 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    @OnClick(R.id.forgot_password)
+    void gotoPasswordReset() {
+        Intent intent = new Intent(getApplicationContext(), ResetPasswordRequestActivity.class);
+        startActivity(intent);
+    }
+
     public void showProgress(final boolean show) {
         mProgressToggle.showProgress(show);
     }
