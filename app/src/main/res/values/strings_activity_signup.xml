@@ -1,7 +1,7 @@
 <resources>
     <!-- Strings related to signup -->
-    <string name="signup_email">Email</string>
-    <string name="signup_name">Name</string>
-    <string name="signup_password">Password</string>
+
     <string name="action_create_account">Create Account</string>
+    <string name="link_sign_in">>> <u>Log in</u></string>
+    <string name="link_forgot_password">>> <u>Forgot Password</u></string>
 </resources>
