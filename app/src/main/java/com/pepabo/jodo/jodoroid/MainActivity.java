@@ -255,7 +255,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showSelf() {
-        showFragment(UserProfileFragment.newInstance(UserProfilePresenter.SELF_ID));
+        showUser(JodoAccount.getAccount(getApplicationContext()).getUserId());
     }
 
     private void showFragment(Fragment fragment) {
