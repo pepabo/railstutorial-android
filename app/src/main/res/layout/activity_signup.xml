@@ -66,13 +66,23 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/action_signup"
+                android:id="@+id/action_sign_up"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/action_create_account"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/sign_in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/link_sign_in"
+                android:textSize="18sp"
+                android:textColor="@drawable/textview_feedback"
+                android:layout_gravity="end" />
 
         </LinearLayout>
     </ScrollView>

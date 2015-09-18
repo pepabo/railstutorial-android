@@ -1,9 +1,8 @@
 package com.pepabo.jodo.jodoroid;
 
-import android.support.v7.app.ActionBar;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -21,6 +20,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.Subscriptions;
 
 public class SignupActivity extends AppCompatActivity {
+    private static final int REQUEST_SIGNIN = 100;
 
     @Bind(R.id.email)
     EditText mEmailView;
@@ -49,9 +49,6 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
 
-        final ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
         mProgressToggle = new ProgressToggle(this, mProgressView, mFormView);
 
         mEmailValidator = new EmailValidator(getApplicationContext());
@@ -62,6 +59,16 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_SIGNIN) {
+            if(resultCode == RESULT_OK) {
+                setResult(RESULT_OK);
+                finish();
+            }
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         mAPISubscription.unsubscribe();
 
@@ -69,7 +76,7 @@ public class SignupActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    @OnClick(R.id.action_signup)
+    @OnClick(R.id.action_sign_up)
     void attemptSignup() {
         // Reset errors.
         mEmailView.setError(null);
@@ -114,15 +121,10 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    @OnClick(R.id.sign_in)
+    void gotoLogin() {
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivityForResult(intent, REQUEST_SIGNIN);
     }
 
     void showProgress(final boolean show) {
@@ -154,7 +156,6 @@ public class SignupActivity extends AppCompatActivity {
             final SignupActivity activity = mActivity.get();
             if (activity != null) {
                 activity.showProgress(false);
-
                 Toast.makeText(activity, ErrorUtils.getMessage(e), Toast.LENGTH_LONG).show();
             }
         }
