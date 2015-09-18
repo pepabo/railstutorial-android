@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Jodoroid</string>
+    <string name="app_name" translatable="false">Jodoroid</string>
 
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
@@ -15,8 +15,8 @@
     <string name="title_activity_post_micropost">PostMicropost</string>
     <string name="action_follow">Follow</string>
     <string name="action_unfollow">UnFollow</string>
-    <string name="label_followers">Followers</string>
-    <string name="label_following">Following</string>
+    <string name="label_followers" translatable="false">Followers</string>
+    <string name="label_following" translatable="false">Following</string>
     <string name="title_activity_reset_password_request">ResetPasswordRequest</string>
     <string name="title_activity_reset_password">ResetPassword</string>
     <string name="toast_password_reset">Your password is reset.</string>
