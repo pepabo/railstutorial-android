@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+<<<<<<< HEAD
     <string name="app_name">Jodoroid</string>
+=======
+>>>>>>> jpのapp_nameが空だった
     <string name="action_create_account">アカウントをつくる</string>
     <string name="action_if_forgot_password">パスワードをお忘れですか？</string>
     <string name="action_reset_password">パスワードをリセット</string>
@@ -62,4 +65,5 @@
     <string name="action_check_star_info">スターを見る</string>
     <string name="link_forgot_password">>> パスワードをお忘れなら></string>
     <string name="link_sign_in">>> ログイン</string>
+    <string name="app_name">Jodoroid</string>
 </resources>
