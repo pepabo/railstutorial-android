@@ -12,11 +12,16 @@ dependencies:
   override:
     - echo y | android update sdk --no-ui --filter "android-22,build-tools-21.1.2"
 test:
+  pre:
+    - emulator -avd circleci-android22 -no-audio -no-window:
+        background: true
+        parallel: true
+    - circle-android wait-for-boot
   override:
-    - ./gradlew build -PdisablePreDex
+    - ./gradlew build connectedAndroidTest -PdisablePreDex
   post:
-    - mkdir -p $CIRCLE_TEST_REPORTS/lint
-    - cp -r app/build/outputs/lint-results* $CIRCLE_TEST_REPORTS/lint
+    - mkdir -p $CIRCLE_TEST_REPORTS/lint && cp -r app/build/outputs/lint-results* $CIRCLE_TEST_REPORTS/lint
+    - mkdir -p $CIRCLE_TEST_REPORTS/androidTest && cp -r app/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS/androidTest
 deployment:
   devlopment:
     branch: master
