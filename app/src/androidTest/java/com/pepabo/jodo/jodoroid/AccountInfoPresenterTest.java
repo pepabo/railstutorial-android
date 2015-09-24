@@ -30,13 +30,7 @@ public class AccountInfoPresenterTest extends AndroidTestCase {
         final User user = new User();
 
         when(mAPIService.fetchMe(1)).thenReturn(
-                Observable.create(new Observable.OnSubscribe<User>() {
-                    @Override
-                    public void call(Subscriber<? super User> subscriber) {
-                        subscriber.onNext(user);
-                        subscriber.onCompleted();
-                    }
-                }).subscribeOn(Schedulers.io())
+                Observable.just(user).subscribeOn(Schedulers.io())
         );
 
         mPresenter.refresh();
@@ -52,12 +46,7 @@ public class AccountInfoPresenterTest extends AndroidTestCase {
         final Throwable error = new Error();
 
         when(mAPIService.fetchMe(1)).thenReturn(
-                Observable.create(new Observable.OnSubscribe<User>() {
-                    @Override
-                    public void call(Subscriber<? super User> subscriber) {
-                        subscriber.onError(error);
-                    }
-                })
+                Observable.<User>error(error).subscribeOn(Schedulers.io())
         );
 
         mPresenter.refresh();
