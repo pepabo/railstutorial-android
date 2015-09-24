@@ -35,13 +35,7 @@ public class AllUsersPresenterTest extends AndroidTestCase{
         final List<User> users = new ArrayList<>();
 
         when(mAPIService.fetchAllUsers(1)).thenReturn(
-                Observable.create(new Observable.OnSubscribe<List<User>>() {
-                    @Override
-                    public void call(Subscriber<? super List<User>> subscriber) {
-                        subscriber.onNext(users);
-                        subscriber.onCompleted();
-                    }
-                }).subscribeOn(Schedulers.io())
+                Observable.just(users).subscribeOn(Schedulers.io())
         );
 
         mPresenter.refresh();
@@ -55,12 +49,7 @@ public class AllUsersPresenterTest extends AndroidTestCase{
         final Throwable e = new Error();
 
         when(mAPIService.fetchAllUsers(1)).thenReturn(
-                Observable.create(new Observable.OnSubscribe<List<User>>() {
-                    @Override
-                    public void call(Subscriber<? super List<User>> subscriber) {
-                        subscriber.onError(e);
-                    }
-                }).subscribeOn(Schedulers.io())
+                Observable.<List<User>>error(e).subscribeOn(Schedulers.io())
         );
 
         mPresenter.refresh();
