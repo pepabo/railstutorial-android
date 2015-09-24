@@ -21,6 +21,9 @@ public class UserFollowersPresenterTest extends AndroidTestCase {
     RefreshableView<List<User>> mView;
     ExpirationManager mExpirationManager;
 
+    final private int USER_ID = 1;
+    final private int PAGE = 1;
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -34,17 +37,17 @@ public class UserFollowersPresenterTest extends AndroidTestCase {
         final List<User> users = new ArrayList<>();
 
         mPresenter = new UserFollowersPresenter(
-                mAPIService, mExpirationManager, UserFollowersPresenter.TYPE_FOLLOWERS, 1
+                mAPIService, mExpirationManager, UserFollowersPresenter.TYPE_FOLLOWERS, USER_ID
         );
         mPresenter.setView(mView);
 
-        when(mAPIService.fetchFollowers(1, 1)).thenReturn(
+        when(mAPIService.fetchFollowers(USER_ID, PAGE)).thenReturn(
                 Observable.just(users).subscribeOn(Schedulers.io())
         );
 
         mPresenter.refresh();
 
-        verify(mAPIService, timeout(1000)).fetchFollowers(1, 1);
+        verify(mAPIService, timeout(1000)).fetchFollowers(USER_ID, PAGE);
         verifyNoMoreInteractions(mAPIService);
 
         verify(mView, timeout(1000)).onNextModel(users);
@@ -56,17 +59,17 @@ public class UserFollowersPresenterTest extends AndroidTestCase {
         final Throwable error = new Error();
 
         mPresenter = new UserFollowersPresenter(
-                mAPIService, mExpirationManager, UserFollowersPresenter.TYPE_FOLLOWERS, 1
+                mAPIService, mExpirationManager, UserFollowersPresenter.TYPE_FOLLOWERS, USER_ID
         );
         mPresenter.setView(mView);
 
-        when(mAPIService.fetchFollowers(1, 1)).thenReturn(
+        when(mAPIService.fetchFollowers(USER_ID, PAGE)).thenReturn(
                 Observable.<List<User>>error(error).subscribeOn(Schedulers.io())
         );
 
         mPresenter.refresh();
 
-        verify(mAPIService, timeout(1000)).fetchFollowers(1, 1);
+        verify(mAPIService, timeout(1000)).fetchFollowers(USER_ID, PAGE);
         verifyNoMoreInteractions(mAPIService);
 
         verify(mView, timeout(1000)).onLoadError(error);
@@ -79,17 +82,17 @@ public class UserFollowersPresenterTest extends AndroidTestCase {
         final List<User> users = new ArrayList<User>();
 
         mPresenter = new UserFollowersPresenter(
-                mAPIService, mExpirationManager, UserFollowersPresenter.TYPE_FOLLOWING, 1
+                mAPIService, mExpirationManager, UserFollowersPresenter.TYPE_FOLLOWING, USER_ID
         );
         mPresenter.setView(mView);
 
-        when(mAPIService.fetchFollowing(1, 1)).thenReturn(
+        when(mAPIService.fetchFollowing(USER_ID, PAGE)).thenReturn(
                 Observable.just(users).subscribeOn(Schedulers.io())
         );
 
         mPresenter.refresh();
 
-        verify(mAPIService, timeout(1000)).fetchFollowing(1, 1);
+        verify(mAPIService, timeout(1000)).fetchFollowing(USER_ID, PAGE);
         verifyNoMoreInteractions(mAPIService);
 
         verify(mView, timeout(1000)).onNextModel(users);
@@ -101,17 +104,17 @@ public class UserFollowersPresenterTest extends AndroidTestCase {
         final Throwable error = new Error();
 
         mPresenter = new UserFollowersPresenter(
-                mAPIService, mExpirationManager, UserFollowersPresenter.TYPE_FOLLOWING, 1
+                mAPIService, mExpirationManager, UserFollowersPresenter.TYPE_FOLLOWING, USER_ID
         );
         mPresenter.setView(mView);
 
-        when(mAPIService.fetchFollowing(1, 1)).thenReturn(
+        when(mAPIService.fetchFollowing(USER_ID, PAGE)).thenReturn(
                 Observable.<List<User>>error(error).subscribeOn(Schedulers.io())
         );
 
         mPresenter.refresh();
 
-        verify(mAPIService, timeout(1000)).fetchFollowing(1, 1);
+        verify(mAPIService, timeout(1000)).fetchFollowing(USER_ID, PAGE);
         verifyNoMoreInteractions(mAPIService);
 
         verify(mView, timeout(1000)).onLoadError(error);
