@@ -46,11 +46,11 @@ public class StarUsersPresenterTest extends AndroidTestCase {
 
         mPresenter.refresh();
 
-        verify(mAPIService).fetchStarUsers(1);
+        verify(mAPIService, timeout(1000)).fetchStarUsers(1);
         verifyNoMoreInteractions(mAPIService);
 
-        verify(mView).onNextModel(users);
-        verify(mView).setRefreshing(false);
+        verify(mView, timeout(1000)).onNextModel(users);
+        verify(mView, timeout(1000)).setRefreshing(false);
         verifyNoMoreInteractions(mView);
     }
 
@@ -68,11 +68,11 @@ public class StarUsersPresenterTest extends AndroidTestCase {
 
         mPresenter.refresh();
 
-        verify(mAPIService).fetchStarUsers(1);
+        verify(mAPIService, timeout(1000)).fetchStarUsers(1);
         verifyNoMoreInteractions(mAPIService);
 
-        verify(mView).onLoadError(error);
-        verify(mView).setRefreshing(false);
+        verify(mView, timeout(1000)).onLoadError(error);
+        verify(mView, timeout(1000)).setRefreshing(false);
         verifyNoMoreInteractions(mView);
     }
 }
