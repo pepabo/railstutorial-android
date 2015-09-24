@@ -37,13 +37,7 @@ public class HomeFeedPresenterTest extends AndroidTestCase {
         final List<Micropost> feed = new ArrayList<>();
 
         when(mAPIService.fetchFeed(1)).thenReturn(
-                Observable.create(new Observable.OnSubscribe<List<Micropost>>() {
-                    @Override
-                    public void call(Subscriber<? super List<Micropost>> subscriber) {
-                        subscriber.onNext(feed);
-                        subscriber.onCompleted();
-                    }
-                }).subscribeOn(Schedulers.io())
+                Observable.just(feed).subscribeOn(Schedulers.io())
         );
 
         mPresenter.refresh();
@@ -58,12 +52,7 @@ public class HomeFeedPresenterTest extends AndroidTestCase {
         final Throwable e = new Error();
 
         when(mAPIService.fetchFeed(1)).thenReturn(
-                Observable.create(new Observable.OnSubscribe<List<Micropost>>() {
-                    @Override
-                    public void call(Subscriber<? super List<Micropost>> subscriber) {
-                        subscriber.onError(e);
-                    }
-                }).subscribeOn(Schedulers.io())
+                Observable.<List<Micropost>>error(e).subscribeOn(Schedulers.io())
         );
 
         mPresenter.refresh();
