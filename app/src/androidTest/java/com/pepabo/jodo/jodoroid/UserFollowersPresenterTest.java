@@ -79,7 +79,7 @@ public class UserFollowersPresenterTest extends AndroidTestCase {
 
 
     public void testRefreshFollowingSuccess() {
-        final List<User> users = new ArrayList<User>();
+        final List<User> users = new ArrayList<>();
 
         mPresenter = new UserFollowersPresenter(
                 mAPIService, mExpirationManager, UserFollowersPresenter.TYPE_FOLLOWING, USER_ID
